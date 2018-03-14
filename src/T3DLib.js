@@ -43,7 +43,8 @@ function T3D() {}
 /* PRIVATE VARS */
 var _version = "1.0.4";
 var _settings = {
-	inflaterURL : "modules/nacl/t3dgwtools.nmf"
+	inflaterURL : "modules/nacl/t3dgwtools.nmf",
+	t3dworkerURL: "modules/t3dtools/t3dworker.js"
 };
 
 /* PUBLIC PROPERTIES */
@@ -352,6 +353,8 @@ function findDuplicateChunkDefs(){
  *                             		
  * @param  {String} 	inflaterURL URL to the inflater .mft file. If omitted
  *                               	_settings.inflaterURL will be used instead.
+ * @param  {Class}		logger		
+ * @param  {String}		t3dworkerURL	URL to the t3dtools web worker
  * 
  * @return {LocalReader}			The contructed LocalReader, note that this object
  *                             		will not be fully initialized until the callback
@@ -363,9 +366,9 @@ T3D.getLocalReader = function(file, callback, inflaterURL, logger, t3dworkerURL)
 	/// We use a wrapper to catch the events.
 	/// We use the embed tag itself for posing messages.
 
-	//Check if the nacl API is not available but t3dtools is
-	if(t3dworkerURL && navigator.mimeTypes['application/x-nacl'] === undefined) {
-		var worker = new Worker(t3dworkerURL);
+	//Check if the nacl API is not available
+	if(navigator.mimeTypes['application/x-nacl'] === undefined) {
+		var worker = new Worker(t3dworkerURL ? t3dworkerURL : _settings.t3dworkerURL);
 
 		var lrInstance = new LocalReader(file, _version, logger);
 		lrInstance.connectInflater(worker, worker);
