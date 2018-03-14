@@ -357,33 +357,42 @@ function findDuplicateChunkDefs(){
  *                             		will not be fully initialized until the callback
  *                             		is fired.
  */
-T3D.getLocalReader = function(file, callback, inflaterURL, logger){
+T3D.getLocalReader = function(file, callback, inflaterURL, logger, t3dworkerURL){
 
 	/// Create Inflater for this file reader.
 	/// We use a wrapper to catch the events.
 	/// We use the embed tag itself for posing messages.
+
+	//Check if the nacl API is not available but t3dtools is
+	if(t3dworkerURL && navigator.mimeTypes['application/x-nacl'] === undefined) {
+		var worker = new Worker(t3dworkerURL);
+
+		var lrInstance = new LocalReader(file, _version, logger);
+		lrInstance.connectInflater(worker, worker);
+	} 
+	else {
+		var pNaClWrapper = document.createElement("div"); 
+		pNaClWrapper.setAttribute("id", "pNaClListener");
+		
+		var pNaClEmbed = document.createElement("embed");
+		pNaClEmbed.setAttribute("type", "application/x-pnacl");
 	
-	var pNaClWrapper = document.createElement("div"); 
-	pNaClWrapper.setAttribute("id", "pNaClListener");
+		pNaClEmbed.style.position ="absolute";
+		pNaClEmbed.style.height = 0;
+		pNaClEmbed.style.width = 0;
+		pNaClEmbed.setAttribute("src", inflaterURL ? inflaterURL : _settings.inflaterURL);
 	
-	var pNaClEmbed = document.createElement("embed");
-	pNaClEmbed.setAttribute("type", "application/x-pnacl");
+		/// Add the objects to the DOM
+		pNaClWrapper.appendChild(pNaClEmbed);
+		document.body.appendChild(pNaClWrapper);
+		
+		/// Connect the provided file reference to a new LocalReader.
+		var lrInstance = new LocalReader(file, _version, logger);
 
-	pNaClEmbed.style.position ="absolute";
-	pNaClEmbed.style.height = 0;
-	pNaClEmbed.style.width = 0;
-	pNaClEmbed.setAttribute("src", inflaterURL ? inflaterURL : _settings.inflaterURL);
+		/// Give the LocalReader access to the inflater.
+		lrInstance.connectInflater(pNaClEmbed, pNaClWrapper);
 
-	/// Add the objects to the DOM
-	pNaClWrapper.appendChild(pNaClEmbed);
-	document.body.appendChild(pNaClWrapper);
-
-	/// Connect the provided file reference to a new LocalReader.
-	var lrInstance = new LocalReader(file, _version, logger);
-
-	/// Give the LocalReader access to the inflater.
-	lrInstance.connectInflater(pNaClEmbed, pNaClWrapper);
-
+	}
 	/// Parse the DAT file MFT header. This must be done oncein order to access
 	/// any files in the DAT.
 	lrInstance.parseHeaderAsync(callback);
