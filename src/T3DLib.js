@@ -41,7 +41,7 @@ module.exports = T3D;
 function T3D() {}
 
 /* PRIVATE VARS */
-var _version = "1.0.3";
+var _version = "1.0.4";
 var _settings = {
 	inflaterURL : "modules/nacl/t3dgwtools.nmf"
 };
