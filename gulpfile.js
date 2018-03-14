@@ -76,6 +76,11 @@ buildJS = function(settings) {
 	
 	/// Move to build directory
 	bundleFileStream.pipe(gulp.dest('build'));
+
+	// Copy to examples as well
+	let tyria2DPath = './examples/Tyria2D/lib';
+	let modelRendererPath = './examples/ModelRenderer/lib';
+	gulp.src(`build/T3D-${version}.js`).pipe(gulp.dest(tyria2DPath)).pipe(gulp.dest(modelRendererPath));
 }
 
 /// gulp API 
@@ -122,13 +127,6 @@ gulp.task('watch', function() {
 		);
 	});
 
-});
-
-gulp.task('build_example', function(){
-	let tyria2DPath = './examples/Tyria2D/lib';
-	let modelRendererPath = './examples/ModelRenderer/lib';
-	gulp.src(`build/T3D-${version}.min.js`).pipe(gulp.dest(tyria2DPath)).pipe(gulp.dest(modelRendererPath));
-	gulp.src(`build/T3D-${version}.Formats.min.js`).pipe(gulp.dest(tyria2DPath)).pipe(gulp.dest(modelRendererPath));
 });
 
 /// Register watch as the default task if none is spefified.
