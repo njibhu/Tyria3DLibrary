@@ -28,6 +28,7 @@ var Utils = T3D.ParserUtils;
  * @property Formats
  * @type Array
  */
+
 window.T3D.formats = [
 
     ///==================================================
