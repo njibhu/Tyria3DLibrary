@@ -28,7 +28,7 @@ var Utils = T3D.ParserUtils;
  * @property Formats
  * @type Array
  */
-window.T3D.Formats = [
+window.T3D.formats = [
 
 	///==================================================
 	/// Chunk: GRMT, versions: 7, strucTab: 0x13B54C0 
