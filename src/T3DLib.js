@@ -270,14 +270,14 @@ T3D.RenderUtils = require('./util/RenderUtils.js');
  */
 function checkRequirements(){
 	var numErrors = 0;
-	var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
-	if(!is_chrome){
-		T3D.Logger.log(
-			T3D.Logger.TYPE_ERROR,
-			"T3D inflation requires Google Chrome."
-		);
-		numErrors++;
-	}
+	// var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+	// if(!is_chrome){
+	// 	T3D.Logger.log(
+	// 		T3D.Logger.TYPE_ERROR,
+	// 		"T3D inflation requires Google Chrome."
+	// 	);
+	// 	numErrors++;
+	// }
 
 	if(typeof DataStream === "undefined"){
 		T3D.Logger.log(
