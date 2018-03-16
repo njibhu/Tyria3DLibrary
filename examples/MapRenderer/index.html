@@ -1,5 +1,5 @@
 <!--
-Copyright (C) 2015 RequestTimeout <https://github.com/RequestTimeout408>
+Copyright (C) 2018 Njibhu <https://github.com/njibhu>
 
 This file is part of the Tyria 3D Library.
 
@@ -199,8 +199,13 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
                     _terrainChunks.push(elem);
                 }
 
-                _camera.position.x = 200;
-                _camera.position.y = 50;
+                var water = T3D.getContextValue(mapData, T3D.TerrainRenderer, "water");
+                _scene.add(water)
+                _terrainChunks.push(water);
+
+                _camera.position.x = 1;
+                _camera.position.y = 1;
+
             }
 
             function cleanScene(){
