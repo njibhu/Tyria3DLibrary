@@ -285,6 +285,32 @@ module.exports = {
 				
 			]
 		},
-		
+		{
+			name: "Maps post HoT (Still need to sort)",
+			maps: [
+				{ fileName :"1018612.data", name:"Timberline Falls (post HoT)" },
+				{ fileName :"1019669.data", name:"Legacy Lion's Arch" },
+				{ fileName :"1255378.data", name:"Gilded Hollow" }, 
+				{ fileName :"1255516.data", name:"Unknown HoT Arena" },
+				{ fileName :"1256064.data", name:"Lost Precipice" },
+				{ fileName :"1262310.data", name:"Dragon Stand" },
+				{ fileName :"1263739.data", name:"Tarir" },
+				{ fileName :"1264291.data", name:"Tangled Depths" },
+				{ fileName :"1383309.data", name:"Raid: Salvation Pass" },
+				{ fileName :"1426653.data", name:"Cliffside Fractal" },
+				{ fileName :"1427048.data", name:"Raid Lobby + Special Forces Training Area" },
+				{ fileName :"1454070.data", name:"Stronghold of the Faithful" },
+				{ fileName :"1472361.data", name:"Chaos Isle Fractal" },
+				{ fileName :"1472382.data", name:"Snowblind Fractal" },
+				{ fileName :"1472406.data", name:"Swampland Fractal" },
+				{ fileName :"1472635.data", name:"Bloodstone Fen (LWS3 e1)" },
+				{ fileName :"1473061.data", name:"Spirit Watch" },
+				{ fileName :"1498016.data", name:"Mistlock Observatory" },
+				{ fileName :"1498071.data", name:"Taimi Simulator (LWS3 e2)" },
+				{ fileName :"1498193.data", name:"Concept sPVP Map" },
+				{ fileName :"1498578.data", name:"Ring of Fire (LWS3 e2)" },
+				{ fileName :"1498798.data", name:"Aetherblade/Mai Trin Fractal" },
+			]
+		}		
 	]
 }
