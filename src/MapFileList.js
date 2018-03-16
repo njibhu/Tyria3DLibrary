@@ -286,7 +286,7 @@ module.exports = {
 			]
 		},
 		{
-			name: "Maps post HoT (Still need to sort)",
+			name: "Post HoT (need to sort)",
 			maps: [
 				{ fileName :"1018612.data", name:"Timberline Falls (post HoT)" },
 				{ fileName :"1019669.data", name:"Legacy Lion's Arch" },
@@ -298,7 +298,7 @@ module.exports = {
 				{ fileName :"1264291.data", name:"Tangled Depths" },
 				{ fileName :"1383309.data", name:"Raid: Salvation Pass" },
 				{ fileName :"1426653.data", name:"Cliffside Fractal" },
-				{ fileName :"1427048.data", name:"Raid Lobby + Special Forces Training Area" },
+				{ fileName :"1427048.data", name:"Special Forces Training Area" },
 				{ fileName :"1454070.data", name:"Stronghold of the Faithful" },
 				{ fileName :"1472361.data", name:"Chaos Isle Fractal" },
 				{ fileName :"1472382.data", name:"Snowblind Fractal" },
@@ -307,9 +307,23 @@ module.exports = {
 				{ fileName :"1473061.data", name:"Spirit Watch" },
 				{ fileName :"1498016.data", name:"Mistlock Observatory" },
 				{ fileName :"1498071.data", name:"Taimi Simulator (LWS3 e2)" },
-				{ fileName :"1498193.data", name:"Concept sPVP Map" },
+				{ fileName :"1498193.data", name:"Concept sPVP Map 1" },
 				{ fileName :"1498578.data", name:"Ring of Fire (LWS3 e2)" },
 				{ fileName :"1498798.data", name:"Aetherblade/Mai Trin Fractal" },
+				{ fileName :"1513556.data", name:"Concept sPVP Map 2" }, 
+				{ fileName :"1513607.data", name:"Concept sPVP Map 3" },
+				{ fileName :"1513620.data", name:"Concept sPVP Map 4" },
+				{ fileName :"1513675.data", name:"Concept sPVP Map 5" },
+				{ fileName :"1605211.data", name:"Bitterfrost Frontier (LWS3 e3)" },
+				{ fileName :"1605344.data", name:"Nightmare Fractal" },
+				{ fileName :"1644624.data", name:"Revenge of the Capricorn" },
+				{ fileName :"1645215.data", name:"Bastion of the Penitent" },
+				{ fileName :"1645474.data", name:"Caudecus Manor (LWS3 e4)" },
+				{ fileName :"1646520.data", name:"Lake Doric (LWS3 e4)" },
+				{ fileName :"1647236.data", name:"Desert Borderlands" },
+				{ fileName :"1666233.data", name:"Battle of Champion's Dusk" },
+				{ fileName :"1682493.data", name:"Draconis Mons (LWS3 e5)" },
+				{ fileName :"1682763.data", name:"Titan's Throat (LWS3 e5)" }
 			]
 		}		
 	]
