@@ -78,9 +78,10 @@ buildJS = function(settings) {
 	bundleFileStream.pipe(gulp.dest('build'));
 
 	// Copy to examples as well
-	let tyria2DPath = './examples/Tyria2D/lib';
-	let modelRendererPath = './examples/ModelRenderer/lib';
-	gulp.src(`build/T3D-${version}.js`).pipe(gulp.dest(tyria2DPath)).pipe(gulp.dest(modelRendererPath));
+	gulp.src(`build/T3D-${version}.js`)
+		.pipe(gulp.dest('./examples/Tyria2D/lib'))
+		.pipe(gulp.dest('./examples/ModelRenderer/lib'))
+		.pipe(gulp.dest('./examples/MapRenderer/lib'));
 }
 
 /// gulp API 
