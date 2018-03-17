@@ -1449,8 +1449,7 @@ function T3D() {}
 /* PRIVATE VARS */
 var _version = "1.0.4";
 var _settings = {
-	inflaterURL : "modules/nacl/t3dgwtools.nmf",
-	t3dworkerURL: "modules/t3dtools/t3dworker.js"
+	inflaterURL : "modules/nacl/t3dgwtools.nmf"
 };
 
 /* PUBLIC PROPERTIES */
@@ -1676,14 +1675,14 @@ T3D.RenderUtils = _dereq_('./util/RenderUtils.js');
  */
 function checkRequirements(){
 	var numErrors = 0;
-	// var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
-	// if(!is_chrome){
-	// 	T3D.Logger.log(
-	// 		T3D.Logger.TYPE_ERROR,
-	// 		"T3D inflation requires Google Chrome."
-	// 	);
-	// 	numErrors++;
-	// }
+	var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+	if(!is_chrome){
+		T3D.Logger.log(
+			T3D.Logger.TYPE_ERROR,
+			"T3D inflation requires Google Chrome."
+		);
+		numErrors++;
+	}
 
 	if(typeof DataStream === "undefined"){
 		T3D.Logger.log(
@@ -1759,8 +1758,6 @@ function findDuplicateChunkDefs(){
  *                             		
  * @param  {String} 	inflaterURL URL to the inflater .mft file. If omitted
  *                               	_settings.inflaterURL will be used instead.
- * @param  {Class}		logger		
- * @param  {String}		t3dworkerURL	URL to the t3dtools web worker
  * 
  * @return {LocalReader}			The contructed LocalReader, note that this object
  *                             		will not be fully initialized until the callback
@@ -1772,9 +1769,9 @@ T3D.getLocalReader = function(file, callback, inflaterURL, logger, t3dworkerURL)
 	/// We use a wrapper to catch the events.
 	/// We use the embed tag itself for posing messages.
 
-	//Check if the nacl API is not available
-	if(navigator.mimeTypes['application/x-nacl'] === undefined) {
-		var worker = new Worker(t3dworkerURL ? t3dworkerURL : _settings.t3dworkerURL);
+	//Check if the nacl API is not available but t3dtools is
+	if(t3dworkerURL && navigator.mimeTypes['application/x-nacl'] === undefined) {
+		var worker = new Worker(t3dworkerURL);
 
 		var lrInstance = new LocalReader(file, _version, logger);
 		lrInstance.connectInflater(worker, worker);
@@ -5087,7 +5084,7 @@ function getUVMat(textures, numUV, alphaTest){
 				lightMap
 			), 
 		attributes: attributes,
-		side: THREE.DoubleSide,
+		side: THREE.BackSide,
 	} );
 
 }
@@ -5252,7 +5249,7 @@ var getMaterial = ME.getMaterial = function(material, materialFile, localReader,
 
 			//finalMaterial = new THREE.MeshBasicMaterial({
 			finalMaterial = new THREE.MeshLambertMaterial({
-				side: THREE.DoubleSide, map:getTexture(ft.filename, localReader, sharedTextures)
+				side: THREE.BackSide, map:getTexture(ft.filename, localReader, sharedTextures)
 			}); 
 			finalMaterial.textureFilename = ft.filename;
 			if(grChunk.data.flags!=16460){
@@ -5266,7 +5263,7 @@ var getMaterial = ME.getMaterial = function(material, materialFile, localReader,
 	/// Fallback material is monocolored red
 	else{
 		finalMaterial = new THREE.MeshBasicMaterial({
-			side: THREE.DoubleSide,
+			side: THREE.BackSide,
 			color:0xff0000,
 			shading: THREE.FlatShading}); 
 	}
@@ -5381,7 +5378,7 @@ var getMaterial = ME.getMaterial = function(material, materialFile, localReader,
 			//debugger;
 			//console.log("no light");
 			finalMaterial =  new THREE.MeshBasicMaterial({
-				side: THREE.DoubleSide,
+				side: THREE.BackSide,
 				map: finalMaterial.map
 			});
 
