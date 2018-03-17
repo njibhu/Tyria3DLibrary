@@ -200,7 +200,7 @@ module.exports = {
                 { fileName :"605983.data", name:"Sanctum Sprint" },
 				{ fileName :"606030.data", name:"Basket Brawl" },
             ]
-        }
+        },
         {
             name:"14. Dungeons",
             maps: [
@@ -218,7 +218,7 @@ module.exports = {
 				{ fileName :"580061.data", name:"Molten Facility" },
 				{ fileName :"595722.data", name:"Aetherblade Retreat" },
             ]
-        }
+        },
         {
             name:"15. Fractals",
             maps: [
