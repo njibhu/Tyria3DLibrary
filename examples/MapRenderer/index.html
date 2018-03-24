@@ -48,6 +48,10 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
                 bottom: 0;
                 overflow:auto;
             }
+            .btnfloat {
+                display: inline-block;
+                margin-right: 5px;
+            }
         </style>
     </head>
     <body>
@@ -59,10 +63,15 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 
         <label>
             <span>Select Model File Id</span>
-            <input id="fileIdInput" type="number" value="295282" disabled />
+            <input id="fileIdInput" type="number" value="294938" disabled />
         </label>
 
-        <button id="loadModelBtn" disabled>Load Model</button>
+        <div>
+            <button id="loadMapBtn" class="btnfloat" disabled>Load map</button>
+            <button id="loadCollBtn" class="btnfloat" disabled>Load collisions</button>
+            <button id="loadPropsBtn" class="btnfloat" disabled>Load props</button>
+            <button id="loadZoneBtn" class="btnfloat" disabled>Load zone props</button>
+        </div>
         
         <p>
             
@@ -104,10 +113,13 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
             var _scene;
             var _camera;
             var _renderer;
-            var _terrainChunks = [];
+            var _terrainChunk = [];
+            var _propsModels = [];
+            var _zoneModels = [];
+            var _collisionModels = [];
+            var _mapData;
             var near = 0.1;
             var far = 100000;
-
 
             /// Extend Original Logger
             var myLogger = {
@@ -147,7 +159,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
                     );
 
                     /// Handle button click
-                    $("#loadModelBtn").click(onButtonClick);
+                    $("#loadMapBtn").click(onButtonClick);
 
                 }
 
@@ -157,7 +169,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
             /// Callback for when the LocalReader has finished setting up!
             function onReaderCreated(){
                 $("#fileIdInput").removeAttr('disabled');
-                $("#loadModelBtn").removeAttr('disabled');
+                $("#loadMapBtn").removeAttr('disabled');
             }
 
             /// The insterresting part!
@@ -180,10 +192,14 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 				    {
 					renderClass: T3D.TerrainRenderer,
 					settings:{}
-                    }
+                    },
+                    {
+                    renderClass: T3D.HavokRenderer,
+                    settings: {visible: true}
+                    },
                 ];
 
-                T3D.renderMapContentsAsync(localReader, fileId, renderers, onRendererDone);
+                T3D.renderMapContentsAsync(localReader, fileId, renderers, onRendererDone, myLogger);
 
             }
 
@@ -191,27 +207,45 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
             function onRendererDone(mapData){
                 cleanScene();
 
+                _mapData = mapData;
+
                 for(elem of T3D.getContextValue(mapData, T3D.TerrainRenderer, "terrainTiles")){
                     elem.material.uniforms["fogNear"].value = near;
                     elem.material.uniforms["fogFar"].value = far;
                     elem.material.needsUpdate = true;
                     _scene.add(elem);
-                    _terrainChunks.push(elem);
+                    //_loadedMeshes.push(elem);
                 }
 
                 var water = T3D.getContextValue(mapData, T3D.TerrainRenderer, "water");
                 _scene.add(water)
-                _terrainChunks.push(water);
+                //_loadedMeshes.push(water);
 
-                _camera.position.x = 1;
-                _camera.position.y = 1;
+                var bounds = T3D.getContextValue(mapData, T3D.TerrainRenderer, "bounds");
+                _camera.position.x = 0;
+                _camera.position.y = bounds ? bounds.y2 : 0;
+                _camera.position.z = 0;
 
             }
 
-            function cleanScene(){
-                for (elem of _terrainChunks){
-                    _scene.remove(elem);
+            function loadPropModels(loar_or_unload) {
+                //T3D.runRenderer
+
+                
+                if(loadPropModels){
+                    for(elem of T3D.getContextValue(_mapData, T3D.HavokRenderer, "meshes")){
+                        _scene.add(elem);
+                        _loadedMeshes.push(elem);
+                    };
+                } else {
+
                 }
+            }
+
+            function cleanScene(){
+                //for (elem of _loadedMeshes){
+                //    _scene.remove(elem);
+                //}
             }
 
             /// Basic THREE stuff, don't mind it
