@@ -75,10 +75,8 @@ buildJS = function(settings) {
 	}
 	
 	/// Move to build directory
-	bundleFileStream.pipe(gulp.dest('build'));
-
-	// Copy to examples as well
-	gulp.src(`build/T3D-${version}.js`)
+	bundleFileStream.pipe(gulp.dest('build'))
+		// Copy to examples as well
 		.pipe(gulp.dest('./examples/Tyria2D/lib'))
 		.pipe(gulp.dest('./examples/ModelRenderer/lib'))
 		.pipe(gulp.dest('./examples/MapRenderer/lib'));
