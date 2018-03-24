@@ -173,6 +173,7 @@ function TerrainRenderer(localReader, mapFile, settings, context, logger){
 			var pageX = Math.floor(cx/4);
 			var pageY = Math.floor(cy/4);
 
+			//TODO: Terrain texture LOD ?
 			var chunkTextureIndices = allMaterials[chunkIndex].loResMaterial.texIndexArray;
 			var matFileName = allMaterials[chunkIndex].loResMaterial.materialFile;		
 			//var chunkTextureIndices = allMaterials[chunkIndex].hiResMaterial.texIndexArray;
@@ -222,7 +223,7 @@ function TerrainRenderer(localReader, mapFile, settings, context, logger){
 			var pageTexName2=  pageX+","+pageY+"-2";				
 
 
-			/// TODO USe mapData
+			/// TODO USe mapData (Chunk: env -> haze)
 			//var fog = SceneUtils.getScene().fog;
 			var fog = {
 				color: {r:1,g:1,b:1},

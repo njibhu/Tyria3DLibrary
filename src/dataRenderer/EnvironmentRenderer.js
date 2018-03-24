@@ -58,7 +58,7 @@ function EnvironmentRenderer(localReader, settings, context, logger){
 
 		function loadFallback(){
 			var mat = self.getMat(
-				THREE.ImageUtils.loadTexture(fallbackFilename)
+				new THREE.TextureLoader().load(fallbackFilename)
 			);
 
 			writeMat(mat);

@@ -271,9 +271,9 @@ var renderGeomChunk = ME.renderGeomChunk = function(localReader, chunk, modelDat
 		for(var i=0; i<indices.length; i+=3){
 
 			// This is ONE face
-			faces[i + 0] = indices[i + 0];
+			faces[i + 0] = indices[i + 2];
 			faces[i + 1] = indices[i + 1];
-			faces[i + 2] = indices[i + 2];
+			faces[i + 2] = indices[i + 0];
 
 		}// End each index aka "face"
 
@@ -445,7 +445,7 @@ function(filename, solidColor, localReader, sharedTextures, showUnmaterialed, ca
 		    	if(matFiles[mat.filename]){
 		    		loadMaterialIndex(mIdx+1,matCallback);
 		    		return;
-		    	}
+				}		
 
 				localReader.loadFile(mat.filename,
 					function(inflatedData){

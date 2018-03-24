@@ -47,6 +47,34 @@ function buildVS(numUv){
 	    "}";
 }
 
+
+/**
+ * Generate a texture of a specified color, used to be part of THREEjs
+ * 
+ * @method generateDataTexture
+ * @param {Number} width 
+ * @param {Number} height 
+ * @param {THREE.Color} color 
+ */
+function generateDataTexture(width, height, color){
+	// create a buffer with color data
+	var size = width * height;
+	var data = new Uint8Array( 3 * size );
+	var r = Math.floor( color.r * 255 );
+	var g = Math.floor( color.g * 255 );
+	var b = Math.floor( color.b * 255 );
+
+	for ( var i = 0; i < size; i ++ ) {
+		var stride = i * 3;
+
+		data[ stride ] = r;
+		data[ stride + 1 ] = g;
+		data[ stride + 2 ] = b;
+	}
+	// used the buffer to create a DataTexture
+	return new THREE.DataTexture( data, width, height, THREE.RGBFormat );
+}
+
 /**
  * Builds a custom pixel shader for a given number of uv cannels.
  * WIP not implemented yet!
@@ -145,7 +173,7 @@ function getUVMat(textures, numUV, alphaTest){
 				lightMap
 			), 
 		attributes: attributes,
-		side: THREE.BackSide,
+		side: THREE.FrontSide,
 	} );
 
 }
@@ -300,18 +328,30 @@ var getMaterial = ME.getMaterial = function(material, materialFile, localReader,
 		}
 		else{
 			var ft=false;
+			var nt=false;
 			material.textures.forEach(function(t){
+				//Flag for diffuse map
 				if(!ft && t.token.split("-")[0] == "1733499172")
 					ft = t;
+
+				//Flag for normal map
+				if(!nt && t.token.split("-")[0] == "404146670")
+					nt = t;
 			});
 			
 			if(!ft || ft.filename<=0)
 				return;
 
-			//finalMaterial = new THREE.MeshBasicMaterial({
-			finalMaterial = new THREE.MeshLambertMaterial({
-				side: THREE.BackSide, map:getTexture(ft.filename, localReader, sharedTextures)
+			finalMaterial = new THREE.MeshPhongMaterial({
+				side: THREE.FrontSide, map:getTexture(ft.filename, localReader, sharedTextures)
 			}); 
+			if(nt) {
+				var normalMap = getTexture(nt.filename, localReader, sharedTextures);
+				normalMap.flipY = true;
+				finalMaterial.normalMap = normalMap;
+			}
+
+				
 			finalMaterial.textureFilename = ft.filename;
 			if(grChunk.data.flags!=16460){
 				//console.log("Setting alpha flag for ",grChunk.data.flags)
@@ -324,7 +364,7 @@ var getMaterial = ME.getMaterial = function(material, materialFile, localReader,
 	/// Fallback material is monocolored red
 	else{
 		finalMaterial = new THREE.MeshBasicMaterial({
-			side: THREE.BackSide,
+			side: THREE.FrontSide,
 			color:0xff0000,
 			shading: THREE.FlatShading}); 
 	}
@@ -439,7 +479,7 @@ var getMaterial = ME.getMaterial = function(material, materialFile, localReader,
 			//debugger;
 			//console.log("no light");
 			finalMaterial =  new THREE.MeshBasicMaterial({
-				side: THREE.BackSide,
+				side: THREE.FrontSide,
 				map: finalMaterial.map
 			});
 
@@ -518,7 +558,7 @@ var loadLocalTexture = ME.loadLocalTexture = function(localReader, fileId, mappi
 
 	/// Temporary texture that will be returned by the function.
 	/// Color is randomized in order to differentiate different textures during loading.
-	var texture =  THREE.ImageUtils.generateDataTexture(
+	var texture =  generateDataTexture(
 		1, // Width
 		1, // Height
 		new THREE.Color( defaultColor ) // Color
