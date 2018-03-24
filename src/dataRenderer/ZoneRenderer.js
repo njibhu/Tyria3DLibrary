@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2015 RequestTimeout <https://github.com/RequestTimeout408>
+Copyright © Tyria3DLibrary project contributors
 
 This file is part of the Tyria 3D Library.
 
@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var Utils = require("../util/RenderUtils");
-var DataRenderer = require('./DataRenderer');
+const RenderUtils = require("../util/RenderUtils");
+const DataRenderer = require('./DataRenderer');
 
 /**
  *
@@ -39,12 +39,12 @@ function ZoneRenderer(localReader, settings, context, logger){
 
 	/**
 	 * TODO
-	 * @method  renderZone
-	 * @param  {[type]} zone               [description]
-	 * @param  {[type]} zoneDefs           [description]
-	 * @param  {[type]} mapRect            [description]
-	 * @param  {[type]} renderZoneCallback [description]
-	 * @return {[type]}                    [description]
+	 * 
+	 * @param  {*} zone               [description]
+	 * @param  {*} zoneDefs           [description]
+	 * @param  {*} mapRect            [description]
+	 * @param  {*} renderZoneCallback [description]
+	 * @return {*}                    [description]
 	 */
 	this.renderZone = function(zone, zoneDefs, mapRect, renderZoneCallback){
 		var self = this;
@@ -99,7 +99,7 @@ function ZoneRenderer(localReader, settings, context, logger){
 			
 			/// Get model just once for this group
 			var showUnmaterialed = false;
-			Utils.getMeshesForFilename(key, null, self.localReader, self.meshCache, self.textureCache, showUnmaterialed,
+			RenderUtils.getMeshesForFilename(key, null, self.localReader, self.meshCache, self.textureCache, showUnmaterialed,
 
 				function(meshes, isCached){
 					
@@ -133,19 +133,18 @@ function ZoneRenderer(localReader, settings, context, logger){
 							 	/// Add to big mesh
 							 	if(!meshGroups[meshIdx]){
 							 		var mg = mesh.geometry.clone();
-							 		var mga = mg.attributes;
 							 		meshGroups[meshIdx] = {
-							 			readVerts : mga.position.array,
-							 			verts: new Float32Array( group.length * mga.position.array.length ),
+							 			readVerts : mg.getAttribute('position').array,
+							 			verts: new Float32Array( group.length * mg.getAttribute('position').array.length ),
 
-							 			readIndices : mga.index.array,
-							 			indices: new Uint32Array( group.length * mga.index.array.length ),
+							 			readIndices : mg.getIndex().array,
+							 			indices: new Uint32Array( group.length * mg.getIndex().array.length ),
 
-							 			readUVs : mga.uv.array,
-							 			uvs: new Float32Array( group.length * mga.uv.array.length ),
+							 			readUVs : mg.getAttribute('uv').array,
+							 			uvs: new Float32Array( group.length * mg.getAttribute('uv').array.length ),
 
-							 			readNormals : mga.normal.array,
-							 			normals: new Float32Array( group.length * mga.normal.array.length ),
+							 			readNormals : mg.getAttribute('normal').array,
+							 			normals: new Float32Array( group.length * mg.getAttribute('normal').array.length ),
 
 							 			material:mesh.material,
 							 			//material:new THREE.MeshBasicMaterial( {color: 0xffcccc, wireframe:true} ),
@@ -211,7 +210,8 @@ function ZoneRenderer(localReader, settings, context, logger){
 						var mergedGeom = new THREE.BufferGeometry();
 						
 						mergedGeom.addAttribute( 'position', new THREE.BufferAttribute( meshGroup.verts, 3 ) );
-						mergedGeom.addAttribute( 'index', new THREE.BufferAttribute( meshGroup.indices, 1) );
+						//mergedGeom.addAttribute( 'index', new THREE.BufferAttribute( meshGroup.indices, 1) );
+						mergedGeom.setIndex(new THREE.BufferAttribute(meshGroup.indices, 1));
 						mergedGeom.addAttribute( 'normal', new THREE.BufferAttribute( meshGroup.normals, 3 ) );
 						mergedGeom.addAttribute( 'uv', new THREE.BufferAttribute( meshGroup.uvs, 2) );
 
@@ -243,11 +243,11 @@ function ZoneRenderer(localReader, settings, context, logger){
 
 	/**
 	 * TODO
-	 * @method  getModelGroups
-	 * @param  {[type]} zone    [description]
-	 * @param  {[type]} zoneDef [description]
-	 * @param  {[type]} mapRect [description]
-	 * @return {[type]}         [description]
+	 * 
+	 * @param  {*} zone    [description]
+	 * @param  {*} zoneDef [description]
+	 * @param  {*} mapRect [description]
+	 * @return {*}         [description]
 	 */
 	this.getModelGroups = function(zone, zoneDef, mapRect){
 
@@ -279,7 +279,7 @@ function ZoneRenderer(localReader, settings, context, logger){
 		
 		//console.log("Get mdl groups", zone);
 		/// Testing: Render Zone Vert Rect
-		//Utils.renderRect(zoneRect, -zPos);
+		//RenderUtils.renderRect(zoneRect, -zPos);
 
 		var zdx = zone.vertRect[0]-zone.vertRect[2];
 		var zdy = zone.vertRect[1]-zone.vertRect[3];
@@ -423,7 +423,6 @@ ZoneRenderer.prototype.constructor = ZoneRenderer;
  *
  * - *meshes* An array of THREE.Mesh objects visualizing all zone models refered by this map.
  * 
- * @method  renderAsync
  * @async
  * @param  {Function} callback Fires when renderer is finished, does not take arguments.
  */
@@ -560,7 +559,7 @@ for(var i=0; i<zoneDefs.length; i++){
 
 			
 
-			Utils.renderRect(rect, 4000,chunkMat, 4000);
+			RenderUtils.renderRect(rect, 4000,chunkMat, 4000);
 
 			//for(var j=0; j<flags.length; j++){
 			//	if(flags[j]>0){

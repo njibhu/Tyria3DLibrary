@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2015 RequestTimeout <https://github.com/RequestTimeout408>
+Copyright © Tyria3DLibrary project contributors
 
 This file is part of the Tyria 3D Library.
 
@@ -17,9 +17,11 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var Utils = require("../util/RenderUtils");
-var DataRenderer = require('./DataRenderer');
-var GW2File = require("../format/file/GW2File.js"); 
+const RenderUtils = require("../util/RenderUtils");
+const DataRenderer = require('./DataRenderer');
+const GW2File = require("../format/file/GW2File.js"); 
+
+const TerrainShader = require("../util/TerrainShader.js");
 
 /**
  *
@@ -54,7 +56,7 @@ function TerrainRenderer(localReader, mapFile, settings, context, logger){
 		);
 
 		material.transparent = true;
-		return Utils.renderRect(rect, 0, material);
+		return RenderUtils.renderRect(rect, 0, material);
 	}
 
 	this.parseNumChunks = function(terrainData){
@@ -117,7 +119,7 @@ function TerrainRenderer(localReader, mapFile, settings, context, logger){
 		var cdy =dy/terrainData.numChunksD_2 * 1;//35/33;
 		var n=0;
 		var allMats = [];
-		var customMaterial = new THREE.MeshLambertMaterial({side: THREE.DoubleSide, color:0x666666, shading: THREE.FlatShading}); 
+		var customMaterial = new THREE.MeshLambertMaterial({side: THREE.DoubleSide, color:0x666666, flatShading: true}); 
 		var texMats = {};
 
 		/// Load textures from PIMG and inject as material maps (textures)
@@ -145,12 +147,13 @@ function TerrainRenderer(localReader, mapFile, settings, context, logger){
 					if(!chunkTextures[matName]){
 
 						/// Load local texture, here we use file name!
-						var chunkTex = Utils.loadLocalTexture(self.localReader, filename);
+						var chunkTex = RenderUtils.loadLocalTexture(self.localReader, filename);
 
 						if(chunkTex){
 							/// Set repeat, antistropy and repeat Y
 							chunkTex.anisotropy = maxAnisotropy;
-							chunkTex.wrapT = chunkTex.wrapS = THREE.RepeatWrapping;					
+							chunkTex.wrapS = THREE.RepeatWrapping;
+							chunkTex.wrapT = THREE.RepeatWrapping;
 						}
 
 						///...But store in coord name
@@ -173,6 +176,7 @@ function TerrainRenderer(localReader, mapFile, settings, context, logger){
 			var pageX = Math.floor(cx/4);
 			var pageY = Math.floor(cy/4);
 
+			//TODO: Terrain texture LOD ?
 			var chunkTextureIndices = allMaterials[chunkIndex].loResMaterial.texIndexArray;
 			var matFileName = allMaterials[chunkIndex].loResMaterial.materialFile;		
 			//var chunkTextureIndices = allMaterials[chunkIndex].hiResMaterial.texIndexArray;
@@ -204,25 +208,25 @@ function TerrainRenderer(localReader, mapFile, settings, context, logger){
 				if(!chunkTextures[textureFileName]){
 
 					/// Load local texture
-					var chunkTex = Utils.loadLocalTexture(self.localReader, textureFileName);
+					var chunkTex = RenderUtils.loadLocalTexture(self.localReader, textureFileName);
 
 					if(chunkTex){
 						/// Set repeat, antistropy and repeat Y
 						chunkTex.anisotropy = maxAnisotropy;
-						chunkTex.wrapT = chunkTex.wrapS = THREE.RepeatWrapping;		
+						chunkTex.wrapS = THREE.RepeatWrapping;
+						chunkTex.wrapT = THREE.RepeatWrapping;
 					}
 
 					chunkTextures[textureFileName] = chunkTex;					
 				}
 			}/// End for each chunkTextureIndices
 
-
 			/// Create Composite texture material, refering the shared textures
 			var pageTexName=  pageX+","+pageY;				
 			var pageTexName2=  pageX+","+pageY+"-2";				
 
 
-			/// TODO USe mapData
+			/// TODO USe mapData (Chunk: env -> haze)
 			//var fog = SceneUtils.getScene().fog;
 			var fog = {
 				color: {r:1,g:1,b:1},
@@ -242,12 +246,6 @@ function TerrainRenderer(localReader, mapFile, settings, context, logger){
 	    		THREE.UniformsLib['lights'],
 			]);
 
-			/// FOG
-			uniforms.fogColor = { type: "v3", value: new THREE.Vector3( fog.color.r, fog.color.g, fog.color.b ) },
-			uniforms.fogNear = { type: "f",value: fog.near },
-			uniforms.fogFar = { type: "f", value: fog.far },
-
-
 			/// TODO: READ FROM VO, don't default to hard coded scale
 			uniforms.uvScale = { type: "v2", value: new THREE.Vector2( 8.0, 8.0 ) };
 			uniforms.offset = { type: "v2", value: new THREE.Vector2( pageOffetX, pageOffetY) };
@@ -260,12 +258,11 @@ function TerrainRenderer(localReader, mapFile, settings, context, logger){
 			uniforms.texture3 = { type: "t", value: chunkTextures[fileNames[2]]};
 			uniforms.texture4 = { type: "t", value: chunkTextures[fileNames[3]]};
 			
-
+			
 			mat = new THREE.ShaderMaterial( {
 				uniforms: uniforms,
-				vertexShader: "varying vec2 vUv;\r\nvarying vec3 vecNormal;\r\nvoid main()\r\n{\r\nvUv =  uv;\r\nvec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );\r\nvecNormal = (modelMatrix * vec4(normal, 0.0)).xyz;\r\ngl_Position = projectionMatrix * mvPosition;\r\n}",
-				fragmentShader: "\r\nuniform vec3 fogColor;\r\nuniform float fogNear;\r\nuniform float fogFar;\r\nuniform vec2 uvScale;\r\nuniform vec2 offset;\r\nuniform sampler2D texturePicker;\r\nuniform sampler2D texturePicker2;\r\nuniform sampler2D texture1;\r\nuniform sampler2D texture2;\r\nuniform sampler2D texture3;\r\nuniform sampler2D texture4;\r\nuniform vec3 ambientLightColor;\r\n#if MAX_DIR_LIGHTS > 0\r\nuniform vec3 directionalLightColor[ MAX_DIR_LIGHTS ];\r\nuniform vec3 directionalLightDirection[ MAX_DIR_LIGHTS ];\r\n#endif\r\nvarying vec2 vUv;\r\nvarying vec3 vecNormal;\r\nvec3 blend(\r\nvec4 texture1, float a1,\r\nvec4 texture2, float a2,\r\nvec4 texture3, float a3,\r\nvec4 texture4, float a4)\r\n{\r\nfloat depth = 2.0;\r\nfloat alphaMult = 1.0;\r\nfloat alphaAdd  = 0.0;\r\na1 *= 4.0;\r\na2 *= 4.0;\r\na3 *= 4.0;\r\na4 *= 4.0;\r\na1 =  a1+(1.5+texture1.a);\r\na2 =  a2+(1.5+texture2.a);\r\na3 =  a3+(1.5+texture3.a);\r\na4 =  a4+(1.5+texture4.a);\r\nfloat ma = max(a1,a2);\r\nma = max(ma,a3);\r\nma = max(ma,a4);\r\nma -= depth;\r\nfloat b1 = max(a1 - ma, 0.0);\r\nfloat b2 = max(a2 - ma, 0.0);\r\nfloat b3 = max(a3 - ma, 0.0);\r\nfloat b4 = max(a4 - ma, 0.0);\r\nreturn (\r\ntexture1.rgb * b1 +\r\ntexture2.rgb * b2 +\r\ntexture3.rgb * b3 +\r\ntexture4.rgb * b4 \r\n) \/ (b1 + b2 + b3 +b4);\r\n}\r\nvoid main( void ) {\r\nvec2 position = vUv*uvScale;\r\nfloat edge = 1.0\/1024.0;\r\nvec2 compPos = edge +  (vUv*0.25 + offset)*(1.0-edge*2.0);\r\nvec4 tp1 = texture2D( texturePicker, compPos);\r\nvec4 tp2 = texture2D( texturePicker2, compPos);\r\nvec4 composite = tp1;\r\nvec4 t1 = texture2D( texture1, position );\r\nvec4 t2 = texture2D( texture2, position );\r\nvec4 t3 = texture2D( texture3, position );\r\nvec4 t4 = texture2D( texture4, position );\r\nvec3 color = blend(\r\nt1, tp1.a,\r\nt2, tp1.b,\r\nt3, tp1.g,\r\nt4, tp1.r\r\n);\r\ncolor *= 0.5+tp2.r;\r\ngl_FragColor = vec4(color,1.0);\r\nvec4 addedLights = vec4(ambientLightColor, 1.0);\r\n#if MAX_DIR_LIGHTS > 0\r\nfor(int l = 0; l < MAX_DIR_LIGHTS; l++) {\r\naddedLights.rgb += clamp(\r\ndot(-directionalLightDirection[l], vecNormal),\r\n0.0,\r\n1.0\r\n)\r\n* directionalLightColor[l];\r\n}\r\n#endif\r\ngl_FragColor *= addedLights;\r\nfloat depth = gl_FragCoord.z \/ gl_FragCoord.w;\r\nfloat fogFactor = smoothstep( fogNear, fogFar, depth );\r\ngl_FragColor.xyz = mix( gl_FragColor.xyz, fogColor.xyz, fogFactor );\r\n}",
-				lights: true
+				fragmentShader: TerrainShader.getFragmentShader(),
+				vertexShader: TerrainShader.getVertexShader()
 			} );
 
 			///Store referenceto each material
@@ -286,7 +283,7 @@ function TerrainRenderer(localReader, mapFile, settings, context, logger){
 			
 					if(  x != 0 && x !=chunkW-1 && y!=0 && y !=chunkW-1 )
 					{
-						chunkGeo.attributes.position.array[cn*3+2] = terrainData.heightMapArray[n];
+						chunkGeo.getAttribute('position').array[cn*3+2] = terrainData.heightMapArray[n];
 						cn++;
 					}
 					
@@ -414,7 +411,6 @@ TerrainRenderer.prototype.constructor = TerrainRenderer;
  * 
  * - *bounds* An object wiht x1, x2, y1, and y2 properties specifying the bounds of the map.
  * 
- * @method  renderAsync
  * @async
  * @param  {Function} callback Fires when renderer is finished, does not take arguments.
  */
@@ -422,14 +418,14 @@ TerrainRenderer.prototype.renderAsync = function(callback){
 	
 	/// Load all paged Images, requires inflation of other pack files!
 	var pagedImageId =  this.mapFile.getChunk("trn").data.materials.pagedImage;
-	this.localReader.loadFile(pagedImageId,this.loadPagedImageCallback.bind(this, callback));
+	this.localReader.loadFile(pagedImageId, this.loadPagedImageCallback.bind(this, callback));
 }
 
 /**
  * TODO: write description. Used for export feature
- * @method getFileIdsAsync
+ * 
  * @param  {Function} callback [description]
- * @return {[type]}            [description]
+ * @return {*}            [description]
  */
 TerrainRenderer.prototype.getFileIdsAsync = function(callback){
 

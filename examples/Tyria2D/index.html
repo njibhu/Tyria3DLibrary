@@ -19,7 +19,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 <html>
 <head>
 	<title>Tyria 2D</title>
-	<link rel="stylesheet" type="text/css" href="lib/w2ui-1.4.3.min.css" />
+	<link rel="stylesheet" type="text/css" href="../static/w2ui-1.4.3.min.css" />
 	 <style type="text/css">
         body,html{
         	margin:0;
@@ -79,23 +79,21 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 <div id="layout" style="width: 100%; height: 100%;"></div>
 
 
-<script type="text/javascript" src="lib/canvas-to-blob.min.js"></script>
+<script type="text/javascript" src="../static/canvas-to-blob.min.js"></script>
 
-<script type="text/javascript" src="lib/three/three.min.js"></script>
-<script type="text/javascript" src="lib/three/OBJExporter.js"></script>
-<script type="text/javascript" src="lib/three/OrbitControls.js"></script>
+<script type="text/javascript" src="../static/three/three.min.js"></script>
+<script type="text/javascript" src="../static/three/OBJExporter.js"></script>
+<script type="text/javascript" src="../static/three/OrbitControls.js"></script>
 
-<script type="text/javascript" src="lib/DataStream.js"></script>
+<script type="text/javascript" src="../static/DataStream.js"></script>
 
-<script type="text/javascript" src="lib/jQuery/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../static/jQuery/jquery-1.11.1.min.js"></script>
 
-<script type="text/javascript" src="lib/w2ui-1.4.3.min.js"></script>
+<script type="text/javascript" src="../static/w2ui-1.4.3.min.js"></script>
 
 
-<script type="text/javascript" src="lib/T3D-1.0.4.js"></script>
-<script type="text/javascript" src="lib/T3D-1.0.4.Formats.min.js"></script>
-<!--<script type="text/javascript" src="/T3D-API/build/T3D-1.0.3.min.js"></script>
-<script type="text/javascript" src="/T3D-API/build/T3D-1.0.3.Formats.min.js"></script>-->
+<script type="text/javascript" src="../static/T3D-1.1.0.js"></script>
+<script type="text/javascript" src="../static/T3D-1.1.0.Formats.js"></script>
 
 <script type="text/javascript">
 
@@ -198,10 +196,9 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 			},
 			columns: [				
 				{ field: 'recid', caption: 'MFT index', size: '80px', sortable: true, resizable: true, searchable: 'int' },
-				{ field: 'fileId', caption: 'File Id', size: '80px', sortable: true, resizable: true, searchable: 'int' },
-				{ field: 'baseId', caption: 'Base Id', size: '80px', sortable: true, resizable: true, searchable: 'int' },
-				{ field: 'type', caption: 'Type', size: '100%', resizable: true, sortable: true },
-				{ field: 'fileSize', caption: 'Size', size: '85px', resizable: true, sortable: true }
+				{ field: 'baseIds', caption: 'BaseId list', size: '100%', sortable: true, resizable: true, searchable: true },
+				{ field: 'type', caption: 'Type', size: '100px', resizable: true, sortable: true },
+				{ field: 'fileSize', caption: 'Pack Size', size: '85px', resizable: true, sortable: true }
 			],
 			onClick: function(event) {
 	        	viewFileByMFT(event.recid);
@@ -213,25 +210,6 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 			SET UP FILE VIEW 'WINDOW'
 		 */
 		$(w2ui['layout'].el('main'))
-		/*.append(
-			$("<input id='filePicker' type='file' />")
-			.change(
-	            function(evt){
-	            	
-	            	_lr.loadFilePart(
-	            		evt.target.files[0], 0,
-	            		evt.target.files[0].size,
-	            		function(ds,length){
-
-	            			var gw2file = new T3D.GW2File(ds,0);
-        					console.log(gw2file);
-
-	            			
-	            		}
-            		);
-	            }
-	        )
-		)*/
 		.append( $("<h1 id='fileTitle' />") )
 		.append( $("<div id='fileTabs' />") )
 		.append(
@@ -340,7 +318,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 	            		$('.fileTab').hide();
 	            		$('#fileTabsSound').show();
 	            	}
-	            },
+				}
 	        ]
 	    });
 
@@ -388,9 +366,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
                 _lr = T3D.getLocalReader(
                     evt.target.files[0],
                     onReaderCreated,
-					"lib/t3dgwtools.nmf",
-					undefined,
-					"lib/t3dworker.js");
+					"../static/t3dworker.js");
             }
 	    );
 
@@ -415,51 +391,54 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 				_fileList = files;
 
 				var packNode = {
-					id: 'packGroup', text: 'Pack Files', img: 'icon-folder',
-					expanded: true, group: false,
+					id: 'packGroup', text: 'Pack Files', img: 'icon-folder', group: false,
 					nodes: []
 				};
-            	
+
+				var textureNode = {
+					id: 'textureGroup', text: 'Texture files', img: 'icon-folder', group: false,
+					nodes: []
+				}
+				
+				var unsortedNode = {
+					id: 'unsortedGroup', text: 'Unsorted', img: 'icon-folder', group: false,
+					nodes: []
+				}
+				
             	/// Build sidebar nodes
 	        	for (var fileType in _fileList) {
 					if (_fileList.hasOwnProperty(fileType)) {
 
 						var node = {id:fileType, img: "icon-folder", group: false };
 						var isPack = false;
-						switch(fileType){
-							
-							case "Texture":
-								node.text = "Textures";
-								break;
-
-							case "Binary":
-								node.text = "Binaries";
-								break;
-
-							case "String":
-								node.text = "Strings";
-								break;
-
-							case "Unknown":
-								node.text = "Unknown";
-								break;
-
-							default:
-								isPack = true;
-								node = {id:"PF-"+fileType, img: "icon-folder", group: false };
-								node.text = fileType;
-								/// Pack file!
+						if(fileType.startsWith("TEXTURE")){
+							node = {id: fileType, img: "icon-folder", group: false, text: fileType};
+							textureNode.nodes.push(node);
 						}
 
-						/// Not a pack file just add to root list
-						if(!isPack){
-							w2ui.sidebar.add(node);	
+						else if(fileType == 'BINARIES'){
+							node.text = "Binaries";
+							w2ui.sidebar.add(node);
 						}
 
-						/// Pack file types found!
-						/// Add sub node for this pack type
-						else{
+						else if(fileType == 'STRINGS'){
+							node.text = "Strings";
+							w2ui.sidebar.add(node);
+						}
+
+						else if(fileType.startsWith("PF")){
+							node = {id: fileType, img: "icon-folder", group: false, text: fileType};
 							packNode.nodes.push(node);
+						}
+
+						else if(fileType == 'UNKNOWN'){
+							node.text = "Unknown";
+							w2ui.sidebar.add(node);
+						}
+
+						else {
+							node = {id: fileType, img: "icon-folder", group: false, text: fileType};
+							unsortedNode.nodes.push(node);
 						}
 						
 					} 
@@ -468,6 +447,15 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 				if(packNode.nodes.length>0){
 					w2ui.sidebar.add(packNode);
 				}
+
+				if(textureNode.nodes.length>0){
+					w2ui.sidebar.add(textureNode);
+				}
+
+				if(unsortedNode.nodes.length>0){
+					w2ui.sidebar.add(unsortedNode);
+				}
+
 
 				/// Close the pop
 				w2popup.close();
@@ -487,11 +475,6 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 			showFileGroup();
 		}
 
-		/// Pack files should remove leading "PF-"
-		else if(evt.target.indexOf("PF-")==0){
-			showFileGroup([evt.target.split("PF-")[1]]);
-		}
-
 		/// Other events are fine to just pass
 		else{
 			showFileGroup([evt.target]);	
@@ -503,6 +486,8 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 
 		w2ui.grid.records = [];
 
+		let reverseTable = _lr.getReverseIndex();
+
 		for (var fileType in _fileList) {
 
 			/// Only show types we've asked for
@@ -513,7 +498,12 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 				/// Should NOT let trought any non-pack types
 				/// i.e. Strings, Binaries etc
 				if(fileTypeFilter.indexOf("packGroup")>=0){
-					if(["Texture","Binary","String","Unknown"].indexOf(fileType)>=0){
+					if(!fileType.startsWith("PF")){
+						continue;
+					}
+				}
+				else if(fileTypeFilter.indexOf("textureGroup")>=0){
+					if(!fileType.startsWith("TEXTURE")){
 						continue;
 					}
 				}
@@ -529,23 +519,23 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 				fileArr.forEach(
 					function(mftIndex){
 
-						mftIndex++;
+						let meta = _lr.getFileMeta(mftIndex);
 
-						var baseId = _lr.mft.m_entryToId.baseId[mftIndex];
-						var fileId = _lr.mft.m_entryToId.fileId[mftIndex];
-						var fileSize =  _lr.mft.entryDict.size[mftIndex-1];
+						var baseIds = reverseTable[mftIndex];
+						var fileSize =  (meta) ? meta.size: "";
 
-						if(fileSize>0){
+						if(fileSize>0 && mftIndex > 15){
 
 							w2ui['grid'].records.push({ 
 								recid : mftIndex, /// MFT index
-								baseId: baseId,
-								fileId: fileId,
+								baseIds: baseIds,
 								type : fileType,
 								fileSize : fileSize
 							});	
 
 						}
+
+						mftIndex++;
 					}/// End for each mft in this file type
 				);
 
@@ -554,19 +544,14 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 		} /// End for each fileType key in _fileList object
 
 		/// Update file grid
-		w2ui.grid.buffered = w2ui.grid.records.length;
-		w2ui.grid.total = w2ui.grid.buffered;
 		w2ui.grid.refresh();
 	}
 
 
 	function viewFileByMFT(mftIdx){
+		let reverseTable = _lr.getReverseIndex();
 		
-		var fileId = _lr.mft.m_entryToId.fileId[mftIdx];
-		var baseId = _lr.mft.m_entryToId.baseId[mftIdx];
-
-		if(baseId==0)
-			baseId = fileId;
+		var baseId = (reverseTable[mftIdx]) ? reverseTable[mftIdx][0] : "";
 
 		viewFileByFileId(baseId);
 	}
@@ -838,7 +823,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 
         /// Run single renderer
         T3D.runRenderer(
-            T3D.ModelRenderer,
+            T3D.SingleModelRenderer,
             _lr,
             {id:fileId},
             _context,
@@ -863,7 +848,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 		);
         
         /// Read the new models
-        _models = T3D.getContextValue(_context, T3D.ModelRenderer, "meshes", []);
+        _models = T3D.getContextValue(_context, T3D.SingleModelRenderer, "meshes", []);
 
         /// Keeping track of the biggest model for later
         var biggestMdl = null;
@@ -1096,16 +1081,5 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
     }
 </script>
 
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-62555746-1', 'auto');
-  ga('send', 'pageview');
-
-</script>
 </body>
 </html>

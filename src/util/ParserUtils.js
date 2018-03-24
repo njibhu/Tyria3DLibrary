@@ -1,18 +1,39 @@
+/*
+Copyright © Tyria3DLibrary project contributors
+
+This file is part of the Tyria 3D Library.
+
+Tyria 3D Library is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Tyria 3D Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @namespace ParserUtils
+ */
+
 /**
  * Collection of methods used for parsing complex data types from the .dat
  *
  * Most of these methods are only refered by the automatically generated script
  * AllFormats.js
  * 
- * @Class ParserUtils
- * @static
  */
 
 module.exports = {
 
 	/**
 	 * Generates a function for reading an array using DataStream
-	 * @method  getArrayReader
+	 * 
 	 * @param  {Array} structDef DataStream formatted structure definition
 	 *                           for the items in the array.
 	 * @param  {Number} maxCount The maximum allowed length of the array.
@@ -53,7 +74,7 @@ module.exports = {
 
 	/**
 	 * Generates a function for reading a refered array using DataStream
-	 * @method  getRefArrayReader
+	 * 
 	 * @param  {Array} structDef DataStream formatted structure definition
 	 *                           for the items in the array.
 	 * @return {Function}        The generated parsing function.
@@ -121,7 +142,7 @@ module.exports = {
 	/**
 	 * Generates a function for reading a 64bit initeger. For now just reads each
 	 * 32 bit integer and glues together as a string.
-	 * @method  getQWordReader
+	 * 
 	 * @return {Function}        The generated parsing function.
 	 */
 	getQWordReader:function(){
@@ -138,7 +159,7 @@ module.exports = {
 	
 	/**
 	 * Generates a function for reading a string of 8 bit chars.
-	 * @method  getStringReader
+	 * 
 	 * @return {Function}        The generated parsing function.
 	 */
 	getStringReader : function(){
@@ -160,7 +181,7 @@ module.exports = {
 
 	/**
 	 * Generates a function for reading a string of 16 bit chars.
-	 * @method  getString16Reader
+	 * 
 	 * @return {Function}        The generated parsing function.
 	 */
 	getString16Reader : function(stringOffset){
@@ -188,7 +209,7 @@ module.exports = {
 
 	/**
 	 * Generates a function for reading a pointer.
-	 * @method getPointerReader
+	 * 
 	 * @param  {Array} structDef DataStream formatted structure definition
 	 *                           for the item pointed to.
 	 * @return {Function}        The generated parsing function.
@@ -219,7 +240,7 @@ module.exports = {
 
 	/**
 	 * Generates a function for reading a filename/file Id.
-	 * @method  getFileNameReader
+	 * 
 	 * @return {Function}        The generated parsing function.
 	 */
 	getFileNameReader : function(){

@@ -1,37 +1,38 @@
-#Tyria 3D Library
+# Tyria 3D Library
+
 Tyria 3D Library is an open source javascript library aimed at accessing and interpreting data from Guild Wars 2 .dat files.
 
-As you can tell this project is just published and I will hopefully spend some time on writing more and better examples,
-and updating the documentation pretty soon! If you have any questions, feedback or suggestions feel free to contact me
-at tyria3d@gmail.com
+## It's not the original ?
 
+This version is a fork of RequestTimeout408/Tyria3DLibrary since the original library is not maintained anymore.
 
-##Examples
-There are two exmaple applications in the examples folder. I sugest looking at the source of index.html in exmaples/ModelRenderer first!
+## Installation
 
+### Requirements 
+* npm
+* gulp-cli
 
-**IMPORTANT** Note that the application in the examples folder run on their own pre-built libraries that **will not**
-be updated when re-building the library!
-
-
-##Building the library
-This project uses gulp browserify for building the output. I'm sorry if the current package.json is bloated with 
-unnecessary dependecies.
-
-###Usage:
+### Usage
 
 ``npm install``
 
-``gulp formats``
-
 ``gulp``
 
-###Building documentation
-This project uses YUIDoc for javadoc-ish documentation creation.
-See http://yui.github.io/yuidoc/
+## Examples
+There are few example applications in the examples folder. I sugest looking at the source of index.html in examples/ModelRenderer first!
+
+## Documentation
+The documentation of the current release is available in the documentation folder, also don't hesitate to go through the code itself.
+
+## Contact
+
+If you have any questions, feedback or suggestions feel free to create a new issue here on github !
+
+### Building documentation
+This project uses jsdoc3 for javadoc-ish documentation creation.
 
 Usage:
 
-``npm -g install yuidocjs``
+``npm -g install jsdoc``
 
-``yuidoc``
+``jsdoc -c jsdoc.conf.json``
