@@ -93,7 +93,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
             visitors!
         -->
 
-        <script type="text/javascript" src="lib/three/three.min.js"></script>
+        <script type="text/javascript" src="lib/three/three.js"></script>
         <script type="text/javascript" src="lib/three/OrbitControls.js"></script>
 
         <script type="text/javascript" src="lib/jquery-1.11.1.min.js"></script>
@@ -240,7 +240,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
                 /// Setup the logger (hacky way because very verbose)
                 T3D.Logger.logFunctions[T3D.Logger.TYPE_PROGRESS] = function(){
                     myLogger.log(arguments[0], arguments[0], arguments[1]);
-                    console.log(arguments);
+                    console.log(arguments[0], arguments[1]);
                 }
 
                 /// Load for the first time the renderer and spawn the context
@@ -423,11 +423,10 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 
             function render(){
                 window.requestAnimationFrame( render );
-
-                mapRenderer.raycaster.setFromCamera( mapRenderer.mouse, mapRenderer.camera );
-                var intersects = mapRenderer.raycaster.intersectObjects( mapRenderer.scene.children );
                 
                 if(highlightEnabled){
+                    mapRenderer.raycaster.setFromCamera( mapRenderer.mouse, mapRenderer.camera );
+                    var intersects = mapRenderer.raycaster.intersectObjects( mapRenderer.scene.children );
                     if ( intersects.length > 0 ) {
                         if ( highlightObject != intersects[ 0 ].object ) {
                             if(highlightHelper) {
