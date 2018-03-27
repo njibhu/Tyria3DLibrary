@@ -55,14 +55,14 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
         </style>
     </head>
     <body>
-        <h1>Single Model Render</h1>
+        <h1>Single Map Render</h1>
         <label>
             <span>Load a Guild Wars 2 dat File</span>
             <input id="filePicker" type="file" />    
         </label>
 
         <label>
-            <span>Select Model File Id</span>
+            <span>Select Map File Id</span>
             <input id="fileIdInput" type="number" value="294938" disabled />
         </label>
 
@@ -103,23 +103,48 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
         <script type="text/javascript">
 
 
-            /// This is an example application for the T3D library
-            /// Skip down to onButtonClick to get to the juicy part
-            /// This will be updated sooner or later, perhaps with a
-            /// written guide, who knows.
+            /// This example is very inspired by the ModelRenderer example but updated
+            /// using the latest version of the API. This global object for the app contains
+            /// all the important data.
 
-            var _lr;
-            var _context;
-            var _scene;
-            var _camera;
-            var _renderer;
-            var _terrainChunk = [];
-            var _propsModels = [];
-            var _zoneModels = [];
-            var _collisionModels = [];
-            var _mapData;
-            var near = 0.1;
-            var far = 100000;
+            var mapRenderer = {
+                /// All renderers must have access to a LocalReader.
+                /// The LocalReader is the object that allows us
+                /// to read from the .dat
+                localReader: null,
+
+                /// The context is an object all the renderer outputs their data to
+                context: null,
+
+                /// THREE js objects
+                scene: null,
+                camera: null,
+                renderer: null,
+
+                /// Data:
+                mapData: {
+                    id: null,
+                    mapFile: null,
+                    terrain: {
+                        data: [],
+                    },
+                    collision: {
+                        enabled: false,
+                        loaded: false,
+                        data: [],
+                    },
+                    props: {
+                        enabled: false,
+                        loaded: false,
+                        data: [],
+                    },
+                    zone: {
+                        enabled: false,
+                        loaded: false,
+                        data: [],
+                    }
+                }
+            };
 
             /// Extend Original Logger
             var myLogger = {
@@ -149,7 +174,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 
                             var file = evt.target.files[0];
 
-                            _lr = T3D.getLocalReader(
+                            mapRenderer.localReader = T3D.getLocalReader(
                                 file,
                                 onReaderCreated,
                                 "lib/t3dgwtools.nmf",
@@ -159,7 +184,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
                     );
 
                     /// Handle button click
-                    $("#loadMapBtn").click(onButtonClick);
+                    $("#loadMapBtn").click(onLoadMapClick);
 
                 }
 
@@ -173,17 +198,19 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
             }
 
             /// The insterresting part!
-            function onButtonClick(){
+            function onLoadMapClick(){
+                $("#loadCollBtn").click(loadCollModels);
+                $("#loadCollBtn").removeAttr('disabled');
+                $("#loadPropsBtn").click(loadPropModels);
+                $("#loadPropsBtn").removeAttr('disabled');
+                $("#loadZoneBtn").click(loadZoneModels);
+                $("#loadZoneBtn").removeAttr('disabled');
                 var self = this;
 
                 /// Get selected file id
-                var fileId = $("#fileIdInput").val();
+                mapRenderer.mapData.id = $("#fileIdInput").val();
 
-                /// All renderers must have access to a LocalReader.
-                /// The LocalReader is the object that allows us
-                /// to read from the .dat
-                var localReader = _lr;
-
+                /// Renderer settings (see the documentation of each Renderer for details)
                 var renderers = [
                     {
 					renderClass: T3D.EnvironmentRenderer,
@@ -192,60 +219,133 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 				    {
 					renderClass: T3D.TerrainRenderer,
 					settings:{}
-                    },
-                    {
-                    renderClass: T3D.HavokRenderer,
-                    settings: {visible: true}
-                    },
+                    }
                 ];
 
-                T3D.renderMapContentsAsync(localReader, fileId, renderers, onRendererDone, myLogger);
+                /// Setup the logger (hacky way because very verbose)
+                T3D.Logger.logFunctions[T3D.Logger.TYPE_PROGRESS] = function(){
+                    if(Math.floor(arguments[1])%10 == 0){
+                        var logText = `${arguments[0]} : ${arguments[1]}%`;
+                        myLogger.log(null, logText);
+                    }
+                    console.log(arguments[0], arguments[1]);
+                }
+
+                /// Load for the first time the renderer and spawn the context
+                T3D.renderMapContentsAsync(mapRenderer.localReader, mapRenderer.mapData.id, renderers, onRendererDone, myLogger);
+
+                /// And store the mapfile for future use
+                loadMapFile(mapRenderer.mapData.id, function(data){ mapRenderer.mapData.mapFile = data; });
 
             }
 
             /// Runs when the ModelRenderer is finshed
-            function onRendererDone(mapData){
+            function onRendererDone(context){
                 cleanScene();
 
-                _mapData = mapData;
+                /// Populate our context with the context returned
+                mapRenderer.context = context;
 
-                for(elem of T3D.getContextValue(mapData, T3D.TerrainRenderer, "terrainTiles")){
-                    elem.material.uniforms["fogNear"].value = near;
-                    elem.material.uniforms["fogFar"].value = far;
-                    elem.material.needsUpdate = true;
-                    _scene.add(elem);
-                    //_loadedMeshes.push(elem);
+                /// Take all the terrain tiles generated by the TerrainRenderer and add them to the scene
+                for(elem of T3D.getContextValue(context, T3D.TerrainRenderer, "terrainTiles")){
+                    mapRenderer.scene.add(elem);
+                    mapRenderer.mapData.terrain.data.push(elem);
                 }
 
-                var water = T3D.getContextValue(mapData, T3D.TerrainRenderer, "water");
-                _scene.add(water)
-                //_loadedMeshes.push(water);
+                /// Add the water level to the scene
+                var water = T3D.getContextValue(context, T3D.TerrainRenderer, "water");
+                mapRenderer.scene.add(water)
+                mapRenderer.mapData.terrain.data.push(water);
 
-                var bounds = T3D.getContextValue(mapData, T3D.TerrainRenderer, "bounds");
-                _camera.position.x = 0;
-                _camera.position.y = bounds ? bounds.y2 : 0;
-                _camera.position.z = 0;
+                /// Move the camera initial place depending on the map bounds
+                var bounds = T3D.getContextValue(context, T3D.TerrainRenderer, "bounds");
+                mapRenderer.camera.position.x = 0;
+                mapRenderer.camera.position.y = bounds ? bounds.y2 : 0;
+                mapRenderer.camera.position.z = 0;
 
             }
 
-            function loadPropModels(loar_or_unload) {
-                //T3D.runRenderer
+            /// It's usually not needed to keep the mapFile independently but
+            /// because we're loading the colision/props/zone models manually, it is.
+            function loadMapFile(fileId, callback){
+                if(parseInt(fileId)){
+                    mapRenderer.localReader.loadFile(fileId, function(arrayBuffer){
+                        var ds = new DataStream(arrayBuffer, 0, DataStream.LITTLE_ENDIAN);
+                        var mapFile = new T3D.GW2File(ds, 0);
+                        callback(mapFile);
+                    });
+                }
+            }
 
-                
-                if(loadPropModels){
-                    for(elem of T3D.getContextValue(_mapData, T3D.HavokRenderer, "meshes")){
-                        _scene.add(elem);
-                        _loadedMeshes.push(elem);
-                    };
+            /// Run a renderer manually and populates the data object
+            function loadMeshes(rendererClass, outRendererData, callback){
+                T3D.runRenderer(rendererClass, mapRenderer.localReader, 
+                                {visible: true, mapFile: mapRenderer.mapData.mapFile}, 
+                                mapRenderer.context, function(){
+                    
+                    outRendererData.data = T3D.getContextValue(mapRenderer.context, rendererClass, "meshes");
+                    outRendererData.loaded = true;
+                    callback();
+                });
+            }
+
+            function toggleMeshes(meshType, buttonId){
+                var mapData = mapRenderer.mapData[meshType];
+                if(!mapData.enabled){
+                    for(elem of mapData.data){
+                        mapRenderer.scene.add(elem);
+                    }
+                    mapData.enabled = true;
+                    $(buttonId)[0].innerHTML = $(buttonId)[0].innerHTML.replace("Load", "Unload");
                 } else {
-
+                    for(elem of mapData.data){
+                        mapRenderer.scene.remove(elem);
+                    }
+                    mapData.enabled = false;
+                    $(buttonId)[0].innerHTML = $(buttonId)[0].innerHTML.replace("Unload", "Load");
                 }
             }
 
+            /// Action when the load zone props button is clicked
+            function loadZoneModels() {
+                if(!mapRenderer.mapData.zone.loaded){
+                    loadMeshes(T3D.ZoneRenderer, mapRenderer.mapData.zone, function(){toggleMeshes("zone", "#loadZoneBtn")})
+                } else {
+                    toggleMeshes("zone", "#loadZoneBtn");
+                }
+            }
+
+            /// Action when the load props button is clicked
+            function loadPropModels() {
+                if(!mapRenderer.mapData.props.loaded){
+                    loadMeshes(T3D.PropertiesRenderer, mapRenderer.mapData.props,function(){toggleMeshes("props", "#loadPropsBtn")})
+                } else {
+                    toggleMeshes("props", "#loadPropsBtn");
+                }
+            }
+
+            /// Action when the load collisions button is clicked
+            function loadCollModels() {
+                if(!mapRenderer.mapData.collision.loaded){
+                    loadMeshes(T3D.HavokRenderer, mapRenderer.mapData.collision,function(){toggleMeshes("collision", "#loadCollBtn")})
+                } else {
+                    toggleMeshes("collision", "#loadCollBtn");
+                }
+            }
+
+            /// Wipes out the data
             function cleanScene(){
-                //for (elem of _loadedMeshes){
-                //    _scene.remove(elem);
-                //}
+                for (type of ["terrain", "props", "zone", "collision"]){
+                    for(elem of mapRenderer.mapData[type].data){
+                        mapRenderer.scene.remove(elem);
+                    }
+                    mapRenderer.mapData[type].data = [];
+                }
+
+                for (type of ["props", "zone", "collision"]){
+                    mapRenderer.mapData[type].loaded = false;
+                    mapRenderer.mapData[type].enabled = false;
+                }
             }
 
             /// Basic THREE stuff, don't mind it
@@ -257,35 +357,35 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
                 var fov = 60;
                 var aspect = 1;
 
-                _camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+                mapRenderer.camera = new THREE.PerspectiveCamera(fov, aspect, 0.1, 100000);
 
-                _scene = new THREE.Scene();
+                mapRenderer.scene = new THREE.Scene();
 
                 /// This scene has one ambient light source and three directional lights
                 var ambientLight = new THREE.AmbientLight( 0x555555 );
-                _scene.add( ambientLight );
+                mapRenderer.scene.add( ambientLight );
 
                 var directionalLight1 = new THREE.DirectionalLight( 0xffffff, .8 );
                 directionalLight1.position.set( 0, 0, 1 );
-                _scene.add( directionalLight1 );
+                mapRenderer.scene.add( directionalLight1 );
         
                 var directionalLight2 = new THREE.DirectionalLight( 0xffffff, .8);
                 directionalLight2.position.set( 1, 0, 0 );
-                _scene.add( directionalLight2 );
+                mapRenderer.scene.add( directionalLight2 );
 
                 var directionalLight3 = new THREE.DirectionalLight( 0xffffff, .8 );
                 directionalLight3.position.set( 0, 1, 0 );
-                _scene.add( directionalLight3 );
+                mapRenderer.scene.add( directionalLight3 );
                 
                 /// Standard THREE renderer with AA
-                _renderer = new THREE.WebGLRenderer({antialiasing: true});
-                document.body.appendChild(_renderer.domElement);
-                _renderer.setSize( canvasWidth, canvasHeight );
-                _renderer.setClearColor( canvasClearColor );
+                mapRenderer.renderer = new THREE.WebGLRenderer({antialiasing: true, logarithmicDepthBuffer: true});
+                document.body.appendChild(mapRenderer.renderer.domElement);
+                mapRenderer.renderer.setSize( canvasWidth, canvasHeight );
+                mapRenderer.renderer.setClearColor( canvasClearColor );
 
                 /// Add THREE orbit controls, for simple orbiting, panning and zooming
-                var orbit = new THREE.OrbitControls( _camera, _renderer.domElement );
-                orbit.enableZoom = false;
+                var orbit = new THREE.OrbitControls( mapRenderer.camera, mapRenderer.renderer.domElement );
+                orbit.enableZoom = true;
 
                 /// Note: constant continous rendering from page load
                 render();
@@ -293,7 +393,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 
             function render(){
                 window.requestAnimationFrame( render );
-                _renderer.render(_scene, _camera);
+                mapRenderer.renderer.render(mapRenderer.scene, mapRenderer.camera);
             }
 
         </script>     
