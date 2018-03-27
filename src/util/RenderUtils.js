@@ -278,10 +278,10 @@ var renderGeomChunk = ME.renderGeomChunk = function(localReader, chunk, modelDat
 		}// End each index aka "face"
 
 
-
 		/// Add position, index and uv props to buffered geometry
 		geom.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-		geom.addAttribute( 'index', new THREE.BufferAttribute( faces, 1) );
+		//geom.addAttribute( 'index', new THREE.BufferAttribute( faces, 1) );
+		geom.setIndex(new THREE.BufferAttribute(faces, 1));
 
 		if(normals){
 			console.log("adding normals");

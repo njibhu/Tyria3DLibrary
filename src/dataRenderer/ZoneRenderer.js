@@ -138,8 +138,8 @@ function ZoneRenderer(localReader, settings, context, logger){
 							 			readVerts : mga.position.array,
 							 			verts: new Float32Array( group.length * mga.position.array.length ),
 
-							 			readIndices : mga.index.array,
-							 			indices: new Uint32Array( group.length * mga.index.array.length ),
+							 			readIndices : mg.getIndex().array,
+							 			indices: new Uint32Array( group.length * mg.getIndex().array.length ),
 
 							 			readUVs : mga.uv.array,
 							 			uvs: new Float32Array( group.length * mga.uv.array.length ),
@@ -211,7 +211,8 @@ function ZoneRenderer(localReader, settings, context, logger){
 						var mergedGeom = new THREE.BufferGeometry();
 						
 						mergedGeom.addAttribute( 'position', new THREE.BufferAttribute( meshGroup.verts, 3 ) );
-						mergedGeom.addAttribute( 'index', new THREE.BufferAttribute( meshGroup.indices, 1) );
+						//mergedGeom.addAttribute( 'index', new THREE.BufferAttribute( meshGroup.indices, 1) );
+						mergedGeom.setIndex(new THREE.BufferAttribute(meshGroup.indices, 1));
 						mergedGeom.addAttribute( 'normal', new THREE.BufferAttribute( meshGroup.normals, 3 ) );
 						mergedGeom.addAttribute( 'uv', new THREE.BufferAttribute( meshGroup.uvs, 2) );
 

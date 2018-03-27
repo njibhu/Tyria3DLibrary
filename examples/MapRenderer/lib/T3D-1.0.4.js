@@ -2355,8 +2355,7 @@ function EnvironmentRenderer(localReader, settings, context, logger){
 
 		function loadFallback(){
 			var mat = self.getMat(
-				//TODO: will crash, got removed in r89
-				THREE.ImageUtils.loadTexture(fallbackFilename)
+				new THREE.TextureLoader().load(fallbackFilename)
 			);
 
 			writeMat(mat);
@@ -3479,6 +3478,8 @@ var Utils = _dereq_("../util/RenderUtils");
 var DataRenderer = _dereq_('./DataRenderer');
 var GW2File = _dereq_("../format/file/GW2File.js"); 
 
+var TerrainShader = _dereq_("../util/TerrainShader.js");
+
 /**
  *
  * A renderer that generates the meshes for the terrain of a map.
@@ -3575,7 +3576,7 @@ function TerrainRenderer(localReader, mapFile, settings, context, logger){
 		var cdy =dy/terrainData.numChunksD_2 * 1;//35/33;
 		var n=0;
 		var allMats = [];
-		var customMaterial = new THREE.MeshLambertMaterial({side: THREE.DoubleSide, color:0x666666, shading: THREE.FlatShading}); 
+		var customMaterial = new THREE.MeshLambertMaterial({side: THREE.DoubleSide, color:0x666666, flatShading: true}); 
 		var texMats = {};
 
 		/// Load textures from PIMG and inject as material maps (textures)
@@ -3608,7 +3609,8 @@ function TerrainRenderer(localReader, mapFile, settings, context, logger){
 						if(chunkTex){
 							/// Set repeat, antistropy and repeat Y
 							chunkTex.anisotropy = maxAnisotropy;
-							chunkTex.wrapT = chunkTex.wrapS = THREE.RepeatWrapping;					
+							chunkTex.wrapS = THREE.RepeatWrapping;
+							chunkTex.wrapT = THREE.RepeatWrapping;
 						}
 
 						///...But store in coord name
@@ -3668,13 +3670,13 @@ function TerrainRenderer(localReader, mapFile, settings, context, logger){
 					if(chunkTex){
 						/// Set repeat, antistropy and repeat Y
 						chunkTex.anisotropy = maxAnisotropy;
-						chunkTex.wrapT = chunkTex.wrapS = THREE.RepeatWrapping;		
+						chunkTex.wrapS = THREE.RepeatWrapping;
+						chunkTex.wrapT = THREE.RepeatWrapping;
 					}
 
 					chunkTextures[textureFileName] = chunkTex;					
 				}
 			}/// End for each chunkTextureIndices
-
 
 			/// Create Composite texture material, refering the shared textures
 			var pageTexName=  pageX+","+pageY;				
@@ -3701,12 +3703,6 @@ function TerrainRenderer(localReader, mapFile, settings, context, logger){
 	    		THREE.UniformsLib['lights'],
 			]);
 
-			/// FOG
-			uniforms.fogColor = { type: "v3", value: new THREE.Vector3( fog.color.r, fog.color.g, fog.color.b ) },
-			uniforms.fogNear = { type: "f",value: fog.near },
-			uniforms.fogFar = { type: "f", value: fog.far },
-
-
 			/// TODO: READ FROM VO, don't default to hard coded scale
 			uniforms.uvScale = { type: "v2", value: new THREE.Vector2( 8.0, 8.0 ) };
 			uniforms.offset = { type: "v2", value: new THREE.Vector2( pageOffetX, pageOffetY) };
@@ -3719,12 +3715,11 @@ function TerrainRenderer(localReader, mapFile, settings, context, logger){
 			uniforms.texture3 = { type: "t", value: chunkTextures[fileNames[2]]};
 			uniforms.texture4 = { type: "t", value: chunkTextures[fileNames[3]]};
 			
-
+			
 			mat = new THREE.ShaderMaterial( {
 				uniforms: uniforms,
-				vertexShader: "varying vec2 vUv;\r\nvarying vec3 vecNormal;\r\nvoid main()\r\n{\r\nvUv =  uv;\r\nvec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );\r\nvecNormal = (modelMatrix * vec4(normal, 0.0)).xyz;\r\ngl_Position = projectionMatrix * mvPosition;\r\n}",
-				fragmentShader: "\r\nuniform vec3 fogColor;\r\nuniform float fogNear;\r\nuniform float fogFar;\r\nuniform vec2 uvScale;\r\nuniform vec2 offset;\r\nuniform sampler2D texturePicker;\r\nuniform sampler2D texturePicker2;\r\nuniform sampler2D texture1;\r\nuniform sampler2D texture2;\r\nuniform sampler2D texture3;\r\nuniform sampler2D texture4;\r\nuniform vec3 ambientLightColor;\r\n#if MAX_DIR_LIGHTS > 0\r\nuniform vec3 directionalLightColor[ MAX_DIR_LIGHTS ];\r\nuniform vec3 directionalLightDirection[ MAX_DIR_LIGHTS ];\r\n#endif\r\nvarying vec2 vUv;\r\nvarying vec3 vecNormal;\r\nvec3 blend(\r\nvec4 texture1, float a1,\r\nvec4 texture2, float a2,\r\nvec4 texture3, float a3,\r\nvec4 texture4, float a4)\r\n{\r\nfloat depth = 2.0;\r\nfloat alphaMult = 1.0;\r\nfloat alphaAdd  = 0.0;\r\na1 *= 4.0;\r\na2 *= 4.0;\r\na3 *= 4.0;\r\na4 *= 4.0;\r\na1 =  a1+(1.5+texture1.a);\r\na2 =  a2+(1.5+texture2.a);\r\na3 =  a3+(1.5+texture3.a);\r\na4 =  a4+(1.5+texture4.a);\r\nfloat ma = max(a1,a2);\r\nma = max(ma,a3);\r\nma = max(ma,a4);\r\nma -= depth;\r\nfloat b1 = max(a1 - ma, 0.0);\r\nfloat b2 = max(a2 - ma, 0.0);\r\nfloat b3 = max(a3 - ma, 0.0);\r\nfloat b4 = max(a4 - ma, 0.0);\r\nreturn (\r\ntexture1.rgb * b1 +\r\ntexture2.rgb * b2 +\r\ntexture3.rgb * b3 +\r\ntexture4.rgb * b4 \r\n) \/ (b1 + b2 + b3 +b4);\r\n}\r\nvoid main( void ) {\r\nvec2 position = vUv*uvScale;\r\nfloat edge = 1.0\/1024.0;\r\nvec2 compPos = edge +  (vUv*0.25 + offset)*(1.0-edge*2.0);\r\nvec4 tp1 = texture2D( texturePicker, compPos);\r\nvec4 tp2 = texture2D( texturePicker2, compPos);\r\nvec4 composite = tp1;\r\nvec4 t1 = texture2D( texture1, position );\r\nvec4 t2 = texture2D( texture2, position );\r\nvec4 t3 = texture2D( texture3, position );\r\nvec4 t4 = texture2D( texture4, position );\r\nvec3 color = blend(\r\nt1, tp1.a,\r\nt2, tp1.b,\r\nt3, tp1.g,\r\nt4, tp1.r\r\n);\r\ncolor *= 0.5+tp2.r;\r\ngl_FragColor = vec4(color,1.0);\r\nvec4 addedLights = vec4(ambientLightColor, 1.0);\r\n#if MAX_DIR_LIGHTS > 0\r\nfor(int l = 0; l < MAX_DIR_LIGHTS; l++) {\r\naddedLights.rgb += clamp(\r\ndot(-directionalLightDirection[l], vecNormal),\r\n0.0,\r\n1.0\r\n)\r\n* directionalLightColor[l];\r\n}\r\n#endif\r\ngl_FragColor *= addedLights;\r\nfloat depth = gl_FragCoord.z \/ gl_FragCoord.w;\r\nfloat fogFactor = smoothstep( fogNear, fogFar, depth );\r\ngl_FragColor.xyz = mix( gl_FragColor.xyz, fogColor.xyz, fogFactor );\r\n}",
-				lights: true
+				fragmentShader: TerrainShader.fragmentShader,
+				vertexShader: TerrainShader.vertexShader
 			} );
 
 			///Store referenceto each material
@@ -3927,7 +3922,7 @@ TerrainRenderer.prototype.getFileIdsAsync = function(callback){
 };
 
 module.exports = TerrainRenderer;
-},{"../format/file/GW2File.js":16,"../util/RenderUtils":20,"./DataRenderer":5}],12:[function(_dereq_,module,exports){
+},{"../format/file/GW2File.js":16,"../util/RenderUtils":20,"../util/TerrainShader.js":21,"./DataRenderer":5}],12:[function(_dereq_,module,exports){
 /*
 Copyright (C) 2015 RequestTimeout <https://github.com/RequestTimeout408>
 
@@ -4068,8 +4063,8 @@ function ZoneRenderer(localReader, settings, context, logger){
 							 			readVerts : mga.position.array,
 							 			verts: new Float32Array( group.length * mga.position.array.length ),
 
-							 			readIndices : mga.index.array,
-							 			indices: new Uint32Array( group.length * mga.index.array.length ),
+							 			readIndices : mg.getIndex().array,
+							 			indices: new Uint32Array( group.length * mg.getIndex().array.length ),
 
 							 			readUVs : mga.uv.array,
 							 			uvs: new Float32Array( group.length * mga.uv.array.length ),
@@ -4141,7 +4136,8 @@ function ZoneRenderer(localReader, settings, context, logger){
 						var mergedGeom = new THREE.BufferGeometry();
 						
 						mergedGeom.addAttribute( 'position', new THREE.BufferAttribute( meshGroup.verts, 3 ) );
-						mergedGeom.addAttribute( 'index', new THREE.BufferAttribute( meshGroup.indices, 1) );
+						//mergedGeom.addAttribute( 'index', new THREE.BufferAttribute( meshGroup.indices, 1) );
+						mergedGeom.setIndex(new THREE.BufferAttribute(meshGroup.indices, 1));
 						mergedGeom.addAttribute( 'normal', new THREE.BufferAttribute( meshGroup.normals, 3 ) );
 						mergedGeom.addAttribute( 'uv', new THREE.BufferAttribute( meshGroup.uvs, 2) );
 
@@ -5038,20 +5034,22 @@ function buildVS(numUv){
 function generateDataTexture(width, height, color){
 	// create a buffer with color data
 	var size = width * height;
-	var data = new Uint8Array( 3 * size );
+	var data = new Uint8Array( 4 * size );
 	var r = Math.floor( color.r * 255 );
 	var g = Math.floor( color.g * 255 );
 	var b = Math.floor( color.b * 255 );
+	var a = 255;
 
 	for ( var i = 0; i < size; i ++ ) {
-		var stride = i * 3;
+		var stride = i * 4;
 
 		data[ stride ] = r;
 		data[ stride + 1 ] = g;
 		data[ stride + 2 ] = b;
+		data[ stride + 3 ] = a;
 	}
 	// used the buffer to create a DataTexture
-	return new THREE.DataTexture( data, width, height, THREE.RGBFormat );
+	return new THREE.DataTexture( data, width, height, THREE.RGBAFormat );
 }
 
 /**
@@ -5542,6 +5540,12 @@ var loadLocalTexture = ME.loadLocalTexture = function(localReader, fileId, mappi
 		1, // Height
 		new THREE.Color( defaultColor ) // Color
 	);
+
+	//Threejs r71 is using these settings by default, r72+ changed it
+	texture.minFilter = THREE.LinearMipMapLinearFilter;
+	texture.magFilter = THREE.LinearFilter;
+	texture.generateMipmaps = true;
+	texture.flipY = true;
 
 	/// Only allow non-zero fileId, otherwise jsut return static texture
 	if( parseInt(fileId) <= 0 ){
@@ -6216,10 +6220,10 @@ var renderGeomChunk = ME.renderGeomChunk = function(localReader, chunk, modelDat
 		}// End each index aka "face"
 
 
-
 		/// Add position, index and uv props to buffered geometry
 		geom.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-		geom.addAttribute( 'index', new THREE.BufferAttribute( faces, 1) );
+		//geom.addAttribute( 'index', new THREE.BufferAttribute( faces, 1) );
+		geom.setIndex(new THREE.BufferAttribute(faces, 1));
 
 		if(normals){
 			console.log("adding normals");
@@ -6623,6 +6627,94 @@ var getFilesUsedByModel = ME.getFilesUsedByModel = function(filename, localReade
 }
 
 
-},{"../format/file/GW2File":16,"./MaterialUtils":17,"./MathUtils":18}]},{},[4])
+},{"../format/file/GW2File":16,"./MaterialUtils":17,"./MathUtils":18}],21:[function(_dereq_,module,exports){
+module.exports = {
+    ///TODO: port fog from in-engine
+
+    fragmentShader : [
+        "uniform vec2 uvScale;",
+        "uniform vec2 offset;",
+        "uniform sampler2D texturePicker;",
+        "uniform sampler2D texturePicker2;",
+        "uniform sampler2D texture1;",
+        "uniform sampler2D texture2;",
+        "uniform sampler2D texture3;",
+        "uniform sampler2D texture4;",
+
+        THREE.ShaderChunk["logdepthbuf_pars_fragment"],
+
+        "varying vec2 vUv;",
+        "varying vec3 vecNormal;",
+
+        "vec3 blend(",
+                "vec4 texture1, float a1, vec4 texture2, float a2,",
+                "vec4 texture3, float a3, vec4 texture4, float a4)",
+        "{",
+            "float depth = 2.0;",
+            "float alphaMult = 1.0;",
+            "float alphaAdd  = 0.0;",
+            "a1 *= 4.0;",
+            "a2 *= 4.0;",
+            "a3 *= 4.0;",
+            "a4 *= 4.0;",
+            "a1 =  a1+(1.5+texture1.a);",
+            "a2 =  a2+(1.5+texture2.a);",
+            "a3 =  a3+(1.5+texture3.a);",
+            "a4 =  a4+(1.5+texture4.a);",
+            "float ma = max(a1,a2);",
+            "ma = max(ma,a3);",
+            "ma = max(ma,a4);",
+            "ma -= depth;",
+            "float b1 = max(a1 - ma, 0.0);",
+            "float b2 = max(a2 - ma, 0.0);",
+            "float b3 = max(a3 - ma, 0.0);",
+            "float b4 = max(a4 - ma, 0.0);",
+            "return (",
+                "texture1.rgb * b1 + texture2.rgb * b2 +",
+                "texture3.rgb * b3 + texture4.rgb * b4 ",
+            ") / (b1 + b2 + b3 + b4);",
+        "}",
+
+        "void main( void ) {",
+            "vec2 position = vUv*uvScale;",
+            "float edge = 1.0/1024.0;",
+            "vec2 compPos = edge + (vUv*0.25 + offset) * (1.0-edge*2.0);",
+            "vec4 tp1 = texture2D( texturePicker, compPos);",
+            "vec4 tp2 = texture2D( texturePicker2, compPos);",
+            "vec4 composite = tp1;",
+            "vec4 t1 = texture2D( texture1, position );",
+            "vec4 t2 = texture2D( texture2, position );",
+            "vec4 t3 = texture2D( texture3, position );",
+            "vec4 t4 = texture2D( texture4, position );",
+            "vec3 color = blend(",
+                "t1, tp1.a,",
+                "t2, tp1.b,",
+                "t3, tp1.g,",
+                "t4, tp1.r",
+            ");",
+            "color *= 0.5+tp2.r;",
+            "gl_FragColor = vec4(color,1.0);",
+            THREE.ShaderChunk["logdepthbuf_fragment"],
+        "}"
+
+    ].join( "\n" ),
+
+    vertexShader : [
+        "varying vec2 vUv;",
+        "varying vec3 vecNormal;",
+        THREE.ShaderChunk["logdepthbuf_pars_vertex"],
+        "void main()",
+        "{",
+
+            "vUv =  uv;",
+            "vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
+            "vecNormal = (modelMatrix * vec4(normal, 0.0)).xyz;",
+            "gl_Position = projectionMatrix * mvPosition;",
+            THREE.ShaderChunk["logdepthbuf_vertex"],
+        "}"
+    ].join( "\n" )
+
+}
+},{}]},{},[4])
 (4)
 });

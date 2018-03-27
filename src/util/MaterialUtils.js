@@ -59,20 +59,22 @@ function buildVS(numUv){
 function generateDataTexture(width, height, color){
 	// create a buffer with color data
 	var size = width * height;
-	var data = new Uint8Array( 3 * size );
+	var data = new Uint8Array( 4 * size );
 	var r = Math.floor( color.r * 255 );
 	var g = Math.floor( color.g * 255 );
 	var b = Math.floor( color.b * 255 );
+	var a = 255;
 
 	for ( var i = 0; i < size; i ++ ) {
-		var stride = i * 3;
+		var stride = i * 4;
 
 		data[ stride ] = r;
 		data[ stride + 1 ] = g;
 		data[ stride + 2 ] = b;
+		data[ stride + 3 ] = a;
 	}
 	// used the buffer to create a DataTexture
-	return new THREE.DataTexture( data, width, height, THREE.RGBFormat );
+	return new THREE.DataTexture( data, width, height, THREE.RGBAFormat );
 }
 
 /**
@@ -563,6 +565,12 @@ var loadLocalTexture = ME.loadLocalTexture = function(localReader, fileId, mappi
 		1, // Height
 		new THREE.Color( defaultColor ) // Color
 	);
+
+	//Threejs r71 is using these settings by default, r72+ changed it
+	texture.minFilter = THREE.LinearMipMapLinearFilter;
+	texture.magFilter = THREE.LinearFilter;
+	texture.generateMipmaps = true;
+	texture.flipY = true;
 
 	/// Only allow non-zero fileId, otherwise jsut return static texture
 	if( parseInt(fileId) <= 0 ){
