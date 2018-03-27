@@ -41,7 +41,7 @@ module.exports = T3D;
 function T3D() {}
 
 /* PRIVATE VARS */
-var _version = "1.0.4";
+var _version = "1.1.0";
 var _settings = {
 	inflaterURL : "modules/nacl/t3dgwtools.nmf",
 	t3dworkerURL: "modules/t3dtools/t3dworker.js"

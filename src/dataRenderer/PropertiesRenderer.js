@@ -223,7 +223,7 @@ PropertiesRenderer.prototype.renderAsync = function(callback){
 		    		lod.boundingSphereRadius = ( boundingSphere && boundingSphere.radius ? boundingSphere.radius : 1.0) * prop.scale;
 
 					/// Show highest level always
-		    		//lod.update(lod);
+		    		lod.update(lod);
 
 			    	/// Add LOD containing mesh instances to scenerender: function(propertiesChunkHeader, map, localReader, renderCallback){
 			    	self.getOutput().meshes.push(lod);

@@ -1482,7 +1482,7 @@ module.exports = T3D;
 function T3D() {}
 
 /* PRIVATE VARS */
-var _version = "1.0.4";
+var _version = "1.1.0";
 var _settings = {
 	inflaterURL : "modules/nacl/t3dgwtools.nmf",
 	t3dworkerURL: "modules/t3dtools/t3dworker.js"
@@ -2562,8 +2562,7 @@ function EnvironmentRenderer(localReader, settings, context, logger){
 		skyGeometry.uvsNeedUpdate = true;
 		
 		/// Generate final skybox
-		var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
-		var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+		var skyBox = new THREE.Mesh( skyGeometry, materialArray );
 
 		/// Put horizon in camera center
 		skyBox.translateY(boxSize/4);
@@ -3248,7 +3247,7 @@ PropertiesRenderer.prototype.renderAsync = function(callback){
 		    		lod.boundingSphereRadius = ( boundingSphere && boundingSphere.radius ? boundingSphere.radius : 1.0) * prop.scale;
 
 					/// Show highest level always
-		    		//lod.update(lod);
+		    		lod.update(lod);
 
 			    	/// Add LOD containing mesh instances to scenerender: function(propertiesChunkHeader, map, localReader, renderCallback){
 			    	self.getOutput().meshes.push(lod);
