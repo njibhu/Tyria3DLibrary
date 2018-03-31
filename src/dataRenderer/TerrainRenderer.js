@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2015 RequestTimeout <https://github.com/RequestTimeout408>
+Copyright © Tyria3DLibrary project contributors
 
 This file is part of the Tyria 3D Library.
 
@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var Utils = require("../util/RenderUtils");
+var RenderUtils = require("../util/RenderUtils");
 var DataRenderer = require('./DataRenderer');
 var GW2File = require("../format/file/GW2File.js"); 
 
@@ -56,7 +56,7 @@ function TerrainRenderer(localReader, mapFile, settings, context, logger){
 		);
 
 		material.transparent = true;
-		return Utils.renderRect(rect, 0, material);
+		return RenderUtils.renderRect(rect, 0, material);
 	}
 
 	this.parseNumChunks = function(terrainData){
@@ -147,7 +147,7 @@ function TerrainRenderer(localReader, mapFile, settings, context, logger){
 					if(!chunkTextures[matName]){
 
 						/// Load local texture, here we use file name!
-						var chunkTex = Utils.loadLocalTexture(self.localReader, filename);
+						var chunkTex = RenderUtils.loadLocalTexture(self.localReader, filename);
 
 						if(chunkTex){
 							/// Set repeat, antistropy and repeat Y
@@ -208,7 +208,7 @@ function TerrainRenderer(localReader, mapFile, settings, context, logger){
 				if(!chunkTextures[textureFileName]){
 
 					/// Load local texture
-					var chunkTex = Utils.loadLocalTexture(self.localReader, textureFileName);
+					var chunkTex = RenderUtils.loadLocalTexture(self.localReader, textureFileName);
 
 					if(chunkTex){
 						/// Set repeat, antistropy and repeat Y
@@ -261,8 +261,8 @@ function TerrainRenderer(localReader, mapFile, settings, context, logger){
 			
 			mat = new THREE.ShaderMaterial( {
 				uniforms: uniforms,
-				fragmentShader: TerrainShader.fragmentShader,
-				vertexShader: TerrainShader.vertexShader
+				fragmentShader: TerrainShader.getFragmentShader(),
+				vertexShader: TerrainShader.getVertexShader()
 			} );
 
 			///Store referenceto each material

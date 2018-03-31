@@ -192,9 +192,8 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
                             mapRenderer.localReader = T3D.getLocalReader(
                                 file,
                                 onReaderCreated,
-                                "lib/t3dgwtools.nmf",
-                                myLogger,
-                                "lib/t3dworker.js");
+                                "lib/t3dworker.js",
+                                myLogger);
                         }
                     );
 
@@ -424,6 +423,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
             function render(){
                 window.requestAnimationFrame( render );
                 
+                //Use the raycaster
                 if(highlightEnabled){
                     mapRenderer.raycaster.setFromCamera( mapRenderer.mouse, mapRenderer.camera );
                     var intersects = mapRenderer.raycaster.intersectObjects( mapRenderer.scene.children );

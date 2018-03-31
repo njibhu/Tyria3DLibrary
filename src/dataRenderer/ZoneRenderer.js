@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2015 RequestTimeout <https://github.com/RequestTimeout408>
+Copyright © Tyria3DLibrary project contributors
 
 This file is part of the Tyria 3D Library.
 
@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var Utils = require("../util/RenderUtils");
+var RenderUtils = require("../util/RenderUtils");
 var DataRenderer = require('./DataRenderer');
 
 /**
@@ -99,7 +99,7 @@ function ZoneRenderer(localReader, settings, context, logger){
 			
 			/// Get model just once for this group
 			var showUnmaterialed = false;
-			Utils.getMeshesForFilename(key, null, self.localReader, self.meshCache, self.textureCache, showUnmaterialed,
+			RenderUtils.getMeshesForFilename(key, null, self.localReader, self.meshCache, self.textureCache, showUnmaterialed,
 
 				function(meshes, isCached){
 					
@@ -280,7 +280,7 @@ function ZoneRenderer(localReader, settings, context, logger){
 		
 		//console.log("Get mdl groups", zone);
 		/// Testing: Render Zone Vert Rect
-		//Utils.renderRect(zoneRect, -zPos);
+		//RenderUtils.renderRect(zoneRect, -zPos);
 
 		var zdx = zone.vertRect[0]-zone.vertRect[2];
 		var zdy = zone.vertRect[1]-zone.vertRect[3];
@@ -561,7 +561,7 @@ for(var i=0; i<zoneDefs.length; i++){
 
 			
 
-			Utils.renderRect(rect, 4000,chunkMat, 4000);
+			RenderUtils.renderRect(rect, 4000,chunkMat, 4000);
 
 			//for(var j=0; j<flags.length; j++){
 			//	if(flags[j]>0){

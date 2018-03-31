@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2015 RequestTimeout <https://github.com/RequestTimeout408>
+Copyright © Tyria3DLibrary project contributors
 
 This file is part of the Tyria 3D Library.
 
@@ -17,14 +17,14 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var Utils = require("../util/RenderUtils");
+var RenderUtils = require("../util/RenderUtils");
 var DataRenderer = require('./DataRenderer');
 
 /**
  *
  * A renderer that generates meshes for a single model file.
  * 
- * @class ModelRenderer
+ * @class SingleModelRenderer
  * @constructor
  * @extends DataRenderer
  * @param  {LocalReader} localReader  The LocalReader instance to read data from.
@@ -33,14 +33,14 @@ var DataRenderer = require('./DataRenderer');
  * @param  {Object} context      Shared value object between renderers.
  * @param  {Logger} logger       The logging class to use for progress, warnings, errors et cetera.
  */
-function ModelRenderer(localReader, settings, context, logger){
+function SingleModelRenderer(localReader, settings, context, logger){
 	DataRenderer.call(this, localReader, settings, context, logger);
 }
 
 
 /// DataRenderer inheritance:
-ModelRenderer.prototype = Object.create(DataRenderer.prototype);
-ModelRenderer.prototype.constructor = ModelRenderer;
+SingleModelRenderer.prototype = Object.create(DataRenderer.prototype);
+SingleModelRenderer.prototype.constructor = SingleModelRenderer;
 
 
 /**
@@ -52,7 +52,7 @@ ModelRenderer.prototype.constructor = ModelRenderer;
  * @async
  * @param  {Function} callback Fires when renderer is finished, does not take arguments.
  */
-ModelRenderer.prototype.renderAsync = function(callback){
+SingleModelRenderer.prototype.renderAsync = function(callback){
 	var self = this;
 
 	/// Get file id
@@ -66,7 +66,7 @@ ModelRenderer.prototype.renderAsync = function(callback){
 	/// Set up output array
 	self.getOutput().meshes = [];
 
-	Utils.getMeshesForFilename(fileId, 0x00ff00, self.localReader, meshCache, textureCache, showUnmaterialed,
+	RenderUtils.getMeshesForFilename(fileId, 0x00ff00, self.localReader, meshCache, textureCache, showUnmaterialed,
 		function(meshes, isCached, boundingSphere){
 		
 			if(meshes){
@@ -84,4 +84,4 @@ ModelRenderer.prototype.renderAsync = function(callback){
 
 }
 
-module.exports = ModelRenderer;
+module.exports = SingleModelRenderer;

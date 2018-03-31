@@ -1,132 +1,48 @@
-/**
- * Simple gulp file for compiling the Tyria 3D API using gulp and browserify.
- *
- * Usage
- *
- * ---- 1st time only ----
- *
- * npm install
- * gulp formats
- * 
- * ---- Always ----
- *
- * gulp
- *
- *
- * ---- Production ----
- *
- * gulp --production
- * gulp formats --production
- * 
- *
- */
+'use strict';
 
 //Load version from package.json
 var version = require('./package.json').version;
 
-/* Core functionality requires gulp and browserify */
-var gulp = require('gulp');
+/* Gulp modules and requires */
 var browserify = require('browserify');
-
-/* Allows arguments to be passed from cmd */
-var argv = require('yargs').argv;
-
-/* Misc. functionality used for building and watching */
-var args = require('yargs').argv;
-var CombinedStream = require('combined-stream');
+var gulp = require('gulp');
 var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
+var sourcemaps = require('gulp-sourcemaps');
+var log = require('gulplog');
+var uglifyjs = require('uglify-es');
+var composer = require('gulp-uglify/composer');
+var uglify = composer(uglifyjs, console);
 var watch = require('gulp-watch');
 
-/* Used for minimizing */
-var streamify = require('gulp-streamify');
-var uglify = require('gulp-uglify');
-
-// Very simple error handler for the file stream.
-var errorHandler = function (msg) {
-    return function (error) {
-        console.error(msg);
-        console.error(error.stack);
-    };
-};
-
-buildJS = function(settings) {
-
-	/// Create file steam
-	var bundleFileStream = CombinedStream.create()
-
-	/// Bundle browsified scripts
-	.append(
-		browserify(settings.mainFile,{debug : true})
-		.bundle(settings.bundleParams)
-	)
-
-	/// Error handler
-	.on('error', errorHandler("T3D API build failed"))
-
-	/// Complete handler
-    .on('end', function () { console.log("T3D API finished"); })
-
-	/// Write to file
-	.pipe( source(settings.fileName) );
-
-	/// Minify
-	if(settings.isProduction){
-		bundleFileStream.pipe(streamify(uglify()));
-	}
-	
-	/// Move to build directory
-	bundleFileStream.pipe(gulp.dest('build'))
-		// Copy to examples as well
-		.pipe(gulp.dest('./examples/Tyria2D/lib'))
-		.pipe(gulp.dest('./examples/ModelRenderer/lib'))
-		.pipe(gulp.dest('./examples/MapRenderer/lib'));
-}
-
-/// gulp API 
-/// compiles the source into a signle bundle.
-gulp.task('API', buildJS);
-
-gulp.task('formats', function(){
-
-	var isProduction = (argv.production === undefined) ? false : true;	
-	buildJS(
-			{
-				isProduction: isProduction,
-				fileName: `T3D-${version}.Formats.min.js`,
-				mainFile:'./src/format/definition/AllFormats.js',
-				bundleParams:{}
-			}
-	);
-
-});
-
-
-/// gulp watch
-/// watch the srouce js files and build the bundle when any file changes.
-gulp.task('watch', function() {
-	
-	/// Build Bundle API when source changes
-	watch({
-		glob : "./src/**/*.js"
-	}, function(files) {
-		var isProduction = (argv.production === undefined) ? false : true;	
-		var fileNames = {
-			dev : `T3D-${version}.js`,
-			production : `T3D-${version}.min.js`
-		};
-
-
-		return buildJS(
-			{
-				isProduction: isProduction,
-				fileName: isProduction ? fileNames.production : fileNames.dev,
-				mainFile:'./src/T3DLib.js',
-				bundleParams:{standalone: 'T3D'}
-			}
-		);
+gulp.task('T3D', function(){
+	// set up the browserify instance on a task basis
+	var b = browserify({
+		entries: './src/T3DLib.js',
+		debug: true,
+		standalone: 'T3D'
 	});
 
+	//Copy the t3dtools.js worker file
+	gulp.src('tools/t3dtools.js/t3dworker.js').pipe(gulp.dest('build'));
+
+	return b.bundle()
+		.pipe(source(`T3D-${version}.js`))
+		.pipe(buffer())
+		.pipe(sourcemaps.init({loadMaps: true}))
+			// Add transformation tasks to the pipeline here.
+			.pipe(uglify())
+			.on('error', log.error)
+		.pipe(sourcemaps.write('./'))
+		.pipe(gulp.dest('build'))
+		.pipe(gulp.dest('./examples/Tyria2D/lib'))
+		.pipe(gulp.dest('./examples/ModelRenderer/lib'))
+		.pipe(gulp.dest('./examples/MapRenderer/lib'))
+        .pipe(gulp.dest('./examples/Archive/lib'));
 });
 
-/// Register watch as the default task if none is spefified.
-gulp.task('default', ['watch']);
+gulp.task('watch', function() {
+	gulp.watch(['src/**/*.js'], gulp.series('T3D'));
+});
+  
+gulp.task('default', gulp.series('T3D'));

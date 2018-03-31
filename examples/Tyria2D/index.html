@@ -386,8 +386,6 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
                 _lr = T3D.getLocalReader(
                     evt.target.files[0],
                     onReaderCreated,
-					"lib/t3dgwtools.nmf",
-					undefined,
 					"lib/t3dworker.js");
             }
 	    );
@@ -836,7 +834,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 
         /// Run single renderer
         T3D.runRenderer(
-            T3D.ModelRenderer,
+            T3D.SingleModelRenderer,
             _lr,
             {id:fileId},
             _context,
@@ -861,7 +859,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 		);
         
         /// Read the new models
-        _models = T3D.getContextValue(_context, T3D.ModelRenderer, "meshes", []);
+        _models = T3D.getContextValue(_context, T3D.SingleModelRenderer, "meshes", []);
 
         /// Keeping track of the biggest model for later
         var biggestMdl = null;

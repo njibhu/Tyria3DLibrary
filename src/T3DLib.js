@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2015 RequestTimeout <https://github.com/RequestTimeout408>
+Copyright © Tyria3DLibrary project contributors
 
 This file is part of the Tyria 3D Library.
 
@@ -43,8 +43,7 @@ function T3D() {}
 /* PRIVATE VARS */
 var _version = "1.1.0";
 var _settings = {
-	inflaterURL : "modules/nacl/t3dgwtools.nmf",
-	t3dworkerURL: "modules/t3dtools/t3dworker.js"
+	t3dtoolsWorker: "modules/t3dtools/t3dworker.js"
 };
 
 /* PUBLIC PROPERTIES */
@@ -81,6 +80,11 @@ T3D.GW2File =				require("./format/file/GW2File");
  * @type Class
  */
 T3D.GW2Chunk = 				require("./format/file/GW2Chunk");
+
+/**
+ * TODO - doc
+ */
+T3D.Archive =				require("./LocalReader/Archive");
 
 
 /* RENDERERS */
@@ -126,14 +130,14 @@ T3D.HavokRenderer = 		require("./dataRenderer/HavokRenderer");
 T3D.PropertiesRenderer = 	require("./dataRenderer/PropertiesRenderer");
 
 /**
- * A static reference to the ModelRenderer class, the preferred way of
+ * A static reference to the SingleModelRenderer class, the preferred way of
  * accessing this class.
  *
  * @final
- * @property ModelRenderer
+ * @property SingleModelRenderer
  * @type Class
  */
-T3D.ModelRenderer = 		require("./dataRenderer/ModelRenderer");
+T3D.SingleModelRenderer = 		require("./dataRenderer/SingleModelRenderer");
 
 /**
  * A static reference to the TerrainRenderer class, the preferred way of
@@ -171,13 +175,13 @@ T3D.StringRenderer = 		require("./dataRenderer/StringRenderer");
 /* LOGGING */
 
 /**
- * A static reference to the static Logger class, the preferred way of
- * accessing this class. A simple way of providing your own logging methods
+ * A static reference to the static Logger object, the preferred way of
+ * accessing this object. A simple way of providing your own logging methods
  * is to simply overwrite any or all of the logging methods specified in 
  * {{#crossLink "Logger/logFunctions:property"}}{{/crossLink}}
  *
  * @property Logger
- * @type Class
+ * @type Object
  */
 T3D.Logger = require("./Logger");
 
@@ -225,7 +229,7 @@ T3D.MapFileList = 	require("./MapFileList");
  *
  * @final
  * @property MaterialUtils
- * @type Class
+ * @type Object
  */
 T3D.MaterialUtils = require('./util/MaterialUtils.js');
 
@@ -234,7 +238,7 @@ T3D.MaterialUtils = require('./util/MaterialUtils.js');
  *
  * @final
  * @property MathUtils
- * @type Class
+ * @type Object
  */
 T3D.MathUtils = require('./util/MathUtils.js');
 
@@ -243,7 +247,7 @@ T3D.MathUtils = require('./util/MathUtils.js');
  *
  * @final
  * @property ParserUtils
- * @type Class
+ * @type Object
  */
 T3D.ParserUtils = require('./util/ParserUtils.js');
 
@@ -253,10 +257,23 @@ T3D.ParserUtils = require('./util/ParserUtils.js');
  *
  * @final
  * @property RenderUtils
- * @type Class
+ * @type Object
  */
 T3D.RenderUtils = require('./util/RenderUtils.js');
 
+/**
+ * A static reference to the PersistantStore class.
+ * 
+ * @final
+ * @property PersistantStore
+ * @type Class
+ */
+T3D.PersistantStore = require('./LocalReader/PersistantStore');
+
+/**
+ * TODO - doc
+ */
+T3D.Archive = require('./LocalReader/Archive');
 
 /* PRIVATE METHODS */
 
@@ -270,14 +287,14 @@ T3D.RenderUtils = require('./util/RenderUtils.js');
  */
 function checkRequirements(){
 	var numErrors = 0;
-	// var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
-	// if(!is_chrome){
-	// 	T3D.Logger.log(
-	// 		T3D.Logger.TYPE_ERROR,
-	// 		"T3D inflation requires Google Chrome."
-	// 	);
-	// 	numErrors++;
-	// }
+
+	if(!global.window || !window.indexedDB){
+		T3D.Logger.log(
+			T3D.Logger.TYPE_ERROR,
+			"T3D persistant storing and loading requires indexedDB support."
+		);
+		numErrors++;
+	}
 
 	if(typeof DataStream === "undefined"){
 		T3D.Logger.log(
@@ -343,7 +360,7 @@ function findDuplicateChunkDefs(){
 
 
 /**
- * Creates a new instance of LocalReader with an pNaCl inflater connected to it.
+ * Creates a new instance of LocalReader with a webworker inflater connected to it.
  * 
  * @method getLocalReader
  * @async
@@ -351,51 +368,22 @@ function findDuplicateChunkDefs(){
  * @param  {Function}	callback	Callback function, fired when the file index is fully
  *                             		constructed. Takes no arguments.
  *                             		
- * @param  {String} 	inflaterURL URL to the inflater .mft file. If omitted
- *                               	_settings.inflaterURL will be used instead.
+ * @param  {String} 	t3dtoolsWorker URL to the inflater file. If omitted
+ *                               	_settings.t3dtoolsWorker will be used instead.
  * @param  {Class}		logger		
- * @param  {String}		t3dworkerURL	URL to the t3dtools web worker
  * 
  * @return {LocalReader}			The contructed LocalReader, note that this object
  *                             		will not be fully initialized until the callback
  *                             		is fired.
  */
-T3D.getLocalReader = function(file, callback, inflaterURL, logger, t3dworkerURL){
+T3D.getLocalReader = function(file, callback, t3dtoolsWorker, logger){
 
 	/// Create Inflater for this file reader.
-	/// We use a wrapper to catch the events.
-	/// We use the embed tag itself for posing messages.
+	var worker = new Worker(t3dtoolsWorker ? t3dtoolsWorker : _settings.t3dtoolsWorker);
 
-	//Check if the nacl API is not available
-	if(navigator.mimeTypes['application/x-nacl'] === undefined) {
-		var worker = new Worker(t3dworkerURL ? t3dworkerURL : _settings.t3dworkerURL);
+	var lrInstance = new LocalReader(file, logger);
+	lrInstance.connectInflater(worker);
 
-		var lrInstance = new LocalReader(file, _version, logger);
-		lrInstance.connectInflater(worker, worker);
-	} 
-	else {
-		var pNaClWrapper = document.createElement("div"); 
-		pNaClWrapper.setAttribute("id", "pNaClListener");
-		
-		var pNaClEmbed = document.createElement("embed");
-		pNaClEmbed.setAttribute("type", "application/x-pnacl");
-	
-		pNaClEmbed.style.position ="absolute";
-		pNaClEmbed.style.height = 0;
-		pNaClEmbed.style.width = 0;
-		pNaClEmbed.setAttribute("src", inflaterURL ? inflaterURL : _settings.inflaterURL);
-	
-		/// Add the objects to the DOM
-		pNaClWrapper.appendChild(pNaClEmbed);
-		document.body.appendChild(pNaClWrapper);
-		
-		/// Connect the provided file reference to a new LocalReader.
-		var lrInstance = new LocalReader(file, _version, logger);
-
-		/// Give the LocalReader access to the inflater.
-		lrInstance.connectInflater(pNaClEmbed, pNaClWrapper);
-
-	}
 	/// Parse the DAT file MFT header. This must be done oncein order to access
 	/// any files in the DAT.
 	lrInstance.parseHeaderAsync(callback);

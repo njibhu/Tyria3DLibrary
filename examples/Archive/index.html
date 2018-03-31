@@ -1,0 +1,32 @@
+<html>
+<head>
+    <title>New Archive API test file</title>
+    <meta content="">
+    <style></style>
+</head>
+<body>
+    <label>
+        <input id="filePicker" type="file" />    
+    </label>
+    <script src="lib/jquery-1.11.1.min.js"></script>
+    <script src="lib/DataStream.js"></script>
+    <script src="lib/T3D-1.1.0.js"></script>
+    <script>
+        var archive;
+        $("#filePicker").change(function(evt){
+            var file = evt.target.files[0];
+            archive = new T3D.Archive();
+            archive.loadArchive(file, () => {
+                archive.getFile(83171, (data) => {
+                    var data = new Uint8Array(data);
+                    var str = "";
+                    for (var elt of data.slice(0,12)){
+                        str += String.fromCharCode(elt);
+                    }
+                    console.log(str);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

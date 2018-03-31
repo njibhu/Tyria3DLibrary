@@ -2,8 +2,6 @@
   DataStream reads scalars, arrays and structs of data from an ArrayBuffer.
   It's like a file-like DataView on steroids.
 
-  @class DataStream
-  @constructor
   @param {ArrayBuffer} arrayBuffer ArrayBuffer to read from.
   @param {?Number} byteOffset Offset from arrayBuffer beginning for the DataStream.
   @param {?Boolean} endianness DataStream.BIG_ENDIAN or DataStream.LITTLE_ENDIAN (the default).
@@ -18,18 +16,29 @@ DataStream = function(arrayBuffer, byteOffset, endianness) {
       this._byteOffset += byteOffset;
     }
   } else {
-    this.buffer = new ArrayBuffer(arrayBuffer || 0);
+    this.buffer = new ArrayBuffer(arrayBuffer || 1);
   }
   this.position = 0;
   this.endianness = endianness == null ? DataStream.LITTLE_ENDIAN : endianness;
 };
 DataStream.prototype = {};
 
+/* Fix for Opera 12 not defining BYTES_PER_ELEMENT in typed array prototypes. */
+if (Uint8Array.prototype.BYTES_PER_ELEMENT === undefined) {
+    Uint8Array.prototype.BYTES_PER_ELEMENT = Uint8Array.BYTES_PER_ELEMENT; 
+    Int8Array.prototype.BYTES_PER_ELEMENT = Int8Array.BYTES_PER_ELEMENT; 
+    Uint8ClampedArray.prototype.BYTES_PER_ELEMENT = Uint8ClampedArray.BYTES_PER_ELEMENT; 
+    Uint16Array.prototype.BYTES_PER_ELEMENT = Uint16Array.BYTES_PER_ELEMENT; 
+    Int16Array.prototype.BYTES_PER_ELEMENT = Int16Array.BYTES_PER_ELEMENT; 
+    Uint32Array.prototype.BYTES_PER_ELEMENT = Uint32Array.BYTES_PER_ELEMENT; 
+    Int32Array.prototype.BYTES_PER_ELEMENT = Int32Array.BYTES_PER_ELEMENT; 
+    Float64Array.prototype.BYTES_PER_ELEMENT = Float64Array.BYTES_PER_ELEMENT; 
+}
 
 /**
   Saves the DataStream contents to the given filename.
   Uses Chrome's anchor download property to initiate download.
- 
+
   @param {string} filename Filename to save as.
   @return {null}
   */
@@ -517,9 +526,9 @@ DataStream.prototype.readFloat32Array = function(length, e) {
 DataStream.prototype.writeInt32Array = function(arr, e) {
   this._realloc(arr.length * 4);
   if (arr instanceof Int32Array &&
-      this.byteOffset+this.position % arr.BYTES_PER_ELEMENT == 0) {
+      (this.byteOffset+this.position) % arr.BYTES_PER_ELEMENT == 0) {
     DataStream.memcpy(this._buffer, this.byteOffset+this.position,
-                      arr.buffer, 0,
+                      arr.buffer, arr.byteOffset,
                       arr.byteLength);
     this.mapInt32Array(arr.length, e);
   } else {
@@ -538,9 +547,9 @@ DataStream.prototype.writeInt32Array = function(arr, e) {
 DataStream.prototype.writeInt16Array = function(arr, e) {
   this._realloc(arr.length * 2);
   if (arr instanceof Int16Array &&
-      this.byteOffset+this.position % arr.BYTES_PER_ELEMENT == 0) {
+      (this.byteOffset+this.position) % arr.BYTES_PER_ELEMENT == 0) {
     DataStream.memcpy(this._buffer, this.byteOffset+this.position,
-                      arr.buffer, 0,
+                      arr.buffer, arr.byteOffset,
                       arr.byteLength);
     this.mapInt16Array(arr.length, e);
   } else {
@@ -558,9 +567,9 @@ DataStream.prototype.writeInt16Array = function(arr, e) {
 DataStream.prototype.writeInt8Array = function(arr) {
   this._realloc(arr.length * 1);
   if (arr instanceof Int8Array &&
-      this.byteOffset+this.position % arr.BYTES_PER_ELEMENT == 0) {
+      (this.byteOffset+this.position) % arr.BYTES_PER_ELEMENT == 0) {
     DataStream.memcpy(this._buffer, this.byteOffset+this.position,
-                      arr.buffer, 0,
+                      arr.buffer, arr.byteOffset,
                       arr.byteLength);
     this.mapInt8Array(arr.length);
   } else {
@@ -579,9 +588,9 @@ DataStream.prototype.writeInt8Array = function(arr) {
 DataStream.prototype.writeUint32Array = function(arr, e) {
   this._realloc(arr.length * 4);
   if (arr instanceof Uint32Array &&
-      this.byteOffset+this.position % arr.BYTES_PER_ELEMENT == 0) {
+      (this.byteOffset+this.position) % arr.BYTES_PER_ELEMENT == 0) {
     DataStream.memcpy(this._buffer, this.byteOffset+this.position,
-                      arr.buffer, 0,
+                      arr.buffer, arr.byteOffset,
                       arr.byteLength);
     this.mapUint32Array(arr.length, e);
   } else {
@@ -600,9 +609,9 @@ DataStream.prototype.writeUint32Array = function(arr, e) {
 DataStream.prototype.writeUint16Array = function(arr, e) {
   this._realloc(arr.length * 2);
   if (arr instanceof Uint16Array &&
-      this.byteOffset+this.position % arr.BYTES_PER_ELEMENT == 0) {
+      (this.byteOffset+this.position) % arr.BYTES_PER_ELEMENT == 0) {
     DataStream.memcpy(this._buffer, this.byteOffset+this.position,
-                      arr.buffer, 0,
+                      arr.buffer, arr.byteOffset,
                       arr.byteLength);
     this.mapUint16Array(arr.length, e);
   } else {
@@ -620,9 +629,9 @@ DataStream.prototype.writeUint16Array = function(arr, e) {
 DataStream.prototype.writeUint8Array = function(arr) {
   this._realloc(arr.length * 1);
   if (arr instanceof Uint8Array &&
-      this.byteOffset+this.position % arr.BYTES_PER_ELEMENT == 0) {
+      (this.byteOffset+this.position) % arr.BYTES_PER_ELEMENT == 0) {
     DataStream.memcpy(this._buffer, this.byteOffset+this.position,
-                      arr.buffer, 0,
+                      arr.buffer, arr.byteOffset,
                       arr.byteLength);
     this.mapUint8Array(arr.length);
   } else {
@@ -641,9 +650,9 @@ DataStream.prototype.writeUint8Array = function(arr) {
 DataStream.prototype.writeFloat64Array = function(arr, e) {
   this._realloc(arr.length * 8);
   if (arr instanceof Float64Array &&
-      this.byteOffset+this.position % arr.BYTES_PER_ELEMENT == 0) {
+      (this.byteOffset+this.position) % arr.BYTES_PER_ELEMENT == 0) {
     DataStream.memcpy(this._buffer, this.byteOffset+this.position,
-                      arr.buffer, 0,
+                      arr.buffer, arr.byteOffset,
                       arr.byteLength);
     this.mapFloat64Array(arr.length, e);
   } else {
@@ -662,9 +671,9 @@ DataStream.prototype.writeFloat64Array = function(arr, e) {
 DataStream.prototype.writeFloat32Array = function(arr, e) {
   this._realloc(arr.length * 4);
   if (arr instanceof Float32Array &&
-      this.byteOffset+this.position % arr.BYTES_PER_ELEMENT == 0) {
+      (this.byteOffset+this.position) % arr.BYTES_PER_ELEMENT == 0) {
     DataStream.memcpy(this._buffer, this.byteOffset+this.position,
-                      arr.buffer, 0,
+                      arr.buffer, arr.byteOffset,
                       arr.byteLength);
     this.mapFloat32Array(arr.length, e);
   } else {
@@ -883,16 +892,9 @@ DataStream.endianness = new Int8Array(new Int16Array([1]).buffer)[0] > 0;
   @param {number} byteLength Number of bytes to copy.
  */
 DataStream.memcpy = function(dst, dstOffset, src, srcOffset, byteLength) {
-
-  try{
-    var dstU8 = new Uint8Array(dst, dstOffset, byteLength);
-    var srcU8 = new Uint8Array(src, srcOffset, byteLength);
-    dstU8.set(srcU8);  
-  }
-  catch(e){
-    debugger;
-  }
-  
+  var dstU8 = new Uint8Array(dst, dstOffset, byteLength);
+  var srcU8 = new Uint8Array(src, srcOffset, byteLength);
+  dstU8.set(srcU8);
 };
 
 /**
@@ -946,6 +948,23 @@ DataStream.flipArrayEndianness = function(array) {
 };
 
 /**
+  Creates an array from an array of character codes.
+  Uses String.fromCharCode in chunks for memory efficiency and then concatenates
+  the resulting string chunks.
+
+  @param {array} array Array of character codes.
+  @return {string} String created from the character codes.
+**/
+DataStream.createStringFromArray = function(array) {
+  var chunk_size = 0x8000;
+  var chunks = [];
+  for (var i=0; i < array.length; i += chunk_size) {
+    chunks.push(String.fromCharCode.apply(null, array.subarray(i, i + chunk_size)));
+  }
+  return chunks.join("");
+};
+
+/**
   Seek position where DataStream#readStruct ran into a problem.
   Useful for debugging struct parsing.
 
@@ -986,7 +1005,9 @@ DataStream.prototype.failurePosition = 0;
 
   // String types
   'cstring' -- ASCII string terminated by a zero byte.
-  'string:N' -- ASCII string of length N.
+  'string:N' -- ASCII string of length N, where N is a literal integer.
+  'string:variableName' -- ASCII string of length $variableName,
+    where 'variableName' is a previously parsed number in the current struct.
   'string,CHARSET:N' -- String of byteLength N encoded with given CHARSET.
   'u16string:N' -- UCS-2 string of length N in DataStream endianness.
   'u16stringle:N' -- UCS-2 string of length N in little-endian.
@@ -1033,7 +1054,7 @@ DataStream.prototype.readStruct = function(structDefinition) {
   @return {string} The read string.
  */
 DataStream.prototype.readUCS2String = function(length, endianness) {
-  return String.fromCharCode.apply(null, this.readUint16Array(length, endianness));
+  return DataStream.createStringFromArray(this.readUint16Array(length, endianness));
 };
 
 /**
@@ -1068,7 +1089,7 @@ DataStream.prototype.writeUCS2String = function(str, endianness, lengthOverride)
  */
 DataStream.prototype.readString = function(length, encoding) {
   if (encoding == null || encoding == "ASCII") {
-    return String.fromCharCode.apply(null, this.mapUint8Array(length == null ? this.byteLength-this.position : length));
+    return DataStream.createStringFromArray(this.mapUint8Array(length == null ? this.byteLength-this.position : length));
   } else {
     return (new TextDecoder(encoding)).decode(this.mapUint8Array(length));
   }
@@ -1119,7 +1140,7 @@ DataStream.prototype.readCString = function(length) {
     len = Math.min(length, blen);
   }
   for (var i = 0; i < len && u8[i] != 0; i++); // find first zero byte
-  var s = String.fromCharCode.apply(null, this.mapUint8Array(i));
+  var s = DataStream.createStringFromArray(this.mapUint8Array(i));
   if (length != null) {
     this.position += len-i;
   } else if (i != blen) {
@@ -1177,10 +1198,21 @@ DataStream.prototype.readType = function(t, struct) {
   var lengthOverride = null;
   var charset = "ASCII";
   var pos = this.position;
+  var len;
   if (typeof t == 'string' && /:/.test(t)) {
     var tp = t.split(":");
     t = tp[0];
-    lengthOverride = parseInt(tp[1]);
+    len = tp[1];
+
+    // allow length to be previously parsed variable
+    // e.g. 'string:fieldLength', if `fieldLength` has
+    // been parsed previously.
+    if (struct[len] != null) {
+      lengthOverride = parseInt(struct[len]);
+    } else {
+      // assume literal integer e.g., 'string:4'
+      lengthOverride = parseInt(tp[1]);
+    }
   }
   if (typeof t == 'string' && /,/.test(t)) {
     var tp = t.split(",");
@@ -1487,3 +1519,16 @@ DataStream.prototype.writeType = function(t, v, struct) {
     this.position = pos + lengthOverride;
   }
 };
+
+// Export DataStream for amd environments
+if (typeof define === 'function' && define.amd) {
+    define('DataStream', [], function() {
+      return DataStream;
+    });
+  }
+  
+// Export DataStream for CommonJS
+if (typeof module === 'object' && module && module.exports) {
+  module.exports = DataStream;
+}
+

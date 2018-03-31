@@ -547,7 +547,7 @@ static main(void)
     auto aChunkName, aNbOfVersions, aANSTructTabOffset;
     
     auto aOutputFile, aReportFile;
-    aOutputFile = fopen("output.txt", "w");
+    aOutputFile = fopen("output.js", "w");
     
     Message("ANet structs script started.\n");
     
@@ -651,6 +651,4 @@ static main(void)
     Message("ANet structs script ended.\n");
     
     fclose(aOutputFile);
-    
-    Exec("output.txt");
 }

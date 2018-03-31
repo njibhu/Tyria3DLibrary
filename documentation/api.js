@@ -10,7 +10,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "Logger",
         "MaterialUtils",
         "MathUtils",
-        "ModelRenderer",
+        "SingleModelRenderer",
         "ParserUtils",
         "PropertiesRenderer",
         "RenderUtils",

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2015 RequestTimeout <https://github.com/RequestTimeout408>
+Copyright © Tyria3DLibrary project contributors
 
 This file is part of the Tyria 3D Library.
 
@@ -32,23 +32,24 @@ var MathUtils = require('../util/MathUtils.js');
 /// List of known GW2 maps used to make lookup faster
 var MapFileList =  require('../MapFileList');
 
+/// Utilities to handle the whole archive file list
+var FileTypes = require('./FileTypes');
 
 /**
  * A statefull class that handles reading and inflating data from a local GW2 dat file.
  * @class LocalReader
  * @constructor
  * @param {File}	datFile A core JS File instance, must refer to the GW2 .dat
- * @param {String}	version T3D version.
  * @param {Object} logger {{#crossLink "Logger"}}{{/crossLink}} object responsible for UI logging.
  */
-var LocalReader = function(datFile, version, logger){
+var LocalReader = function(datFile, logger){
 
-	/// Initiate list of file infaltion listeners
+	/// Initiate list of file inflation listeners
 	this.fileListeners = [];
 
 	/// Add reference to file object to DAT
 	this.dat = datFile;
-	this.version = version;
+	this.version = T3D.version;
 
 	if(logger)
 		this.logger = logger;
@@ -71,22 +72,21 @@ LocalReader.prototype.parseHeaderAsync = function(callback){
 }
 
 /**
- * Registers a pNaCl inflaton program from the DOM to this instance.
+ * Registers an inflater webworker from the DOM to this instance.
  * @method connectInflater
- * @param  {HTMLElement} inflater   The embed element for the pNaCl program
- * @param  {HTMLElement} inflaterWrapper The element wrapping the embed
+ * @param  {HTMLElement} inflater   The embed element for the t3dtools.js webworker
  */
-LocalReader.prototype.connectInflater = function(inflater, inflaterWrapper){
+LocalReader.prototype.connectInflater = function(inflater){
 	var self = this;
 
-	/// HTML pNaCl emed elements
-	this.NaClInflater = inflater;	
+	//HTML webworker Element
+	this.inflater = inflater;	
 
-    /// Set up a listener for any messages passed by the pNaCl component
-    inflaterWrapper.addEventListener(
+    /// Set up a listener for any messages passed by the webworker component
+    this.inflater.addEventListener(
     	'message',
     	function(message_event){
-    		self.NaClListener.call(self, message_event);
+    		self.listener.call(self, message_event);
     	},
     	true
 	);
@@ -94,23 +94,20 @@ LocalReader.prototype.connectInflater = function(inflater, inflaterWrapper){
 }
 
 /**
- * Listener for pNaCl inflater.
- * @method NaClListener
- * @param {Object} message_event data received from pNaCl program.
+ * Listener for the inflater.
+ * @method listener
+ * @param {Object} message_event data received from the webworker
  */
-LocalReader.prototype.NaClListener = function(message_event){
+LocalReader.prototype.listener = function(message_event){
 	if( typeof message_event.data === 'string' ) {
 		
 		this.logger.log(
 			T3D.Logger.TYPE_WARNING,
-			"NaCl threw an error",message_event.data
+			"Inflater threw an error", message_event.data
 		);
 		return;
 	}
 
-
-	//console.log("Got back a DS from NaCl RAW", message_event.data);
-	//console.log("Got back a DS from NaCl Uint32Array", new Uint32Array(message_event.data));
 	var handle = message_event.data[0];
 
 	if(this.fileListeners[handle]){
@@ -168,18 +165,16 @@ LocalReader.prototype.readMFTHeader = function(ds){
 	this.mft = ds.readStruct(defMFT);
 
 	var entryStartPtr = ds.position;
-	var numEntires = this.mft.nbOfEntries;
+	var numEntries = this.mft.nbOfEntries;
 
-	/// MFT has entries with offset, size and compression flag
+	/// MFT has entries with offset, size, compression flag and crc
 	/// for all files in the .dat
 
-	/// Read all entry offsets and sizes into uint32 arrays
 	this.mft.entryDict = {
-		offset_0:new Uint32Array(numEntires),
-		offset_1:new Uint32Array(numEntires),
-		offset:new Float64Array(numEntires),
-		size:new Uint32Array(numEntires),
-		compressed:new Uint16Array(numEntires),
+		offset:new Float64Array(numEntries),
+		size:new Uint32Array(numEntries),
+		compressed:new Uint16Array(numEntries),
+		crc: new Uint32Array(numEntries),
 	}
 
 
@@ -188,31 +183,28 @@ LocalReader.prototype.readMFTHeader = function(ds){
 		T3D.Logger.TYPE_DEBUG,
 		"reading MFT entries"
 	);
-	for(var i=0; i<numEntires-1; i++){
+	for(var i=0; i<numEntries-1; i++){
 		
-		/// Read first 14 bytes
-		this.mft.entryDict.offset_0[i] = ds.readUint32();
-		this.mft.entryDict.offset_1[i] = ds.readUint32();
+		/// Read the 64bit offset
+		var offset_0 = ds.readUint32();
+		var offset_1 = ds.readUint32();
+		this.mft.entryDict.offset[i] =  MathUtils.arr32To64(
+			[ offset_0, offset_1 ] );
+
+		/// Size is 32bit int and compression flags are 16bits
 		this.mft.entryDict.size[i] = ds.readUint32();
 		this.mft.entryDict.compressed[i] = ds.readUint16();
+		
+		/// Skip 6 unknown bytes
+		ds.seek(ds.position + 6);
 
-
-		this.mft.entryDict.offset[i] =  MathUtils.arr32To64(
-			[ this.mft.entryDict.offset_0[i],
-			  this.mft.entryDict.offset_1[i] ]
-		);
-
-		/// Skip 10
-		ds.seek(ds.position + 10);
-
+		/// CRC is 32bit int
+		this.mft.entryDict.crc[i] = ds.readUint32();
 	}
 
 	/// Read data pointed to by 2nd mft entry
 	/// This entry maps file ID to MFT index	
-	var offset = MathUtils.arr32To64(
-		[ this.mft.entryDict.offset_0[1],
-		  this.mft.entryDict.offset_1[1] ]
-	);
+	var offset = this.mft.entryDict.offset[1];
 	var size = this.mft.entryDict.size[1];
 
 	this.loadFilePart(this.dat, offset, size, this.readMFTIndexFile);
@@ -231,15 +223,15 @@ LocalReader.prototype.readMFTIndexFile = function(ds, size){
 	var length = size / 8;
 
 	/// fileIdTable
-	var ids = new Uint32Array(length);
-	var mftIndices = new Uint32Array(length);
+	var ids = new Uint32Array(length); // x -> id
+	var mftIndices = new Uint32Array(length); // x -> mft
 
 	/// m_entryToId
-	var m_entryToId_baseId = new Uint32Array(length);
-	var m_entryToId_fileFileId = new Uint32Array(length);
+	var m_entryToId_baseId = new Uint32Array(length); //mft -> baseId
+	var m_entryToId_fileFileId = new Uint32Array(length); //mft -> fileid
 
-	this.mft.baseToMft = new Uint32Array(2e6);
-	this.mft.fileToMft = new Uint32Array(2e6);
+	this.mft.baseToMft = new Uint32Array(2e6); // -> mft
+	this.mft.fileToMft = new Uint32Array(2e6); // -> mft
 	
 	for(var i=0; i<length; i++){
 		ids[i] = ds.readUint32();
@@ -611,38 +603,8 @@ LocalReader.prototype.listFiles = function(uniqueIdxs, type, start, length, N ,c
 		}
 
 		var ds = new DataStream(inflatedData);
-
-		/// Check if this is a pack file, a texture, a string file etc
-		var first4 = ds.readCString(4);
-		var fileType;
-
-		///Texture
-		if( first4 == "ATEX" || first4 == "ATEC" ||
-			first4 == "ATEP" || first4 == "ATET" || 
-			first4 == "ATEU" || first4 == "ATTX" ){
-			fileType = "Texture";
-		}
-
-		///Pack file
-		else if(first4.indexOf("PF") == 0){
-			var file = new GW2File(ds, 0, true);/// true for "plz no load chunkz"
-			fileType = file.header.type;
-		}
-
-		///Binary
-		else if(first4.indexOf("MZ") == 0){
-			fileType = "Binary";
-		}
-
-		/// Strings file
-		else if(first4 == "strs"){
-			fileType = "String";
-		}
-
-		///Unknown
-		else{
-			fileType = "Unknown";
-		}
+		var fileType = FileTypes.getFileType(ds);
+		fileType = FileTypes.getTypeName(fileType);
 		
 		/// Add file to result[type] array
 		/// If a type was specified in the call only allow that type to be added
@@ -848,10 +810,7 @@ LocalReader.prototype.loadFile = function(baseId, callback, isImage, raw){
 
 	//console.log("fetchign  baseId ",baseId);
 	
-	var offset = MathUtils.arr32To64(
-		[ this.mft.entryDict.offset_0[mftIndex],
-		  this.mft.entryDict.offset_1[mftIndex] ]
-	);
+	var offset = this.mft.entryDict.offset[mftIndex];
 
 	var size = this.mft.entryDict.size[mftIndex];
 	//console.log("File at found index is "+ size +" bytes");
@@ -867,7 +826,7 @@ LocalReader.prototype.loadFile = function(baseId, callback, isImage, raw){
 		return;
 	}
 
-	/// Read map and pass the ds to our pNaCL inflate function
+	/// Read map and pass the ds to our inflate function
 	//TODO: will this work?? Shared base id's and all that...
 	var handle = index;
 
@@ -888,13 +847,13 @@ LocalReader.prototype.loadFile = function(baseId, callback, isImage, raw){
 
 
 /**
- * Infaltes binary data using a pNaCl program. If the isImage flag is set the infalted data is
+ * Inflates binary data using an external webworker. If the isImage flag is set the infalted data is
  * also decoded if it contains DXT image data.
  * @method inflate
  * @param  {DataStream} ds DataStream instance holding data to inflate
  * @param  {Number}   size      Number if bytes to read
  * @param  {Number}   handle    Unique ID for this file
- * @param  {Function} callback  callback to register for this pNaCl task
+ * @param  {Function} callback  callback to register for this inflating task
  * @param  {Boolean}  isImage   Passed to the inflater in order to decode image data
  * @param  {[type]}   capLength Number of bytes to deflate.
  */
@@ -933,10 +892,8 @@ LocalReader.prototype.inflate = function(ds, size, handle, callback, isImage, ca
 	}
 	
     
-    /// Call pNaCl component with the handle and arrayBuffer as an arguments
-
-    //console.log("posting",[handle,arrayBuffer,isImage===true])
-	this.NaClInflater.postMessage([handle,arrayBuffer,isImage===true, capLength]);
+    /// Call the webworker component with the handle and arrayBuffer as an arguments
+	this.inflater.postMessage([handle,arrayBuffer,isImage===true, capLength]);
 };
 
 /**

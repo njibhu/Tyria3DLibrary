@@ -1,0 +1,46 @@
+ROADMAP 1.1.0:
+
++ > done
+~ > ongoing
+
+Major:
+    + > Update THREEjs + tools
+    
+    > Major revamp of the LocalReader
+        + > Only use of t3dtools
+        + > Allow spawn of webworkers
+        ~ > Migrate to IndexedDB; store all Mft data (Type, CRC, size) into it
+        > Fast rescan with existing data
+            > Report of rescan 
+            > (indexedDB logs)
+        ~ >  Full rewrite of LocalReader (archive)
+        > Replace all uses of LocalReader and remove it
+            > Remove definitions/ANDat + MFT
+            
+    > Cleanup of the Utils + DataRenderers
+        > Do we handle the chunks in the Renderer or in Utils ?
+        > Move all the chunk handling stuff into utils and make the DataRenderers pretty interfaces 
+        > RenderUtils
+        > MaterialUtils
+    
+    ~ > Tyria3DFormats splitup + autoscript
+        > Multiple use: add a chunk_prefered field
+        > Remove Allformats
+
+Medium:
+    + > Bump to 1.1
+    > Rework the LOD in TerrainRenderer
+     ~ > Debug tool: (see threejs example interactive/buffergeometry ): Tells name of a mesh by pointing at it
+    + > Copyrights mentions and headers
+    + > Rewrite gulpfile
+    > Check npm dependencies
+    > Clean all the todos
+
+Minor:
+    > Make EmissiveMap work
+        > Fix (if not with emissivemap) the black not transparent textures (backside)
+    > Check normal maps and other kind of maps
+    > Use gw2 skydomes + (threejs example sky)
+    
+    > Cleanup code
+      > Especially the GW2Chunk

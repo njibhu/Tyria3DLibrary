@@ -1,0 +1,21 @@
+LocalReader actual state:
+ -> constructor
+ +> parseHeaderAsync   -> ArchiveParser
+ +> connectInflater    -> DataReader (moved to constructor)   [public]
+ +> listener           -> DataReader
+ +> readANDatHeader    -> ArchiveParser
+ +> readMFTHeader      -> ArchiveParser
+ +> readMFTIndexFile   -> ArchiveParser
+ > loadFileList       -> PersistantStore + FileTypes                [public]
+ > loadMapList        -> PersistantStore                            [public]
+ > storeFileList      -> PersistantStore + FileTypes                [public]
+ > storeMapList       -> PersistantStore                            [public]
+ > readFileListAsync  -> Archive + FileTypes                        [public]
+ > readMapListAsync   -> Archive                                    [public]
+ > listFiles          -> Archive + FileTypes
+ +> getFileIndex       -> Archive (moved to getFileMeta)
+ > loadTextureFile    -> Archive                                    [public]
+ +> loadFile           -> Archive                                    [public]
+ +> inflate            -> DataReader
+ +> loadFilePart       -> ArchiveParser
+

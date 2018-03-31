@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2015 RequestTimeout <https://github.com/RequestTimeout408>
+Copyright © Tyria3DLibrary project contributors
 
 This file is part of the Tyria 3D Library.
 
@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var Utils = require("../util/RenderUtils");
+var RenderUtils = require("../util/RenderUtils");
 var DataRenderer = require('./DataRenderer');
 
 /**
@@ -167,8 +167,8 @@ PropertiesRenderer.prototype.renderAsync = function(callback){
 		    	maxDist = Math.max( maxDist, addMeshToLOD(mesh,groups,lod,prop,needsClone) );
 	    	});
 
-	    	/// Add invisible level
-	    	//lod.addLevel(new THREE.Group(),10000);
+	    	/// Add invisible level (the raycaster crashes on lod without any levels)
+	    	lod.addLevel(new THREE.Group(),100000);
 
 		    /// Set position, scale and rotation of the LOD object
 			if(prop.rotation){
@@ -233,7 +233,7 @@ PropertiesRenderer.prototype.renderAsync = function(callback){
 
 		/// Get meshes
 		var showUnmaterialed = false;
-		Utils.getMeshesForFilename(prop.filename, prop.color, self.localReader, self.meshCache, self.textureCache, showUnmaterialed,
+		RenderUtils.getMeshesForFilename(prop.filename, prop.color, self.localReader, self.meshCache, self.textureCache, showUnmaterialed,
 			function(meshes, isCached, boundingSphere){
 			
 				if(meshes){
