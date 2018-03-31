@@ -108,7 +108,7 @@ LocalReader.prototype.NaClListener = function(message_event){
 		return;
 	}
 
-	
+
 	//console.log("Got back a DS from NaCl RAW", message_event.data);
 	//console.log("Got back a DS from NaCl Uint32Array", new Uint32Array(message_event.data));
 	var handle = message_event.data[0];
@@ -893,7 +893,7 @@ LocalReader.prototype.loadFile = function(baseId, callback, isImage, raw){
  * @method inflate
  * @param  {DataStream} ds DataStream instance holding data to inflate
  * @param  {Number}   size      Number if bytes to read
- * @param  {Number   handle    Unique ID for this file
+ * @param  {Number}   handle    Unique ID for this file
  * @param  {Function} callback  callback to register for this pNaCl task
  * @param  {Boolean}  isImage   Passed to the inflater in order to decode image data
  * @param  {[type]}   capLength Number of bytes to deflate.

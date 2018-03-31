@@ -1,5 +1,5 @@
 <!--
-Copyright (C) 2015 RequestTimeout <https://github.com/RequestTimeout408>
+Copyright (C) 2018 Njibhu <https://github.com/njibhu>
 
 This file is part of the Tyria 3D Library.
 
@@ -20,7 +20,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 <html >
     <head>
         <meta charset="utf-8">
-        <title>T3D API - Examples : Single Model Rendering</title>        
+        <title>T3D API - Examples : Map Rendering</title>        
         <style type="text/css">
             body{
                 background: rgb(251,241,244); /*titanium white*/
@@ -59,7 +59,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 
         <label>
             <span>Select Model File Id</span>
-            <input id="fileIdInput" type="number" value="13848" disabled />
+            <input id="fileIdInput" type="number" value="295282" disabled />
         </label>
 
         <button id="loadModelBtn" disabled>Load Model</button>
@@ -104,7 +104,10 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
             var _scene;
             var _camera;
             var _renderer;
-            var _models = [];
+            var _terrainChunks = [];
+            var near = 0.1;
+            var far = 100000;
+
 
             /// Extend Original Logger
             var myLogger = {
@@ -159,99 +162,57 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 
             /// The insterresting part!
             function onButtonClick(){
+                var self = this;
 
                 /// Get selected file id
                 var fileId = $("#fileIdInput").val();
-
-
-                /// Let's use the ModelRenderer. It renders 3D stuff!
-                var renderClass = T3D.ModelRenderer;
 
                 /// All renderers must have access to a LocalReader.
                 /// The LocalReader is the object that allows us
                 /// to read from the .dat
                 var localReader = _lr;
 
-                /// The settings object is different for all renderers.
-                /// Accourding to documentation the ModelRenderer requires
-                /// the id of a file.
-                var settings = {id:fileId};
+                var renderers = [
+                    {
+					renderClass: T3D.EnvironmentRenderer,
+					settings:{}
+				    },
+				    {
+					renderClass: T3D.TerrainRenderer,
+					settings:{}
+                    }
+                ];
 
-                /// This is the value object that renderers use to write output!
-                /// If we ran multiple renderers that wanted to read output from
-                /// each other we'd have to pass this object to each Renderer!
-                /// Note that we'll want to access this object later, so make
-                /// sure it's stored in a scope we can reach from the callback
-                /// method.
-                _context = {};
+                T3D.renderMapContentsAsync(localReader, fileId, renderers, onRendererDone);
 
-                /// The method to run when the renderer is done. Almost all
-                /// renderers are asynchronous since there is a lot of file
-                /// reading et cetera.
-                var callback = onRendererDone;
-
-                /// Running a renderer takes 5 mandatory parameters! Phew!
-                T3D.runRenderer(
-                    renderClass,
-                    localReader,
-                    settings,
-                    _context,
-                    callback
-                );
             }
 
             /// Runs when the ModelRenderer is finshed
-            function onRendererDone(){
-                
-                /// Remove old models from the 3D scene
-                _models.forEach(function(mdl){
-                    _scene.remove(mdl);
-                });
+            function onRendererDone(mapData){
+                cleanScene();
 
-                /// Now we want to take a look in the output object!
-                /// The object we told the renderer to write to was _context
-                var readFromContext = _context;
+                for(elem of T3D.getContextValue(mapData, T3D.TerrainRenderer, "terrainTiles")){
+                    elem.material.uniforms["fogNear"].value = near;
+                    elem.material.uniforms["fogFar"].value = far;
+                    elem.material.needsUpdate = true;
+                    _scene.add(elem);
+                    _terrainChunks.push(elem);
+                }
 
-                /// The generator class we want output for is ModelRenderer
-                var readForClass = T3D.ModelRenderer;
+                var water = T3D.getContextValue(mapData, T3D.TerrainRenderer, "water");
+                _scene.add(water)
+                _terrainChunks.push(water);
 
-                /// The documentation says the generated outputs are:
-                /// 
-                /// meshes : An array of THREE.Mesh objects visualizing this model file.
-                /// 
-                /// Lets get that one!
-                var nameOfValue = "meshes";
+                _camera.position.x = 1;
+                _camera.position.y = 1;
 
-                /// Let's go!
-                _models = T3D.getContextValue(readFromContext, readForClass, nameOfValue); 
-
-                /// From here on it's just THREE stuff:
-
-                /// Keeping track of the biggest model for later
-                var biggestMdl = null;
-
-                /// Add all models to the scene
-                _models.forEach(function(model){
-
-                    /// Find the biggest model for camera focus/fitting
-                    if(!biggestMdl || biggestMdl.boundingSphere.radius < model.boundingSphere.radius){
-                        biggestMdl = model;
-                    }
-
-                    _scene.add(model);
-                });
-
-                _camera.position.x = 200;
-                _camera.position.y = 50;
-
-                /// Focus camera to the bigest model
-                if(biggestMdl)
-                    _camera.lookAt(biggestMdl.position);      
             }
 
-
-
-
+            function cleanScene(){
+                for (elem of _terrainChunks){
+                    _scene.remove(elem);
+                }
+            }
 
             /// Basic THREE stuff, don't mind it
             function setupScene(){
@@ -261,8 +222,6 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
                 var canvasClearColor = 0x342920; // For happy rendering, always use Van Dyke Brown.
                 var fov = 60;
                 var aspect = 1;
-                var near = 0.1;
-                var far = 50000;
 
                 _camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 

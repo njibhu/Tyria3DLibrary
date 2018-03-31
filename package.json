@@ -1,19 +1,16 @@
 {
   "name": "Tyria3D-API",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": true,
   "dependencies": {},
-  
   "devDependencies": {
     "gulp": "*",
     "browserify": "4.2.0",
     "yargs": "*",
     "combined-stream": "0.0.5",
     "vinyl-source-stream": "*",
-
     "gulp-uglify": "*",
-    "gulp-streamify" : "*",
-    
+    "gulp-streamify": "*",
     "gulp-watch": "~0.6.8"
   }
 }

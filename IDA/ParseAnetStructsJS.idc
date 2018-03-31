@@ -4,7 +4,6 @@
 This file is based on Original Work done by Antoine Hom https://github.com/ahom
 
 
- */
 Copyright (C) 2015 RequestTimeout <https://github.com/RequestTimeout408>
 
 This file is part of the Tyria 3D Library.

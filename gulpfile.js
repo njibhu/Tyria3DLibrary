@@ -21,6 +21,9 @@
  *
  */
 
+//Load version from package.json
+var version = require('./package.json').version;
+
 /* Core functionality requires gulp and browserify */
 var gulp = require('gulp');
 var browserify = require('browserify');
@@ -72,7 +75,11 @@ buildJS = function(settings) {
 	}
 	
 	/// Move to build directory
-	bundleFileStream.pipe(gulp.dest('build'));
+	bundleFileStream.pipe(gulp.dest('build'))
+		// Copy to examples as well
+		.pipe(gulp.dest('./examples/Tyria2D/lib'))
+		.pipe(gulp.dest('./examples/ModelRenderer/lib'))
+		.pipe(gulp.dest('./examples/MapRenderer/lib'));
 }
 
 /// gulp API 
@@ -85,7 +92,7 @@ gulp.task('formats', function(){
 	buildJS(
 			{
 				isProduction: isProduction,
-				fileName: "T3D-1.0.3.Formats.min.js",
+				fileName: `T3D-${version}.Formats.min.js`,
 				mainFile:'./src/format/definition/AllFormats.js',
 				bundleParams:{}
 			}
@@ -104,8 +111,8 @@ gulp.task('watch', function() {
 	}, function(files) {
 		var isProduction = (argv.production === undefined) ? false : true;	
 		var fileNames = {
-			dev : "T3D-1.0.3.js",
-			production : "T3D-1.0.3.min.js"
+			dev : `T3D-${version}.js`,
+			production : `T3D-${version}.min.js`
 		};
 
 

@@ -145,7 +145,7 @@ function getUVMat(textures, numUV, alphaTest){
 				lightMap
 			), 
 		attributes: attributes,
-		side: THREE.DoubleSide,
+		side: THREE.BackSide,
 	} );
 
 }
@@ -310,7 +310,7 @@ var getMaterial = ME.getMaterial = function(material, materialFile, localReader,
 
 			//finalMaterial = new THREE.MeshBasicMaterial({
 			finalMaterial = new THREE.MeshLambertMaterial({
-				side: THREE.DoubleSide, map:getTexture(ft.filename, localReader, sharedTextures)
+				side: THREE.BackSide, map:getTexture(ft.filename, localReader, sharedTextures)
 			}); 
 			finalMaterial.textureFilename = ft.filename;
 			if(grChunk.data.flags!=16460){
@@ -324,7 +324,7 @@ var getMaterial = ME.getMaterial = function(material, materialFile, localReader,
 	/// Fallback material is monocolored red
 	else{
 		finalMaterial = new THREE.MeshBasicMaterial({
-			side: THREE.DoubleSide,
+			side: THREE.BackSide,
 			color:0xff0000,
 			shading: THREE.FlatShading}); 
 	}
@@ -439,7 +439,7 @@ var getMaterial = ME.getMaterial = function(material, materialFile, localReader,
 			//debugger;
 			//console.log("no light");
 			finalMaterial =  new THREE.MeshBasicMaterial({
-				side: THREE.DoubleSide,
+				side: THREE.BackSide,
 				map: finalMaterial.map
 			});
 

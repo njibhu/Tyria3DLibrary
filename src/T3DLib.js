@@ -41,9 +41,10 @@ module.exports = T3D;
 function T3D() {}
 
 /* PRIVATE VARS */
-var _version = "1.0.3";
+var _version = "1.0.4";
 var _settings = {
-	inflaterURL : "modules/nacl/t3dgwtools.nmf"
+	inflaterURL : "modules/nacl/t3dgwtools.nmf",
+	t3dworkerURL: "modules/t3dtools/t3dworker.js"
 };
 
 /* PUBLIC PROPERTIES */
@@ -269,14 +270,14 @@ T3D.RenderUtils = require('./util/RenderUtils.js');
  */
 function checkRequirements(){
 	var numErrors = 0;
-	var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
-	if(!is_chrome){
-		T3D.Logger.log(
-			T3D.Logger.TYPE_ERROR,
-			"T3D inflation requires Google Chrome."
-		);
-		numErrors++;
-	}
+	// var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+	// if(!is_chrome){
+	// 	T3D.Logger.log(
+	// 		T3D.Logger.TYPE_ERROR,
+	// 		"T3D inflation requires Google Chrome."
+	// 	);
+	// 	numErrors++;
+	// }
 
 	if(typeof DataStream === "undefined"){
 		T3D.Logger.log(
@@ -352,38 +353,49 @@ function findDuplicateChunkDefs(){
  *                             		
  * @param  {String} 	inflaterURL URL to the inflater .mft file. If omitted
  *                               	_settings.inflaterURL will be used instead.
+ * @param  {Class}		logger		
+ * @param  {String}		t3dworkerURL	URL to the t3dtools web worker
  * 
  * @return {LocalReader}			The contructed LocalReader, note that this object
  *                             		will not be fully initialized until the callback
  *                             		is fired.
  */
-T3D.getLocalReader = function(file, callback, inflaterURL, logger){
+T3D.getLocalReader = function(file, callback, inflaterURL, logger, t3dworkerURL){
 
 	/// Create Inflater for this file reader.
 	/// We use a wrapper to catch the events.
 	/// We use the embed tag itself for posing messages.
+
+	//Check if the nacl API is not available
+	if(navigator.mimeTypes['application/x-nacl'] === undefined) {
+		var worker = new Worker(t3dworkerURL ? t3dworkerURL : _settings.t3dworkerURL);
+
+		var lrInstance = new LocalReader(file, _version, logger);
+		lrInstance.connectInflater(worker, worker);
+	} 
+	else {
+		var pNaClWrapper = document.createElement("div"); 
+		pNaClWrapper.setAttribute("id", "pNaClListener");
+		
+		var pNaClEmbed = document.createElement("embed");
+		pNaClEmbed.setAttribute("type", "application/x-pnacl");
 	
-	var pNaClWrapper = document.createElement("div"); 
-	pNaClWrapper.setAttribute("id", "pNaClListener");
+		pNaClEmbed.style.position ="absolute";
+		pNaClEmbed.style.height = 0;
+		pNaClEmbed.style.width = 0;
+		pNaClEmbed.setAttribute("src", inflaterURL ? inflaterURL : _settings.inflaterURL);
 	
-	var pNaClEmbed = document.createElement("embed");
-	pNaClEmbed.setAttribute("type", "application/x-pnacl");
+		/// Add the objects to the DOM
+		pNaClWrapper.appendChild(pNaClEmbed);
+		document.body.appendChild(pNaClWrapper);
+		
+		/// Connect the provided file reference to a new LocalReader.
+		var lrInstance = new LocalReader(file, _version, logger);
 
-	pNaClEmbed.style.position ="absolute";
-	pNaClEmbed.style.height = 0;
-	pNaClEmbed.style.width = 0;
-	pNaClEmbed.setAttribute("src", inflaterURL ? inflaterURL : _settings.inflaterURL);
+		/// Give the LocalReader access to the inflater.
+		lrInstance.connectInflater(pNaClEmbed, pNaClWrapper);
 
-	/// Add the objects to the DOM
-	pNaClWrapper.appendChild(pNaClEmbed);
-	document.body.appendChild(pNaClWrapper);
-
-	/// Connect the provided file reference to a new LocalReader.
-	var lrInstance = new LocalReader(file, _version, logger);
-
-	/// Give the LocalReader access to the inflater.
-	lrInstance.connectInflater(pNaClEmbed, pNaClWrapper);
-
+	}
 	/// Parse the DAT file MFT header. This must be done oncein order to access
 	/// any files in the DAT.
 	lrInstance.parseHeaderAsync(callback);

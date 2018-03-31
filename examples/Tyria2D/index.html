@@ -92,8 +92,8 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 <script type="text/javascript" src="lib/w2ui-1.4.3.min.js"></script>
 
 
-<script type="text/javascript" src="lib/T3D-1.0.3.min.js"></script>
-<script type="text/javascript" src="lib/T3D-1.0.3.Formats.min.js"></script>
+<script type="text/javascript" src="lib/T3D-1.0.4.js"></script>
+<script type="text/javascript" src="lib/T3D-1.0.4.Formats.min.js"></script>
 <!--<script type="text/javascript" src="/T3D-API/build/T3D-1.0.3.min.js"></script>
 <script type="text/javascript" src="/T3D-API/build/T3D-1.0.3.Formats.min.js"></script>-->
 
@@ -388,7 +388,9 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
                 _lr = T3D.getLocalReader(
                     evt.target.files[0],
                     onReaderCreated,
-                    "lib/t3dgwtools.nmf");
+					"lib/t3dgwtools.nmf",
+					undefined,
+					"lib/t3dworker.js");
             }
 	    );
 
