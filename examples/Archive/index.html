@@ -12,19 +12,20 @@
     <script src="lib/DataStream.js"></script>
     <script src="lib/T3D-1.1.0.js"></script>
     <script>
+        var settings = {
+            t3dtoolsWorker: 'lib/t3dworker.js',
+            concurrentTasks: (typeof navigator != 'undefined') ? navigator.hardwareConcurrency : 1
+        };
         var archive;
         $("#filePicker").change(function(evt){
             var file = evt.target.files[0];
-            archive = new T3D.Archive();
+            archive = new T3D.Archive(settings);
             archive.loadArchive(file, () => {
-                archive.getFile(83171, (data) => {
-                    var data = new Uint8Array(data);
-                    var str = "";
-                    for (var elt of data.slice(0,12)){
-                        str += String.fromCharCode(elt);
-                    }
-                    console.log(str);
+                archive.updatePersistant().then(()=>{
+                    console.log("done");
                 });
+                //archive._persistantStore.getAllFilesConcurrent().then((e) => {console.log(e.length)});
+                //archive._persistantStore.getCount().then((e) => console.log(e));
             });
         });
     </script>

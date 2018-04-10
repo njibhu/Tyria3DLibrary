@@ -18,10 +18,10 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
 /// Includes
-var GW2File = require('../format/file/GW2File.js');
+let GW2File = require('../format/file/GW2File.js');
 /// EndIncludes
 
-var FileTypes = {};
+let FileTypes = {};
 
 FileTypes.TYPE = {};
 
@@ -71,7 +71,7 @@ FileTypes.TYPE['PACK_TXTV'] = 0x424; //txtv && txtV
  * @function getTypeName
  */
 FileTypes.getTypeName = function(typeID){
-    for (var key in FileTypes.TYPE){
+    for (let key in FileTypes.TYPE){
         if(FileTypes.TYPE[key] === typeID){
             return key;
         }
@@ -85,7 +85,7 @@ FileTypes.getTypeName = function(typeID){
  * @param {DataStream} ds 
  */
 FileTypes.getFileType = function(ds){
-    var first4 = ds.readCString(4);
+    let first4 = ds.readCString(4);
 
     //Parse textures
     switch(first4){
@@ -111,7 +111,7 @@ FileTypes.getFileType = function(ds){
 
     // PackFiles
     if (first4.indexOf("PF") === 0){
-        var file = new GW2File(ds, 0, true);/// true for "plz no load chunkz"
+        let file = new GW2File(ds, 0, true);/// true for "plz no load chunkz"
         switch(file.header.type) {
             case 'ABIX':
                 return FileTypes.TYPE.PACK_ABIX;

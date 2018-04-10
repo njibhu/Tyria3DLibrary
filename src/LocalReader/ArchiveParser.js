@@ -144,8 +144,8 @@ parseMFTTable = function(ds){
 parseMFTIndex = function(ds, size){
     var length = size / 8;
 
-    var baseIdToMFT = {};
-    var MFTbaseIds = {};
+    var baseIdToMFT = [];
+    var MFTbaseIds = [];
 
     for(var i=0; i<length; i++){
         //Parse table

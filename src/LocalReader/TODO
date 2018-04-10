@@ -6,15 +6,15 @@ LocalReader actual state:
  +> readANDatHeader    -> ArchiveParser
  +> readMFTHeader      -> ArchiveParser
  +> readMFTIndexFile   -> ArchiveParser
- > loadFileList       -> PersistantStore + FileTypes                [public]
+ +> loadFileList       -> PersistantStore + FileTypes                [public]
  > loadMapList        -> PersistantStore                            [public]
- > storeFileList      -> PersistantStore + FileTypes                [public]
+ +> storeFileList      -> PersistantStore + FileTypes                [public]
  > storeMapList       -> PersistantStore                            [public]
- > readFileListAsync  -> Archive + FileTypes                        [public]
+ +> readFileListAsync  -> Archive + FileTypes                        [public]
  > readMapListAsync   -> Archive                                    [public]
  > listFiles          -> Archive + FileTypes
  +> getFileIndex       -> Archive (moved to getFileMeta)
- > loadTextureFile    -> Archive                                    [public]
+ -> loadTextureFile    -> Archive                                    [public]
  +> loadFile           -> Archive                                    [public]
  +> inflate            -> DataReader
  +> loadFilePart       -> ArchiveParser

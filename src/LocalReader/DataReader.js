@@ -26,13 +26,13 @@ class DataReader {
         this._workerPool = [];
         this._workerLoad = [];
         this._inflateCallbacks = [];
-        for (var i = 0; i<settings.workers; i++){
+        for (let i = 0; i<settings.workers; i++){
             this._startWorker(settings.path);
         }
     }
 
     inflate(ds, size, handle, callback, isImage, capLength){
-        var arrayBuffer = ds.buffer;
+        let arrayBuffer = ds.buffer;
 
         //If no capLength then inflate the whole file
         if(!capLength){
@@ -61,7 +61,7 @@ class DataReader {
         }
 
         // Add the load to the worker
-        var workerId = this._getBestWorkerIndex();
+        let workerId = this._getBestWorkerIndex();
         this._workerLoad[workerId] += 1;
         this._workerPool[workerId].postMessage(
             [handle, arrayBuffer, isImage===true, capLength]
@@ -69,14 +69,14 @@ class DataReader {
     }
 
     _startWorker(path){
-        var self = this;
-        var worker = new Worker(path);
-        var selfWorkerId = this._workerPool.push(worker);
-        if(this._workerLoad.push(0) != selfWorkerId) 
+        let self = this;
+        let worker = new Worker(path);
+        let selfWorkerId = this._workerPool.push(worker) - 1;
+        if(this._workerLoad.push(0) != selfWorkerId + 1) 
             throw new Error("WorkerLoad and WorkerPool don't have the same length");
 
         worker.onmessage = function(message_event){
-            var handle;
+            let handle;
             // Remove load
             self._workerLoad[selfWorkerId] -= 1;
 
@@ -87,7 +87,7 @@ class DataReader {
                     "Inflater threw an error", message_event.data
                 );
                 handle = message_event.data.split(':')[0];
-                for(var callback of self._inflateCallbacks[handle]){
+                for(let callback of self._inflateCallbacks[handle]){
                     callback(null);
                 }
             } 
@@ -95,8 +95,8 @@ class DataReader {
                 handle = message_event.data[0];
                 // On success
                 if(self._inflateCallbacks[handle]){
-                    for(var callback of self._inflateCallbacks[handle]) {
-                        var data = message_event.data;
+                    for(let callback of self._inflateCallbacks[handle]) {
+                        let data = message_event.data;
                         // Array buffer, dxtType, imageWidth, imageHeigh			
                         callback(data[1], data[2], data[3], data[4]);	
                     }

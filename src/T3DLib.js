@@ -43,7 +43,8 @@ function T3D() {}
 /* PRIVATE VARS */
 var _version = "1.1.0";
 var _settings = {
-	t3dtoolsWorker: "modules/t3dtools/t3dworker.js"
+	t3dtoolsWorker: "modules/t3dtools/t3dworker.js",
+	concurrentTasks: (typeof navigator != 'undefined') ? navigator.hardwareConcurrency : 1,
 };
 
 /* PUBLIC PROPERTIES */
@@ -274,6 +275,7 @@ T3D.PersistantStore = require('./LocalReader/PersistantStore');
  * TODO - doc
  */
 T3D.Archive = require('./LocalReader/Archive');
+T3D.FileTypes = require('./LocalReader/FileTypes');
 
 /* PRIVATE METHODS */
 
