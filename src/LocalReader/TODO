@@ -1,21 +1,10 @@
-LocalReader actual state:
- -> constructor
- +> parseHeaderAsync   -> ArchiveParser
- +> connectInflater    -> DataReader (moved to constructor)   [public]
- +> listener           -> DataReader
- +> readANDatHeader    -> ArchiveParser
- +> readMFTHeader      -> ArchiveParser
- +> readMFTIndexFile   -> ArchiveParser
- +> loadFileList       -> PersistantStore + FileTypes                [public]
- > loadMapList        -> PersistantStore                            [public]
- +> storeFileList      -> PersistantStore + FileTypes                [public]
- > storeMapList       -> PersistantStore                            [public]
- +> readFileListAsync  -> Archive + FileTypes                        [public]
- > readMapListAsync   -> Archive                                    [public]
- > listFiles          -> Archive + FileTypes
- +> getFileIndex       -> Archive (moved to getFileMeta)
- -> loadTextureFile    -> Archive                                    [public]
- +> loadFile           -> Archive                                    [public]
- +> inflate            -> DataReader
- +> loadFilePart       -> ArchiveParser
+New Archive API (v2)
 
+v1 was complete but couldn't satisfy the goals on performance side.
+v2 changes:
+  1. all scan functions are static (no definitions inside the iterator)
+  2. the result lands in memory and are not dynamically pushed in the persistant storage
+  3. result contains: [id] = {size, crc, fileType}
+  4. during update/scan the content of the persistant storage automatically updates the archive meta array
+  5. Remove all the previously added Promise since they block 1. so become irrelevant + Delete PromiseUtils
+  

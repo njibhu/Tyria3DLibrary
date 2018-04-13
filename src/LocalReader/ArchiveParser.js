@@ -30,32 +30,47 @@ const defMFT = require('../format/definition/MFT');
  */
 
 readArchive = function(file, callback){
-    var ANDatHeader, MFTTable, MFTIndex;
-    
-    // Get the header from the file then parse it
-    getFilePart(file, 0, 40, function(ds, len){
-        ANDatHeader = parseANDatHeader(ds);
+    let ANDatHeader, MFTTable, MFTIndex;
 
-        // Get the MFTTable and then parse it
-        getFilePart(file, ANDatHeader.mftOffset, ANDatHeader.mftSize, function(ds, len){
+    //Parse the Archive Header
+    function firstStep(callback) {
+        getFilePart(file, 0, 40, (ds, len) => {
+            ANDatHeader = parseANDatHeader(ds);
+            callback();
+        });
+    }
+
+    //Parse the file meta information table
+    function secondStep(callback) {
+        getFilePart(file, ANDatHeader.mftOffset, ANDatHeader.mftSize, (ds, len) => {
             MFTTable = parseMFTTable(ds, len);
+            callback();
+        });
+    }
 
-            // Get the MFTIndex table and then parse it
-            getFilePart(file, MFTTable.mftIndexOffset, MFTTable.mftIndexSize, function(ds, len){
-                MFTIndex = parseMFTIndex(ds, len);
+    //Parse the real index of each file
+    function thirdStep(callback) {
+        getFilePart(file, MFTTable.mftIndexOffset, MFTTable.mftIndexSize, (ds, len) => {
+            MFTIndex = parseMFTIndex(ds, len);
+            callback();
+        });
+    }
 
-                //Then callback
-                callback({
-                    ANDatHeader: ANDatHeader,
-                    MFTTable: MFTTable,
-                    MFTIndex: MFTIndex
-                });
-            });
-        })
-    });
-
+    firstStep(secondStep.bind(null, thirdStep.bind(null, () => {
+        callback({
+            ANDatHeader: ANDatHeader,
+            MFTTable: MFTTable,
+            MFTIndex: MFTIndex
+        });
+    })));
 }
 
+/**
+ * TODO-doc
+ * @function parseANDatHeader
+ * @param {DataStream} ds
+ * @return {Object|null} Returns null if the header couldn't be parsed
+ */
 parseANDatHeader = function(ds){
     var header = {};
 
@@ -87,6 +102,12 @@ parseANDatHeader = function(ds){
     return header;
 }
 
+/**
+ * TODO- doc
+ * @function parseMFTTable
+ * @param {Datastream}  ds
+ * @return  {Object|null}   Returns null if it couldn't parse the table
+ */
 parseMFTTable = function(ds){
     // Parse the table header
     var header = {};
@@ -102,21 +123,20 @@ parseMFTTable = function(ds){
         return null;
     }
 
-    //Pre alloc the big arrays
-    var table = {
-        offset: new Float64Array(header.nbOfEntries),
-        size: new Uint32Array(header.nbOfEntries),
-        compressed: new Uint16Array(header.nbOfEntries),
-        crc: new Uint32Array(header.nbOfEntries),
-    };
+    //Where we put all the parsed data
+    //We don't pre-alloc anymore since not having the data aligned together procs too many
+    //cache misses during a fullscan
+    let fullTable = [];
     
     // Go through the table
-    for(var i=0; i<header.nbOfEntries-1; i++){
-        table.offset[i] = MathUtils.arr32To64([ds.readUint32(), ds.readUint32()]);
-        table.size[i] = ds.readUint32();
-        table.compressed[i] = ds.readUint16();
+    for(let i=0; i<header.nbOfEntries - 1; i++){ // -1 is the header that we already parsed
+        let item = {};
+        item['offset'] = MathUtils.arr32To64([ds.readUint32(), ds.readUint32()]);
+        item['size'] = ds.readUint32();
+        item['compressed'] = ds.readUint16();
         ds.seek(ds.position + 4 + 2); //Skip uint16 + uint32
-        table.crc[i] = ds.readUint32();
+        item['crc'] = ds.readUint32();
+        fullTable.push(item);
     }
 
     T3D.Logger.log(
@@ -126,10 +146,10 @@ parseMFTTable = function(ds){
 
     return {
         header: header, 
-        table: table, 
+        table: fullTable, 
         //Register the MFTIndex table position and size
-        mftIndexOffset: table.offset[1], 
-        mftIndexSize: table.size[1] 
+        mftIndexOffset: table[1].offset, 
+        mftIndexSize: table[1].size
     };
 }
 
@@ -142,15 +162,15 @@ parseMFTTable = function(ds){
  * @param {*} size 
  */
 parseMFTIndex = function(ds, size){
-    var length = size / 8;
+    let length = size / 8;
 
-    var baseIdToMFT = [];
-    var MFTbaseIds = [];
+    let baseIdToMFT = [];
+    let MFTbaseIds = [];
 
-    for(var i=0; i<length; i++){
+    for(let i=0; i<length; i++){
         //Parse table
-        var id = ds.readUint32();
-        var mftIndex = ds.readUint32();
+        let id = ds.readUint32();
+        let mftIndex = ds.readUint32();
         //Store the values
         baseIdToMFT[id] = mftIndex;
         if(!MFTbaseIds[mftIndex])

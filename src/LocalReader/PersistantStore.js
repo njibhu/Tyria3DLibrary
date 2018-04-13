@@ -21,7 +21,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 let version = require('../T3DLib').version;
 
 /// Indexed DB versioning
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 /**
  * This class handles offline storage of the .dat indexes and files metadata
@@ -42,181 +42,90 @@ class PersistantStore{
      * @async
      * @method connectDB
      */
-    _getConnection(){
+    _getConnection(callback){
         let self = this;
-        return new Promise(function(resolve, reject){
 
-            if(self._dbConnection){
-                return resolve(self._dbConnection);
+        if(this._dbConnection){
+            return callback(this._dbConnection);
+        }
+
+        // Let us open our database
+        let request = window.indexedDB.open("Tyria3DLibrary", DB_VERSION);
+        
+        /// onblocked is fired when the db needs an upgrade but an older version is opened in another tab
+        request.onblocked = function(event) {
+            T3D.Logger.log(
+                T3D.Logger.TYPE_ERROR,
+                "The T3D persistant database cannot be upgraded while the app is opened somewhere else."
+            );
+        }
+
+        /// fired when the database needs to be upgraded (or the first time)
+        request.onupgradeneeded = function(event){
+            let db = event.target.result;
+            let currentVersion = event.oldVersion;
+
+            /// Define the database structure:
+            if(currentVersion < 1){
+                //This store was only used in version 1, it's not anymore since the performance was not good enough
+                let store = db.createObjectStore("fileList", { keyPath: "baseId", unique: true});
+                store.createIndex("fileType", "fileType", {unique: false});
             }
 
-            // Let us open our database
-            let request = window.indexedDB.open("Tyria3DLibrary", DB_VERSION);
-            
-            /// onblocked is fired when the db needs an upgrade but an older version is opened in another tab
-            request.onblocked = function(event) {
-                T3D.Logger.log(
-                    T3D.Logger.TYPE_ERROR,
-                    "The T3D persistant database cannot be upgraded while the app is opened somewhere else."
-                );
+            if(currentVersion < 2){
+                let newstore = db.createObjectStore("listings", 
+                    {keyPath: "id", unique: true, autoIncrement: true});                    
             }
+        }
 
-            /// fired when the database needs to be upgraded (or the first time)
-            request.onupgradeneeded = function(event){
-                let db = event.target.result;
-                let currentVersion = event.oldVersion;
+        request.onsuccess = function(event){
+            self._dbConnection = event.target.result;
+            self.isReady = true;
+            callback(self._dbConnection);
+        }
 
-                /// Define the database structure:
-                if(currentVersion < 1){
-                    let store = db.createObjectStore("fileList", { keyPath: "baseId", unique: true});
-                    store.createIndex("fileType", "fileType", {unique: false});
-                }
-            }
+        request.onerror = function(event){
+            T3D.Logger.log(
+                T3D.Logger.TYPE_ERROR,
+                "The T3D persistant database could not be opened."
+            );
+            callback(null);
+        }
+    }
+
+    updateListing(id, listing, callback){
+        this._getConnection((db) => {
+            if(!db)
+                return callback(null);
+
+            let item = {id: id, array: listing};
+            let request = db.transaction(["updateListing"], "readwrite")
+            .objectStore("listings")
+            .put(item);
 
             request.onsuccess = function(event){
-                self._dbConnection = event.target.result;
-                self.isReady = true;
-                resolve(self._dbConnection);
+                callback(request.result);
             }
-
             request.onerror = function(event){
-                T3D.Logger.log(
-                    T3D.Logger.TYPE_ERROR,
-                    "The T3D persistant database could not be opened."
-                );
-                reject(request.error);
+                callback(null);
             }
         });
     }
 
-    getFile(id) {
-        let self = this;
-        return new Resolve(function(resolve, reject){
-            self._getConnection().then((db) => {
-                let request = db.transaction(["fileList"], "readonly")
-                                .objectStore("fileList")
-                                .get(itemId);
-                request.onsuccess = function(event){
-                    resolve(request.result);
-                }
-                request.onerror = function(event){
-                    reject(request.result);
-                }
-            });
-        });
-    }
-
-    getTypeFiles(fileType, limit) {
-        let self = this;
-        return new Resolve(function(resolve, reject){
-            self._getConnection().then((db) => {
-                let request = db.transaction(["fileList"], "readonly")
-                    .objectStore("fileList")
-                    .index("fileType")
-                    .getAll(IDBKeyRange.only(fileType), limit);
-                request.onsuccess = function(event){
-                    resolve(request.result);
-                }
-                request.onerror = function(event){
-                    reject(request.result);
-                }
-            });
-        });
-    }
-
-    getHighestId() {
-        let self = this;
-        return new Promise((resolve, reject) => {
-            self._getConnection().then((db) => {
-
-            });
-        });
-    }
-
-    getCount() {
-        let self = this;
-        return new Promise(function(resolve, reject){
-            self._getConnection().then((db) => {
-                let store = db.transaction(["fileList"], "readonly")
-                    .objectStore("fileList");
-                let reqCount = store.count();
-                reqCount.onsuccess = () => {
-                    resolve(reqCount.result);
-                };
-                reqCount.onerror = reject;
-            });
-        });
-    }
-
-    getFiles(offset, limit) {
-        let self = this;
-        return new Promise(function(resolve, reject){
-
-            let range;
-            if(!offset && !limit)
-                //warning this will blow up
-                range = IDBKeyRange.lowerBound(0);
-            else if(!offset)
-                range = IDBKeyRange.upperBound(limit);
-            else if(!limit)
-                range = IDBKeyRange.lowerBound(offset);
-            else
-                range = IDBKeyRange.bound(offset, limit);
-
-            let returnArray = [];
-            self._getConnection().then((db) => {
-                let request = db.transaction(["fileList"], "readonly")
-                    .objectStore("fileList")
-                    .getAll(range);
-
-                request.onsuccess = function(event){
-                    //Unfold the result into a usable array
-                    for(let item of request.result){
-                        returnArray[item.baseId] = item;
-                    }
-                    resolve(returnArray);
-                }
-                request.onerror = function(event){
-                    reject(request.result);
-                }
-                
-            });
-        });
-    }
-
-    putFile(item){
-        let self = this;
-        return new Promise(function(resolve, reject){
-            self._getConnection().then((db) => {
-                let request = db.transaction(["fileList"], "readwrite")
-                .objectStore("fileList")
-                .put(item);
-
-                request.onsuccess = function(event){
-                    resolve(request.result);
-                }
-                request.onerror = function(event){
-                    reject(request.result);
-                }
-            });
-        });
-    }
-
-    deleteFile(item){
-        let self = this;
-        return new Promise(function(resolve, reject){
-            self._getConnection().then((db) => {
-                let request = self._dbConnection.transaction(["fileList"], "readwrite")
-                    .objectStore("fileList")
-                    .delete(item);
-
-                request.onsuccess = function(event){
-                    resolve(request.result);
-                }
-                request.onerror = function(event){
-                    reject(request.result);
-                }
-            });
+    getLastListing(callback) {
+        this._getConnection((db) => {
+            let listingsStore = db.transaction(["getLastListing"], "readonly")
+                .objectStore("listings");
+            
+            let init = true; //Skip the first item
+            listingsStore.openCursor(IDBKeyRange.only(0), "prev").onsuccess = () => {
+                let cursor = event.target.result;
+                if(!init)
+                    return callback(cursor.key);
+                else
+                    init = false;
+                cursor.continue();
+            }
         });
     }
 }

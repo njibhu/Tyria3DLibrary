@@ -22,7 +22,6 @@ const ArchiveParser = require('./ArchiveParser');
 const FileTypes = require('./FileTypes');
 const PersistantStore = require('./PersistantStore');
 const DataReader = require('./DataReader');
-const PromiseUtils = require('../util/PromiseUtils');
 /// EndIncludes
 
 const FETCHLIMIT = 100000;
@@ -41,8 +40,6 @@ const FETCHLIMIT = 100000;
 
 /**
  * TODO - doc
- * One of the big main advantages of this new API is that there is just only one nummeric ID 
- * for the files.
  */
 class Archive {
     constructor(settings) {
@@ -55,108 +52,107 @@ class Archive {
 
         this._file;
         this._archiveMeta;
-        this._mftTable;
-        this._mftIndex;
+        this._indexTable;
+        this._fileMetaTable; //fields: offset, size, compressed, crc, baseIds, fileType
 
         this._persistantStore = new PersistantStore();
-        this._persistantCache = undefined;
         this._fileTypeCache = [];
     }
 
     loadArchive(file, callback){
-        if(!callback) callback = () => {};
         let self = this;
-        
-        ArchiveParser.readArchive(file, function(data){
-            if(!data) callback(true);
+
+        Archive.readArchive(file, (data) => {
+            if(!data)
+                callback(null);
+
             self._file = file;
             self._archiveMeta = data.ANDatHeader;
-            self._mftTable = data.MFTTable.table;
-            self._mftTableSize = data.MFTTable.header.nbOfEntries;
-            self._mftIndexTable = data.MFTIndex.baseIdToMFT;
-            self._baseIdRegister = data.MFTIndex.MFTbaseIds;
-            callback(false);
+            self._fileMetaTable = data.MFTTable.table;
+            self._indexTable = data.MFTIndex.baseIdToMFT;
+            //Add the baseIds to the meta array
+            data.MFTIndex.MFTbaseIds.forEach((value, index) => {
+                self._fileMetaTable[index].baseIds = value;
+            });
+
+            callback(0);
         });
-        
     }
 
     getFileMeta(fileId, isMftID){
         if(!isMftID)
-            fileId = this._mftIndexTable[fileId];
+            fileId = this._indexTable[fileId];
 
-        return {
-            mftId: fileId,
-            offset: this._mftTable.offset[fileId],
-            size: this._mftTable.size[fileId],
-            compressed: this._mftTable.compressed[fileId],
-            crc: this._mftTable.crc[fileId]
+        return {mftId: fileId, data: this._fileMetaTable[fileId]};
+    }
+
+    /**
+     * @method getFile
+     * @param {*} baseId 
+     * @param {*} isImage 
+     * @param {Function} callback
+     *      * 
+     */
+    getFile(baseId, isImage, callback){
+        let self = this;
+
+        let mftId = this._mftIndexTable[baseId];
+        if(!mftId){
+            T3D.Logger.log(T3D.Logger.TYPE_ERROR, "Specified baseId is invalid");
+            callback(null);
         }
-    }
 
-    getFile(baseId, isImage){
-        let self = this;
+        //Get the file meta information
+        let meta = this.getFileMeta(mftId, true).data;
 
-        return new Promise((resolve, reject) => {
-            let mftId = this._mftIndexTable[baseId];
-            if(!mftId){
-                T3D.Logger.log(T3D.Logger.TYPE_ERROR, "Specified baseId is invalid");
-                reject();
+        if(!meta || meta.offset <= 0) {
+            T3D.Logger.log(T3D.Logger.TYPE_ERROR, "File location in archive is invalid");
+            callback(null);
+        }
+
+        ArchiveParser.getFilePart(this._file, meta.offset, meta.size, (ds, len) => {
+            //If the file is not compressed, return the data already
+            if(!meta.compressed){
+                callback(ds.buffer);
+            } else {
+                self._dataReader.inflate(ds, len, baseId, isImage, callback);
             }
-
-            let offset = this._mftTable.offset[mftId];
-            let size = this._mftTable.size[mftId];
-            let compressed = this._mftTable.compressed[mftId];
-
-            if(offset <= 0) {
-                T3D.Logger.log(T3D.Logger.TYPE_ERROR, "File location in archive is invalid");
-                reject();
-            }        
-
-            ArchiveParser.getFilePart(this._file, offset, size, function(ds, len){
-                //If the file is not compressed, return the data already
-                if(!compressed){
-                    resolve(ds.buffer);
-                } else {
-                    self._dataReader.inflate(ds, len, baseId, resolve, isImage);
-                }
-            })
         });
-        
     }
 
-    readFileType(id, isMftID){
-        let self = this;
-        return new Promise((resolve, reject) => {
-            if(!isMftID)
-                id = self._mftIndexTable[id];
-            
-            if(self._fileTypeCache[id] != undefined)
-                return resolve(self._fileTypeCache[id]);
+    getAllBaseIds() {
+        return Object.keys(this._mftIndexTable).map(i => Number(i));
+    }
 
-            let offset = self._mftTable.offset[id];
-            let size = self._mftTable.size[id];
-            let compressed = self._mftTable.compressed[id];
-    
-            ArchiveParser.getFilePart(self._file, offset, Math.min(size,2000), function(ds, _size){
-                if(compressed){
-                    self._dataReader.inflate(
-                        ds,
-                        _size,
-                        id,
-                        function(inflatedData){
-                            let ds = new DataStream(inflatedData);
-                            let resultType = FileTypes.getFileType(ds);
-                            self._fileTypeCache[id] = resultType;
-                            resolve(resultType);
-                        }, 
-                        false, 0x20
-                    );
-                } else {
-                    let resultType = FileTypes.getFileType(ds);
-                    self._fileTypeCache[id] = resultType;
-                    resolve(resultType);
-                }
-            });
+    readFileType(id, isMftID, callback){
+        let self = this;
+        if(!isMftID)
+            id = this._mftIndexTable[id];
+        
+        if(this._fileTypeCache[id] != undefined)
+            return callback(this._fileTypeCache[id]);
+
+        let fileMeta = this.getFileMeta(id, true).data;
+        if(!fileMeta)
+            return callback(null);
+
+        ArchiveParser.getFilePart(this._file, fileMeta.offset, Math.min(fileMeta.size,2000), (ds, size) => {
+            if(fileMeta.compressed){
+                self._dataReader.inflate(ds, size, id, false, 0x20,
+                    (inflatedData) => {
+                        if(!inflatedData)
+                            return callback(null);
+
+                        let ds = new DataStream(inflatedData);
+                        let resultType = FileTypes.getFileType(ds);
+                        self._fileTypeCache[id] = resultType;
+                        callback(resultType);
+                    });
+            } else {
+                let resultType = FileTypes.getFileType(ds);
+                self._fileTypeCache[id] = resultType;
+                callback(resultType);
+            }
         });
     }
 
@@ -167,7 +163,7 @@ class Archive {
         let persistantList = [];
 
         return new Promise((resolve, reject) => {
-            let iterateList = Object.keys(this._mftIndexTable).map(i => Number(i));
+            let iterateList = self.getAllBaseIds();
 
             //Iterate through all the archive baseIds
             PromiseUtils.limitedAsyncIterator(iterateList, (id, index) => {
@@ -209,77 +205,51 @@ class Archive {
         });
     }
 
-    _updateFileListItem(baseId, persistantData, logArray){
+    //persistantData will be populated by the promise, it must be an object
+    _scanListingItem(baseId, persistantData, logArray, callback){
         let self = this;
         if(!logArray)
             logArray = [];
 
-        return new Promise((resolve, reject) => {
-            let currentData = self.getFileMeta(baseId);
+        let meta = self.getFileMeta(baseId);
+        let mftId = meta.mftId;
+        meta = meta.data;
 
-            function compareData(){
-                //If the item has an invalid offset
-                if(currentData.offset<=0)
-                    return reject();
-    
-                //If the baseId didn't exist before
-                if(persistantData !== undefined && currentData.size === undefined){
-                    self.readFileType(currentData.mftId, true).then((resultType) => {
-                        logArray.push(`NewItem: { baseId: ${baseId}, type: ${resultType}, size: ${currentData.size} }`);
-                        self._persistantStore.putFile({ 
-                            baseId: baseId, size: currentData.size, crc: currentData.crc, fileType: resultType
-                        }).then(resolve);
-                    });
-                }
-                //If the size or checksum of the current don't match the old one
-                else if(currentData.size !== persistantData.size ||
-                        currentData.crc !== persistantData.crc
-                ){
-                    self.readFileType(currentData.mftId, true).then((resultType) => {
-                        logArray.push(`ItemModified: { baseId: ${baseId}, type: ${resultType}, size: ${currentData.size} }`);
-                        self._persistantStore.putFile({ 
-                            baseId: baseId, size: currentData.size, crc: currentData.crc, fileType: resultType
-                        }).then(resolve);
-                    });
-                }
-                //If nothing changed
-                else {
-                    resolve();
-                }
-            }
+        //If the item has an invalid offset
+        if(meta.offset<=0)
+            return callback(null);
 
-            //If the persistantData is not already loaded
-            if(!persistantData)
-                self._persistantStore.getFile(baseId).then((persistantData) => {
-                    compareData();
-                });
-            else
-                compareData();
-        });
+        //If the baseId didn't exist before
+        if(meta.size === undefined){
+            self.readFileType(mftId, true, (resultType) => {
+                logArray.push(`NewItem: { baseId: ${baseId}, type: ${resultType}, size: ${meta.size} }`);
+                persistantData.baseId = baseId;
+                persistantData.size = meta.size;
+                persistantData.crc = meta.crc;
+                persistantData.fileType = resultType;
+                callback();
+            });
+        }
+        //If the size or checksum of the meta don't match the old one
+        else if(meta.size !== persistantData.size ||
+                meta.crc !== persistantData.crc
+        ){
+            self.readFileType(mftId, true, (resultType) => {
+                logArray.push(`ItemModified: { baseId: ${baseId}, type: ${resultType}, size: ${meta.size} }`);
+                persistantData.baseId = baseId;
+                persistantData.size = meta.size;
+                persistantData.crc = meta.crc;
+                persistantData.fileType = resultType;
+                callback();
+            });
+        }
+        //If nothing changed
+        else {
+            callback(0);
+        }
     }
 
-    _cleanFileList(actualKeys, oldKeys, logArray) {
-        let self = this;
-        if(!logArray)
-            logArray = [];
 
-        return new Promise((resolve, reject) => {
-            function checkAndClean(id) {
-                return new Promise((done, fail) => {
-                    if(!actualKeys.includes(id)){
-                        logArray.push(`ItemDeleted: { baseId: ${id}}`);
-                        self._persistantStore.deleteFile(id)
-                            .then(done)
-                            .catch(done);
-                    }
-                })
-            }
-            PromiseUtils.limitedAsyncIterator(oldKeys, checkAndClean, 
-                                              self._concurrentTasks * 4)
-                .then(resolve)
-                .catch(reject);
-        });
-    } 
 
     _callUpdateItem(data, id, logs){
         let persistantData = data[id] ? data[id] : {};

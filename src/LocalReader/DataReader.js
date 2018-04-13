@@ -31,11 +31,20 @@ class DataReader {
         }
     }
 
-    inflate(ds, size, handle, callback, isImage, capLength){
+    /**
+     * TODO doc
+     * @param {*} ds 
+     * @param {*} size 
+     * @param {*} handle 
+     * @param {*} isImage 
+     * @param {*} capLength 
+     * @param {null|ArrayBuffer} callback 
+     */
+    inflate(ds, size, handle, isImage, capLength, callback){
         let arrayBuffer = ds.buffer;
 
         //If no capLength then inflate the whole file
-        if(!capLength){
+        if(!capLength || capLength < 0){
             capLength = 0;
         }
 
