@@ -52,7 +52,7 @@ function generate(){
             // Re-add what was cut by the chunk split
             chunkObject[header] += 
                 "    ///==================================================\n" + 
-                `    ///Chunk: ${chunk.slice(0, chunk.indexOf("\n"))}` +
+                `    ///Chunk: ${chunk.slice(0, chunk.indexOf("\n"))}` + "\n" +
                 "    ///==================================================\n" +
                 chunk.slice(chunk.indexOf("\n"));
 		}
