@@ -20,10 +20,13 @@
         $("#filePicker").change(function(evt){
             var file = evt.target.files[0];
             archive = new T3D.Archive(settings);
-            archive.loadArchive(file, () => {
-                archive.updatePersistant().then(()=>{
-                    console.log("done");
-                });
+            archive.loadArchive(file, (a) => {
+                if(a.done){
+                    archive.persistantUpdate(false, () => {
+                        console.log("done");
+                    });
+                } else
+                    console.log("sad");
                 //archive._persistantStore.getAllFilesConcurrent().then((e) => {console.log(e.length)});
                 //archive._persistantStore.getCount().then((e) => console.log(e));
             });

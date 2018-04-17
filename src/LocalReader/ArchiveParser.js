@@ -129,14 +129,14 @@ parseMFTTable = function(ds){
     let fullTable = [];
     
     // Go through the table
-    for(let i=0; i<header.nbOfEntries - 1; i++){ // -1 is the header that we already parsed
+    for(let i=0; i<header.nbOfEntries - 1; i++){
         let item = {};
         item['offset'] = MathUtils.arr32To64([ds.readUint32(), ds.readUint32()]);
         item['size'] = ds.readUint32();
         item['compressed'] = ds.readUint16();
         ds.seek(ds.position + 4 + 2); //Skip uint16 + uint32
         item['crc'] = ds.readUint32();
-        fullTable.push(item);
+        fullTable[i] = item;
     }
 
     T3D.Logger.log(
@@ -148,8 +148,8 @@ parseMFTTable = function(ds){
         header: header, 
         table: fullTable, 
         //Register the MFTIndex table position and size
-        mftIndexOffset: table[1].offset, 
-        mftIndexSize: table[1].size
+        mftIndexOffset: fullTable[1].offset, 
+        mftIndexSize: fullTable[1].size
     };
 }
 

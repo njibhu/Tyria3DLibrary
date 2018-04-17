@@ -34,7 +34,9 @@ class PersistantStore{
         //They may be multiple connection request issued at the same time, but it's actually okay since
         //as soon as they are registered, the not-used ones will get garbage collected
         this._dbConnection = undefined;
-        this._getConnection();
+        this._getConnection((a)=>{
+            console.log(a);
+        });
     }
 
     /**
@@ -46,7 +48,7 @@ class PersistantStore{
         let self = this;
 
         if(this._dbConnection){
-            return callback(this._dbConnection);
+            return callback({done: true, db: this._dbConnection});
         }
 
         // Let us open our database
@@ -65,23 +67,15 @@ class PersistantStore{
             let db = event.target.result;
             let currentVersion = event.oldVersion;
 
-            /// Define the database structure:
             if(currentVersion < 1){
-                //This store was only used in version 1, it's not anymore since the performance was not good enough
-                let store = db.createObjectStore("fileList", { keyPath: "baseId", unique: true});
-                store.createIndex("fileType", "fileType", {unique: false});
-            }
-
-            if(currentVersion < 2){
-                let newstore = db.createObjectStore("listings", 
-                    {keyPath: "id", unique: true, autoIncrement: true});                    
+                let newstore = db.createObjectStore("listings", {autoIncrement: true});                    
             }
         }
 
         request.onsuccess = function(event){
             self._dbConnection = event.target.result;
             self.isReady = true;
-            callback(self._dbConnection);
+            callback({done: true, db: self._dbConnection});
         }
 
         request.onerror = function(event){
@@ -89,42 +83,46 @@ class PersistantStore{
                 T3D.Logger.TYPE_ERROR,
                 "The T3D persistant database could not be opened."
             );
-            callback(null);
+            callback({done: false});
         }
     }
 
-    updateListing(id, listing, callback){
-        this._getConnection((db) => {
-            if(!db)
-                return callback(null);
+    putNewListing(listing, callback){
+        this.updateListing(null, listing, callback);
+    }
 
-            let item = {id: id, array: listing};
-            let request = db.transaction(["updateListing"], "readwrite")
-            .objectStore("listings")
-            .put(item);
+    updateListing(id, listing, callback){
+        this._getConnection((res) => {
+            if(!res.done)
+                return callback({done: false});
+
+            let store = res.db.transaction(["listings"], "readwrite").objectStore("listings");
+
+            let request = (id) ? store.put({array: listing}, id) : store.put({array: listing});
 
             request.onsuccess = function(event){
-                callback(request.result);
+                callback({done: true, key: request.result});
             }
             request.onerror = function(event){
-                callback(null);
+                callback({done: false});
             }
         });
     }
 
     getLastListing(callback) {
-        this._getConnection((db) => {
-            let listingsStore = db.transaction(["getLastListing"], "readonly")
+        this._getConnection((res) => {
+            if(!res.done)
+                return callback({done: false});
+
+            let listingsStore = res.db.transaction(["listings"], "readonly")
                 .objectStore("listings");
             
-            let init = true; //Skip the first item
-            listingsStore.openCursor(IDBKeyRange.only(0), "prev").onsuccess = () => {
+            listingsStore.openCursor(null, "prev").onsuccess = (event) => {
                 let cursor = event.target.result;
-                if(!init)
-                    return callback(cursor.key);
+                if(!cursor)
+                    return callback({done: true, null: true});
                 else
-                    init = false;
-                cursor.continue();
+                    return callback({done: true, null: false, array: cursor.value.array, key: cursor.key});
             }
         });
     }

@@ -24,19 +24,6 @@ const PersistantStore = require('./PersistantStore');
 const DataReader = require('./DataReader');
 /// EndIncludes
 
-const FETCHLIMIT = 100000;
-
-
-/****
- * This current model doesn't work so well on the performance side
- * IndexedDB is not meant to be used to store a huge array of 500 000+ items
- * containing just 4 numbers.
- * Next iteration will be one item = Full List
- *   The last item is the most up to date version
- * During the scanning, the archive may upload incomplete versions of the list.
- ****/
-
-
 
 /**
  * TODO - doc
@@ -52,33 +39,36 @@ class Archive {
 
         this._file;
         this._archiveMeta;
-        this._indexTable;
-        this._fileMetaTable; //fields: offset, size, compressed, crc, baseIds, fileType
+        this._indexTable = [];
+        this._fileMetaTable = []; //fields: offset, size, compressed, crc, baseIds, fileType
 
         this._persistantStore = new PersistantStore();
         this._fileTypeCache = [];
     }
 
+    //Makes all the basic header and table parsing to populate the basic archive data
     loadArchive(file, callback){
         let self = this;
 
-        Archive.readArchive(file, (data) => {
+        ArchiveParser.readArchive(file, (data) => {
             if(!data)
-                callback(null);
+                callback({done: false});
 
             self._file = file;
             self._archiveMeta = data.ANDatHeader;
             self._fileMetaTable = data.MFTTable.table;
             self._indexTable = data.MFTIndex.baseIdToMFT;
             //Add the baseIds to the meta array
-            data.MFTIndex.MFTbaseIds.forEach((value, index) => {
-                self._fileMetaTable[index].baseIds = value;
-            });
+            for(let index in data.MFTIndex.MFTbaseIds){
+                if(self._fileMetaTable[index] !== undefined)
+                    self._fileMetaTable[index].baseIds = data.MFTIndex.MFTbaseIds[index];
+            }
 
-            callback(0);
+            callback({done: true});
         });
     }
 
+    //Returns the mftId and the data parsed in the header tables
     getFileMeta(fileId, isMftID){
         if(!isMftID)
             fileId = this._indexTable[fileId];
@@ -120,10 +110,7 @@ class Archive {
         });
     }
 
-    getAllBaseIds() {
-        return Object.keys(this._mftIndexTable).map(i => Number(i));
-    }
-
+    //Parses the file type or return it if already parsed
     readFileType(id, isMftID, callback){
         let self = this;
         if(!isMftID)
@@ -156,107 +143,137 @@ class Archive {
         });
     }
 
-    updatePersistant(archive, disableLog) {
+    //baseId can be not-valid, it will log a deleted item
+    persistantScanFile(baseId, cacheArray, logs, callback) {
         let self = this;
-        let logs = [];
 
-        let persistantList = [];
-
-        return new Promise((resolve, reject) => {
-            let iterateList = self.getAllBaseIds();
-
-            //Iterate through all the archive baseIds
-            PromiseUtils.limitedAsyncIterator(iterateList, (id, index) => {
-                
-                return new Promise((done, fail) => {
-
-                    if(index % FETCHLIMIT == 0){
-                        let offset = id;
-                        let limit = (index+FETCHLIMIT < iterateList.length) ? iterateList[index+FETCHLIMIT] : iterateList[iterateList.length - 1];
-
-
-                        let fetchingData = self._persistantStore.getFiles(offset, limit);
-                        fetchingData.then((data) => {
-                            //just checking for deleted index in the current slice
-                            let slice = iterateList.slice(index, (index + FETCHLIMIT + 1 < iterateList.length) ? 
-                                index + FETCHLIMIT + 1 : iterateList.length);
-                            let oldSlice = Object.keys(data).map(i => Number(i));
-                            self._cleanFileList(slice, oldSlice, logs);
-
-                            //Adding the newly fetched data
-                            for (let dataIndex in data){
-                                persistantList[dataIndex] = data[dataIndex];
-                            }
-                            
-                            //Update the current item
-                            self._callUpdateItem(persistantList, id, logs).then(done).catch(fail);
-                        })
-                        fetchingData.catch(reject); //Failing to fetch will call a reject
-                    } else {
-                        self._callUpdateItem(persistantList, id, logs).then(done).catch(fail);
-                    }
-
-                });
-            }, self._concurrentTasks, "Finding types"
-            ).then(() => {
-                self._persistantCache = persistantList;
-                resolve();
-            }).catch(reject);
-        });
-    }
-
-    //persistantData will be populated by the promise, it must be an object
-    _scanListingItem(baseId, persistantData, logArray, callback){
-        let self = this;
-        if(!logArray)
-            logArray = [];
+        if(baseId <= 0)
+            return callback(null);
 
         let meta = self.getFileMeta(baseId);
         let mftId = meta.mftId;
-        meta = meta.data;
+        let metaData = meta.data;
 
-        //If the item has an invalid offset
-        if(meta.offset<=0)
-            return callback(null);
-
-        //If the baseId didn't exist before
-        if(meta.size === undefined){
+        //Nothing interesting
+        if(metaData === undefined && cacheArray[baseId] === undefined){
+            return callback({done: true, change: false});
+        }
+        //If the file have been deleted
+        else if(metaData === undefined){
+            cacheArray[baseId] = undefined;
+            if(logs)
+                logs.push(`ItemDeleted: { baseId: ${baseId} }`);
+            return callback({done: true, change: true});
+        }
+        //If the file is new
+        else if(cacheArray[baseId] === undefined) {
             self.readFileType(mftId, true, (resultType) => {
-                logArray.push(`NewItem: { baseId: ${baseId}, type: ${resultType}, size: ${meta.size} }`);
-                persistantData.baseId = baseId;
-                persistantData.size = meta.size;
-                persistantData.crc = meta.crc;
-                persistantData.fileType = resultType;
-                callback();
+                self._fileMetaTable[mftId].fileType = resultType;
+                cacheArray[baseId] = 
+                    {baseId: baseId, size: metaData.size, crc: metaData.crc, fileType: resultType};
+                if(logs)
+                    logs.push(`NewItem: { baseId: ${baseId}, type: ${resultType}, size: ${metaData.size} }`);
+                return callback({done: true, change: true});
             });
         }
-        //If the size or checksum of the meta don't match the old one
-        else if(meta.size !== persistantData.size ||
-                meta.crc !== persistantData.crc
-        ){
+        //If the size or crc don't match
+        else if(metaData.size !== cacheArray[baseId].size || metaData.crc !== cacheArray[baseId].crc){
             self.readFileType(mftId, true, (resultType) => {
-                logArray.push(`ItemModified: { baseId: ${baseId}, type: ${resultType}, size: ${meta.size} }`);
-                persistantData.baseId = baseId;
-                persistantData.size = meta.size;
-                persistantData.crc = meta.crc;
-                persistantData.fileType = resultType;
-                callback();
+                self._fileMetaTable[mftId].fileType = resultType;
+                cacheArray[baseId] = 
+                    {baseId: baseId, size: metaData.size, crc: metaData.crc, fileType: resultType};
+                if(logs)
+                    logs.push(`ItemModified: { baseId: ${baseId}, type: ${resultType}, size: ${metaData.size} }`);
+                return callback({done: true, change: true});
             });
         }
-        //If nothing changed
-        else {
-            callback(0);
+        //If everything is the same
+        else
+        {
+            self._fileMetaTable[mftId].fileType = metaData.fileType;
+            return callback({done: true, change: false});
         }
     }
 
 
+    //update the persistant storage
+    persistantUpdate(disableDetailLog, callback) {
+        let self = this;
+        let logs = [];
+        if(disableDetailLog)
+            logs = false;
 
-    _callUpdateItem(data, id, logs){
-        let persistantData = data[id] ? data[id] : {};
-        return this._updateFileListItem(id, persistantData, logs);
+        let persistantList = []; //PersistantStore.getLastListing
+
+        this._persistantStore.getLastListing((result) => {
+            if(!result.done)
+                return callback({done: false});
+            
+            if(!result.null)
+                persistantList = result.array;
+
+            let newPersistantId = null;
+
+            let iterateList = Object.keys(self._indexTable).map(i=>Number(i));
+
+            for (let index in persistantList){
+                if(self._indexTable[index] === undefined)
+                    iterateList.push(index);
+            }
+    
+            let index = 0;
+            let returned = 0;
+            let needUpdate = false; //Define if we save more data (if there is a change or not)
+
+            function saveProgress(){
+                self._persistantStore.updateListing(newPersistantId, persistantList, (result) => {
+                    if(result.done){
+                        newPersistantId = result.key;
+                    }                        
+                    else
+                        T3D.Logger.log(T3D.Logger.TYPE_ERROR, "Could not save persistant data");
+                });
+            }
+    
+            function progress(i){
+                if(i%Math.floor(iterateList.length/100) == 0){
+                    T3D.Logger.log(T3D.Logger.TYPE_PROGRESS,
+                        "Finding types", i/Math.floor(iterateList.length/100));
+                    if(needUpdate){
+                        needUpdate = false;
+                        saveProgress();
+                    }
+                }
+            }
+    
+            function next(res) { //Break the recursion
+                if(res.change)
+                    needUpdate = true;
+
+                if(index%1000 == 0)
+                    setTimeout(startScan, 0);
+                else
+                    startScan();
+            }
+    
+            function startScan() {
+                if(index < iterateList.length){
+                    let currentId = iterateList[index];
+                    index += 1;
+                    progress(index);
+                    self.persistantScanFile(currentId, persistantList, logs, next);
+                } else {
+                    returned += 1;
+                    if(returned == self._concurrentTasks)
+                        return callback({done: true});
+                }
+            }
+    
+            for(let i = 0; i<self._concurrentTasks * 2; i++)
+                startScan();
+
+        });
     }
 }
-
-
 
 module.exports = Archive;

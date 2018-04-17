@@ -1,0 +1,3 @@
+[submodule "tools/t3dtools.js"]
+	path = tools/t3dtools.js
+	url = https://github.com/njibhu/t3dtools.js
