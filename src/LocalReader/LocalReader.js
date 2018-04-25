@@ -24,6 +24,8 @@ const MapFileList = require('../MapFileList');
 const FileTypes = require('./FileTypes');
 
 
+// TODO: cleanup persistant storage after X rows
+
 /***
  * TODO: UPDATE !! Change have been made
  * API CHANGES: LocalReader (V2)
@@ -193,9 +195,6 @@ class LocalReader {
 
         // Helps us to know when we need to update the persistant store
         let updatePersistant = false;
-
-        //TODO:
-        // Use tasks only for decompression, for scanning we can iterate without tasks
 
         //Spawn the decompression tasks
         let taskArray = [];

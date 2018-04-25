@@ -524,7 +524,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 						var baseIds = reverseTable[mftIndex];
 						var fileSize =  (meta) ? meta.size: "";
 
-						if(fileSize>0){
+						if(fileSize>0 && mftIndex > 15){
 
 							w2ui['grid'].records.push({ 
 								recid : mftIndex, /// MFT index
@@ -544,8 +544,6 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 		} /// End for each fileType key in _fileList object
 
 		/// Update file grid
-		w2ui.grid.buffered = w2ui.grid.records.length;
-		w2ui.grid.total = w2ui.grid.buffered;
 		w2ui.grid.refresh();
 	}
 
@@ -554,10 +552,6 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 		let reverseTable = _lr.getReverseIndex();
 		
 		var baseId = (reverseTable[mftIdx]) ? reverseTable[mftIdx][0] : "";
-		var fileId = (reverseTable[mftIdx]) ? reverseTable[mftIdx][1] : "";
-
-		if(baseId==0)
-			baseId = fileId;
 
 		viewFileByFileId(baseId);
 	}
