@@ -196,10 +196,9 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 			},
 			columns: [				
 				{ field: 'recid', caption: 'MFT index', size: '80px', sortable: true, resizable: true, searchable: 'int' },
-				{ field: 'fileId', caption: 'File Id', size: '80px', sortable: true, resizable: true, searchable: 'int' },
-				{ field: 'baseId', caption: 'Base Id', size: '80px', sortable: true, resizable: true, searchable: 'int' },
+				{ field: 'baseIds', caption: 'BaseId list', size: '80px', sortable: true, resizable: true, searchable: 'int' },
 				{ field: 'type', caption: 'Type', size: '100%', resizable: true, sortable: true },
-				{ field: 'fileSize', caption: 'Size', size: '85px', resizable: true, sortable: true }
+				{ field: 'fileSize', caption: 'Pack Size', size: '85px', resizable: true, sortable: true }
 			],
 			onClick: function(event) {
 	        	viewFileByMFT(event.recid);
@@ -211,25 +210,6 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 			SET UP FILE VIEW 'WINDOW'
 		 */
 		$(w2ui['layout'].el('main'))
-		/*.append(
-			$("<input id='filePicker' type='file' />")
-			.change(
-	            function(evt){
-	            	
-	            	_lr.loadFilePart(
-	            		evt.target.files[0], 0,
-	            		evt.target.files[0].size,
-	            		function(ds,length){
-
-	            			var gw2file = new T3D.GW2File(ds,0);
-        					console.log(gw2file);
-
-	            			
-	            		}
-            		);
-	            }
-	        )
-		)*/
 		.append( $("<h1 id='fileTitle' />") )
 		.append( $("<div id='fileTabs' />") )
 		.append(
@@ -411,51 +391,54 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 				_fileList = files;
 
 				var packNode = {
-					id: 'packGroup', text: 'Pack Files', img: 'icon-folder',
-					expanded: true, group: false,
+					id: 'packGroup', text: 'Pack Files', img: 'icon-folder', group: false,
 					nodes: []
 				};
-            	
+
+				var textureNode = {
+					id: 'textureGroup', text: 'Texture files', img: 'icon-folder', group: false,
+					nodes: []
+				}
+				
+				var unclassifiedNode = {
+					id: 'unclassifiedGroup', text: 'Unclassified', img: 'icon-folder', group: false,
+					nodes: []
+				}
+				
             	/// Build sidebar nodes
 	        	for (var fileType in _fileList) {
 					if (_fileList.hasOwnProperty(fileType)) {
 
 						var node = {id:fileType, img: "icon-folder", group: false };
 						var isPack = false;
-						switch(fileType){
-							
-							case "Texture":
-								node.text = "Textures";
-								break;
-
-							case "Binary":
-								node.text = "Binaries";
-								break;
-
-							case "String":
-								node.text = "Strings";
-								break;
-
-							case "Unknown":
-								node.text = "Unknown";
-								break;
-
-							default:
-								isPack = true;
-								node = {id:"PF-"+fileType, img: "icon-folder", group: false };
-								node.text = fileType;
-								/// Pack file!
+						if(fileType.startsWith("TEXTURE")){
+							node = {id: fileType, img: "icon-folder", group: false, text: fileType};
+							textureNode.nodes.push(node);
 						}
 
-						/// Not a pack file just add to root list
-						if(!isPack){
-							w2ui.sidebar.add(node);	
+						else if(fileType == 'BINARIES'){
+							node.text = "Binaries";
+							w2ui.sidebar.add(node);
 						}
 
-						/// Pack file types found!
-						/// Add sub node for this pack type
-						else{
+						else if(fileType == 'STRINGS'){
+							node.text = "Strings";
+							w2ui.sidebar.add(node);
+						}
+
+						else if(fileType.startsWith("PF")){
+							node = {id: fileType, img: "icon-folder", group: false, text: fileType};
 							packNode.nodes.push(node);
+						}
+
+						else if(fileType == 'UNKNOWN'){
+							node.text = "Unknown";
+							w2ui.sidebar.add(node);
+						}
+
+						else {
+							node = {id: fileType, img: "icon-folder", group: false, text: fileType};
+							unclassifiedNode.nodes.push(node);
 						}
 						
 					} 
@@ -464,6 +447,15 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 				if(packNode.nodes.length>0){
 					w2ui.sidebar.add(packNode);
 				}
+
+				if(textureNode.nodes.length>0){
+					w2ui.sidebar.add(textureNode);
+				}
+
+				if(unclassifiedNode.nodes.length>0){
+					w2ui.sidebar.add(unclassifiedNode);
+				}
+
 
 				/// Close the pop
 				w2popup.close();
@@ -481,11 +473,6 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 		/// No filter if clicked group was "All"
 		if(evt.target=="All"){
 			showFileGroup();
-		}
-
-		/// Pack files should remove leading "PF-"
-		else if(evt.target.indexOf("PF-")==0){
-			showFileGroup([evt.target.split("PF-")[1]]);
 		}
 
 		/// Other events are fine to just pass
@@ -511,7 +498,12 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 				/// Should NOT let trought any non-pack types
 				/// i.e. Strings, Binaries etc
 				if(fileTypeFilter.indexOf("packGroup")>=0){
-					if(["Texture","Binary","String","Unknown"].indexOf(fileType)>=0){
+					if(!fileType.startsWith("PF")){
+						continue;
+					}
+				}
+				else if(fileTypeFilter.indexOf("textureGroup")>=0){
+					if(!fileType.startsWith("TEXTURE")){
 						continue;
 					}
 				}
@@ -529,16 +521,14 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 
 						let meta = _lr.getFileMeta(mftIndex);
 
-						var baseId = (reverseTable[mftIndex]) ? reverseTable[mftIndex][0] : "";
-						var fileId = (reverseTable[mftIndex]) ? reverseTable[mftIndex][1] : "";
+						var baseIds = reverseTable[mftIndex];
 						var fileSize =  (meta) ? meta.size: "";
 
 						if(fileSize>0){
 
 							w2ui['grid'].records.push({ 
 								recid : mftIndex, /// MFT index
-								baseId: baseId,
-								fileId: fileId,
+								baseIds: baseIds,
 								type : fileType,
 								fileSize : fileSize
 							});	
