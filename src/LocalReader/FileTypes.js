@@ -60,6 +60,12 @@ FileTypes.getFileType = function(ds){
     if (first4.indexOf("PNG") === 1)
         return 'TEXTURE_PNG';
 
+    if (first4.indexOf("RIFF") === 0)
+        return 'TEXTURE_RIFF';
+
+    if (first4.indexOf("YUI") === 0)
+        return 'TEXT_YUI';
+
     // PackFiles
     if (first4.indexOf("PF") === 0){
         let file = new GW2File(ds, 0, true);/// true for "plz no load chunkz"
@@ -73,6 +79,13 @@ FileTypes.getFileType = function(ds){
     // Strings
     if (first4.indexOf("strs") === 0)
         return 'STRINGS';
+
+    //Raw asnd chunk (without pack file)
+    if (first4.indexOf("asnd") === 0)
+        return 'CHUNK_ASND';
+
+    // TODO: parse all datastream and if all bytes are valid unicode symbols then
+    // return TEXT_UNKNOWN;
 
     // Unknown
     return 'UNKNOWN';

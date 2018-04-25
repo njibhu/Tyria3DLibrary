@@ -182,7 +182,7 @@ class LocalReader {
         let persistantId;
 
         if (this._persistantStore)
-            persistantList = (await this._persistantStore.getLastListing()).array;
+            persistantList = (await this._persistantStore.getLastListing(this._file.name)).array;
 
         // Create a list of all the baseIds we need to inspect
         let iterateList = Object.keys(self._indexTable).map(i => Number(i));
@@ -237,7 +237,7 @@ class LocalReader {
                 //Update the persistant storage if needed
                 if(self._persistantStore && persistantNeedsUpdate){
                     persistantNeedsUpdate = false;
-                    self._persistantStore.putListing(persistantId, persistantList).then(res => persistantId = res);
+                    self._persistantStore.putListing(persistantId, persistantList, self._file.name).then(res => persistantId = res);
                 }
             }
         }
@@ -525,7 +525,7 @@ class LocalReader {
      */
     _needsScan(baseId, persistantData){
         if(baseId <= 0)
-            throw new Error("Invalid baseId");
+            return {change: 'none', scan: false};
 
         let mftId = this.getFileIndex(baseId);
         let metaData = this.getFileMeta(mftId);
