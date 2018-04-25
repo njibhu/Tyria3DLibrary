@@ -499,6 +499,8 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 
 		w2ui.grid.records = [];
 
+		let reverseTable = _lr.getReverseIndex();
+
 		for (var fileType in _fileList) {
 
 			/// Only show types we've asked for
@@ -525,11 +527,11 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 				fileArr.forEach(
 					function(mftIndex){
 
-						mftIndex++;
+						let meta = _lr.getFileMeta(mftIndex);
 
-						var baseId = _lr.mft.m_entryToId.baseId[mftIndex];
-						var fileId = _lr.mft.m_entryToId.fileId[mftIndex];
-						var fileSize =  _lr.mft.entryDict.size[mftIndex-1];
+						var baseId = (reverseTable[mftIndex]) ? reverseTable[mftIndex][0] : "";
+						var fileId = (reverseTable[mftIndex]) ? reverseTable[mftIndex][1] : "";
+						var fileSize =  (meta) ? meta.size: "";
 
 						if(fileSize>0){
 
@@ -542,6 +544,8 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 							});	
 
 						}
+
+						mftIndex++;
 					}/// End for each mft in this file type
 				);
 
@@ -557,9 +561,10 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 
 
 	function viewFileByMFT(mftIdx){
+		let reverseTable = _lr.getReverseIndex();
 		
-		var fileId = _lr.mft.m_entryToId.fileId[mftIdx];
-		var baseId = _lr.mft.m_entryToId.baseId[mftIdx];
+		var baseId = (reverseTable[mftIdx]) ? reverseTable[mftIdx][0] : "";
+		var fileId = (reverseTable[mftIdx]) ? reverseTable[mftIdx][1] : "";
 
 		if(baseId==0)
 			baseId = fileId;

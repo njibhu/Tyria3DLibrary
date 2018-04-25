@@ -12,24 +12,13 @@
     <script src="lib/DataStream.js"></script>
     <script src="lib/T3D-1.1.0.js"></script>
     <script>
-        var settings = {
-            t3dtoolsWorker: 'lib/t3dworker.js',
-            concurrentTasks: (typeof navigator != 'undefined') ? navigator.hardwareConcurrency : 1
-        };
-        var archive;
+        var lr;
         $("#filePicker").change(function(evt){
             var file = evt.target.files[0];
-            archive = new T3D.Archive(settings);
-            archive.loadArchive(file, (a) => {
-                if(a.done){
-                    archive.persistantUpdate(false, () => {
-                        console.log("done");
-                    });
-                } else
-                    console.log("sad");
-                //archive._persistantStore.getAllFilesConcurrent().then((e) => {console.log(e.length)});
-                //archive._persistantStore.getCount().then((e) => console.log(e));
-            });
+            T3D.getLocalReader(file, function(result){
+                lr = result;
+                T3D.getFileListAsync(lr, console.log);
+            }, 'lib/t3dworker.js') 
         });
     </script>
 </body>

@@ -133,19 +133,18 @@ function ZoneRenderer(localReader, settings, context, logger){
 							 	/// Add to big mesh
 							 	if(!meshGroups[meshIdx]){
 							 		var mg = mesh.geometry.clone();
-							 		var mga = mg.attributes;
 							 		meshGroups[meshIdx] = {
-							 			readVerts : mga.position.array,
-							 			verts: new Float32Array( group.length * mga.position.array.length ),
+							 			readVerts : mg.getAttribute('position').array,
+							 			verts: new Float32Array( group.length * mg.getAttribute('position').array.length ),
 
 							 			readIndices : mg.getIndex().array,
 							 			indices: new Uint32Array( group.length * mg.getIndex().array.length ),
 
-							 			readUVs : mga.uv.array,
-							 			uvs: new Float32Array( group.length * mga.uv.array.length ),
+							 			readUVs : mg.getAttribute('uv').array,
+							 			uvs: new Float32Array( group.length * mg.getAttribute('uv').array.length ),
 
-							 			readNormals : mga.normal.array,
-							 			normals: new Float32Array( group.length * mga.normal.array.length ),
+							 			readNormals : mg.getAttribute('normal').array,
+							 			normals: new Float32Array( group.length * mg.getAttribute('normal').array.length ),
 
 							 			material:mesh.material,
 							 			//material:new THREE.MeshBasicMaterial( {color: 0xffcccc, wireframe:true} ),

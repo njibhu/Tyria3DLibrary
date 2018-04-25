@@ -17,13 +17,13 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
+/* INCLUDES */
+var LocalReader = require('./LocalReader/LocalReader');
+
 /**
  * Provides the static Tyria 3D Library Class.
  * @module T3D
  */
-
-/* INCLUDES */
-LocalReader = require('./LocalReader/LocalReader.js');
 
 /**
  * Tyria 3D Library main class.
@@ -81,11 +81,6 @@ T3D.GW2File =				require("./format/file/GW2File");
  * @type Class
  */
 T3D.GW2Chunk = 				require("./format/file/GW2Chunk");
-
-/**
- * TODO - doc
- */
-T3D.Archive =				require("./LocalReader/Archive");
 
 
 /* RENDERERS */
@@ -272,9 +267,12 @@ T3D.RenderUtils = require('./util/RenderUtils.js');
 T3D.PersistantStore = require('./LocalReader/PersistantStore');
 
 /**
- * TODO - doc
+ * A static reference to the FileTypes tools and list.
+ * 
+ * @final
+ * @property FileTypes
+ * @type Object
  */
-T3D.Archive = require('./LocalReader/Archive');
 T3D.FileTypes = require('./LocalReader/FileTypes');
 
 /* PRIVATE METHODS */
@@ -362,7 +360,7 @@ function findDuplicateChunkDefs(){
 
 
 /**
- * Creates a new instance of LocalReader with a webworker inflater connected to it.
+ * Creates a new instance of LocalReader with an pNaCl inflater connected to it.
  * 
  * @method getLocalReader
  * @async
@@ -372,26 +370,24 @@ function findDuplicateChunkDefs(){
  *                             		
  * @param  {String} 	t3dtoolsWorker URL to the inflater file. If omitted
  *                               	_settings.t3dtoolsWorker will be used instead.
- * @param  {Class}		logger		
  * 
  * @return {LocalReader}			The contructed LocalReader, note that this object
  *                             		will not be fully initialized until the callback
  *                             		is fired.
  */
-T3D.getLocalReader = function(file, callback, t3dtoolsWorker, logger){
+T3D.getLocalReader = function(file, callback, t3dtoolsWorker){
 
-	/// Create Inflater for this file reader.
-	var worker = new Worker(t3dtoolsWorker ? t3dtoolsWorker : _settings.t3dtoolsWorker);
+	let path = (t3dtoolsWorker) ? t3dtoolsWorker : _settings.t3dtoolsWorker;
+	
+	//Create the instance and init the threads
+	var lrInstance = new LocalReader({workerPath: path, workersNb: _settings.concurrentTasks });
 
-	var lrInstance = new LocalReader(file, logger);
-	lrInstance.connectInflater(worker);
+	/// Callback with the lrInstance
+	lrInstance.openArchive(file).then(() => {
+		callback(lrInstance);
+	});
 
-	/// Parse the DAT file MFT header. This must be done oncein order to access
-	/// any files in the DAT.
-	lrInstance.parseHeaderAsync(callback);
-
-	/// Return file reader object
-	return lrInstance;	
+	return lrInstance;
 }
 
 /**
@@ -503,7 +499,7 @@ T3D.getMapListAsync = function(localReader, callback, searchAll){
 	/// Otherwise, just fire the callback with the cached list
 	else{
 		callback(mapList);
-	}
+}
 	
 }
 

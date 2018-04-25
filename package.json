@@ -1,5 +1,5 @@
 {
-  "name": "Tyria3D-API",
+  "name": "t3d-lib",
   "version": "1.1.0",
   "private": true,
   "dependencies": {

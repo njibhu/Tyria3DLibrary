@@ -26,7 +26,6 @@ const DB_VERSION = 2;
 /**
  * This class handles offline storage of the .dat indexes and files metadata
  * @class PersistantStore
- * @constructor
  */
 class PersistantStore{
 
@@ -34,96 +33,108 @@ class PersistantStore{
         //They may be multiple connection request issued at the same time, but it's actually okay since
         //as soon as they are registered, the not-used ones will get garbage collected
         this._dbConnection = undefined;
-        this._getConnection((a)=>{
-            console.log(a);
+        this._getConnection(()=>{});
+    }
+
+    /**
+     *   Initialize the IndexedDB connection and manages version changes.
+     * 
+     * @async
+     * @method connectDB
+     * @returns {Promise<IDBDatabase>} Promise to the Database connection
+     */
+    _getConnection(){
+        let self = this;
+        return new Promise((resolve, reject) => {
+            if(self._dbConnection)
+                resolve(self._dbConnection);
+
+            // Let us open our database
+            let request = window.indexedDB.open("Tyria3DLibrary", DB_VERSION);
+            
+            /// onblocked is fired when the db needs an upgrade but an older version is opened in another tab
+            request.onblocked = (event) =>  {
+                T3D.Logger.log(
+                    T3D.Logger.TYPE_ERROR,
+                    "The T3D persistant database cannot be upgraded while the app is opened somewhere else."
+                );
+            }
+
+            /// fired when the database needs to be upgraded (or the first time)
+            request.onupgradeneeded = (event) => {
+                let db = event.target.result;
+                let currentVersion = event.oldVersion;
+
+                if(currentVersion < 2){
+                    let newstore = db.createObjectStore("listings", {autoIncrement: true});                    
+                }
+            }
+
+            request.onsuccess = (event) => {
+                self._dbConnection = event.target.result;
+                self.isReady = true;
+                resolve(self._dbConnection);
+            }
+
+            request.onerror = (event) => {
+                T3D.Logger.log(
+                    T3D.Logger.TYPE_ERROR,
+                    "The T3D persistant database could not be opened."
+                );
+                reject();
+            }
         });
     }
 
     /**
-     * Initialize the IndexedDB connection and manages version changes.
+     *   Add or update a listing into the database
+     * 
      * @async
-     * @method connectDB
+     * @param {number|undefined} id This ID doesn't really matter, it's just the index of the object in the database, can be undefined
+     * @param {Array} listing 
+     * @returns {Promise<number>} On success, the number is the object key in the database
      */
-    _getConnection(callback){
+    putListing(id, listing){
         let self = this;
+        return new Promise((resolve, reject) => {
+            self._getConnection().then((db) => {
+                let store = db.transaction(["listings"], "readwrite").objectStore("listings");
 
-        if(this._dbConnection){
-            return callback({done: true, db: this._dbConnection});
-        }
-
-        // Let us open our database
-        let request = window.indexedDB.open("Tyria3DLibrary", DB_VERSION);
-        
-        /// onblocked is fired when the db needs an upgrade but an older version is opened in another tab
-        request.onblocked = function(event) {
-            T3D.Logger.log(
-                T3D.Logger.TYPE_ERROR,
-                "The T3D persistant database cannot be upgraded while the app is opened somewhere else."
-            );
-        }
-
-        /// fired when the database needs to be upgraded (or the first time)
-        request.onupgradeneeded = function(event){
-            let db = event.target.result;
-            let currentVersion = event.oldVersion;
-
-            if(currentVersion < 1){
-                let newstore = db.createObjectStore("listings", {autoIncrement: true});                    
-            }
-        }
-
-        request.onsuccess = function(event){
-            self._dbConnection = event.target.result;
-            self.isReady = true;
-            callback({done: true, db: self._dbConnection});
-        }
-
-        request.onerror = function(event){
-            T3D.Logger.log(
-                T3D.Logger.TYPE_ERROR,
-                "The T3D persistant database could not be opened."
-            );
-            callback({done: false});
-        }
-    }
-
-    putNewListing(listing, callback){
-        this.updateListing(null, listing, callback);
-    }
-
-    updateListing(id, listing, callback){
-        this._getConnection((res) => {
-            if(!res.done)
-                return callback({done: false});
-
-            let store = res.db.transaction(["listings"], "readwrite").objectStore("listings");
-
-            let request = (id) ? store.put({array: listing}, id) : store.put({array: listing});
-
-            request.onsuccess = function(event){
-                callback({done: true, key: request.result});
-            }
-            request.onerror = function(event){
-                callback({done: false});
-            }
+                let request = (id) ? store.put({array: listing}, id) : store.put({array: listing});
+    
+                request.onsuccess = (event) => {
+                    resolve(request.result);
+                }
+                request.onerror = (event) => {
+                    reject();
+                }
+            })
         });
     }
 
-    getLastListing(callback) {
-        this._getConnection((res) => {
-            if(!res.done)
-                return callback({done: false});
-
-            let listingsStore = res.db.transaction(["listings"], "readonly")
-                .objectStore("listings");
-            
-            listingsStore.openCursor(null, "prev").onsuccess = (event) => {
-                let cursor = event.target.result;
-                if(!cursor)
-                    return callback({done: true, null: true});
-                else
-                    return callback({done: true, null: false, array: cursor.value.array, key: cursor.key});
-            }
+    /**
+     * Returns the last valid listing in the database
+     * 
+     * @async
+     * @returns {Promise<{array: Array, key: number}>}
+     *      array: the last listing
+     *      key: the index of the last listing in the database
+     */
+    getLastListing() {
+        let self = this;
+        return new Promise((resolve, reject) => {
+            self._getConnection().then((db) => {
+                let listingsStore = db.transaction(["listings"], "readonly")
+                    .objectStore("listings");
+                
+                listingsStore.openCursor(null, "prev").onsuccess = (event) => {
+                    let cursor = event.target.result;
+                    if(!cursor)
+                        resolve({array: [], key: undefined});
+                    else
+                        resolve({array: cursor.value.array, key: cursor.key});
+                }
+            });
         });
     }
 }

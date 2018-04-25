@@ -17,61 +17,54 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-/// Includes
+/***
+ * @file The ArchiveParser module is a set of helper tools to correctly read the Archive.
+ **/
+
 const MathUtils = require('../util/MathUtils');
-const defANDAT = require('../format/definition/ANDAT');
-const defMFT = require('../format/definition/MFT');
-/// EndIncludes
+
+
 
 /**
- * TODO - doc
- * The ArchiveParser module is a set of tools for the Archive class to
- * correctly read the Archive
+ *    All in one function to read a GW2.dat file and parse all the needed informations to work with it
+ * 
+ * @param {File} file
+ * @returns {Promise<{archiveHeader: ArchiveHeader, metaTable: MetaTable, indexTable: IndexTable}>}
  */
+async function readArchive(file){
+    let archiveHeader = parseANDatHeader((await getFilePart(file, 0, 40)).ds);
+    let mftData = parseMFTTable((await getFilePart(file, archiveHeader.mftOffset, archiveHeader.mftSize)).ds);
+    let {ds, len} = await getFilePart(file, mftData.mftIndexOffset, mftData.mftIndexSize);
+    let indexTable = parseMFTIndex(ds, len);
 
-readArchive = function(file, callback){
-    let ANDatHeader, MFTTable, MFTIndex;
-
-    //Parse the Archive Header
-    function firstStep(callback) {
-        getFilePart(file, 0, 40, (ds, len) => {
-            ANDatHeader = parseANDatHeader(ds);
-            callback();
-        });
-    }
-
-    //Parse the file meta information table
-    function secondStep(callback) {
-        getFilePart(file, ANDatHeader.mftOffset, ANDatHeader.mftSize, (ds, len) => {
-            MFTTable = parseMFTTable(ds, len);
-            callback();
-        });
-    }
-
-    //Parse the real index of each file
-    function thirdStep(callback) {
-        getFilePart(file, MFTTable.mftIndexOffset, MFTTable.mftIndexSize, (ds, len) => {
-            MFTIndex = parseMFTIndex(ds, len);
-            callback();
-        });
-    }
-
-    firstStep(secondStep.bind(null, thirdStep.bind(null, () => {
-        callback({
-            ANDatHeader: ANDatHeader,
-            MFTTable: MFTTable,
-            MFTIndex: MFTIndex
-        });
-    })));
+    return {
+        archiveHeader: archiveHeader,
+        metaTable: mftData.table,
+        indexTable: indexTable
+    };
 }
 
+
 /**
- * TODO-doc
- * @function parseANDatHeader
- * @param {DataStream} ds
- * @return {Object|null} Returns null if the header couldn't be parsed
+ * The header of the archive.
+ * @typedef {Object} ArchiveHeader
+ * @property {number} version
+ * @property {number} magic
+ * @property {number} headerSize
+ * @property {number} chunkSize
+ * @property {number} crc
+ * @property {number} mftOffset
+ * @property {number} mftSize
+ * @property {number} flags
  */
-parseANDatHeader = function(ds){
+
+/**
+ *   Parse the main information about the archive like format version, positions of information tables, crc etc...
+ * 
+ * @param {DataStream} ds
+ * @returns {ArchiveIndex} Returns undefined if the header couldn't be parsed
+ */
+function parseANDatHeader(ds){
     var header = {};
 
     // Header parsing
@@ -91,7 +84,7 @@ parseANDatHeader = function(ds){
     if(header.magic != "AN\u001A"){
         T3D.Logger.log(
             T3D.Logger.TYPE_ERROR, "ANDat header is not valid", header.magic);
-        return null;
+        return undefined;
     }
 
     T3D.Logger.log(
@@ -103,12 +96,18 @@ parseANDatHeader = function(ds){
 }
 
 /**
- * TODO- doc
- * @function parseMFTTable
- * @param {Datastream}  ds
- * @return  {Object|null}   Returns null if it couldn't parse the table
+ * The array containing all the meta information concerning the contained files
+ * @typedef {Array<{offset: number, size: number, compressed: number, crc: number}>} MetaTable
  */
-parseMFTTable = function(ds){
+
+/**
+ *   Parse the main information table that contains the offset, size, compression flags and crc
+ * 
+ * @param {Datastream}  ds
+ * @returns {{header: {magic: String, nbOfEntries: number}, table: MetaTable, mftIndexOffset: number, mftIndexSize: number}|undefined}
+ *   Returns undefined if it couldn't parse the table
+ */
+function parseMFTTable(ds){
     // Parse the table header
     var header = {};
     header.magic = ds.readString(4);
@@ -120,7 +119,7 @@ parseMFTTable = function(ds){
     if(header.magic != "Mft\u001A"){
         T3D.Logger.log(
             T3D.Logger.TYPE_ERROR, "MFTTable header is not valid", header.magic);
-        return null;
+        return undefined;
     }
 
     //Where we put all the parsed data
@@ -129,7 +128,7 @@ parseMFTTable = function(ds){
     let fullTable = [];
     
     // Go through the table
-    for(let i=0; i<header.nbOfEntries - 1; i++){
+    for(let i=1; i<header.nbOfEntries; i++){
         let item = {};
         item['offset'] = MathUtils.arr32To64([ds.readUint32(), ds.readUint32()]);
         item['size'] = ds.readUint32();
@@ -148,34 +147,37 @@ parseMFTTable = function(ds){
         header: header, 
         table: fullTable, 
         //Register the MFTIndex table position and size
-        mftIndexOffset: fullTable[1].offset, 
-        mftIndexSize: fullTable[1].size
+        mftIndexOffset: fullTable[2].offset, 
+        mftIndexSize: fullTable[2].size
     };
 }
 
+
 /**
- * TODO - doc
+ * The array linking all the file indexes to their respective files
+ * @typedef {Array<number>} IndexTable
+ */
+
+/**
  *   This function used to be much more complex with the use of
  *   a "fileId" which in the end was just the equivalent of 
  *   MFTbaseIds[mftId].sort().reverse()[0] (aka the bigger baseId found)
- * @param {*} ds 
- * @param {*} size 
+ * 
+ * @param {DataStream} ds 
+ * @param {number} size
+ * @returns {IndexTable}
  */
-parseMFTIndex = function(ds, size){
+function parseMFTIndex(ds, size){
     let length = size / 8;
 
-    let baseIdToMFT = [];
-    let MFTbaseIds = [];
+    let indexTable = [];
 
     for(let i=0; i<length; i++){
         //Parse table
         let id = ds.readUint32();
         let mftIndex = ds.readUint32();
         //Store the values
-        baseIdToMFT[id] = mftIndex;
-        if(!MFTbaseIds[mftIndex])
-            MFTbaseIds[mftIndex] = [];
-        MFTbaseIds[mftIndex].push(id);
+        indexTable[id] = mftIndex;
     }
 
     T3D.Logger.log(
@@ -183,27 +185,35 @@ parseMFTIndex = function(ds, size){
 		"Finished indexing MFT"
 	);
 
-    return {
-        baseIdToMFT: baseIdToMFT, 
-        MFTbaseIds: MFTbaseIds
-    };
+    return indexTable;
 }
 
-getFilePart = function(file, offset, length, callback){
-    var reader = new FileReader();
-		
-	reader.onerror = function(fileEvent){
-		throw new Error(fileEvent);
-	}
-	reader.onload  = function(fileEvent){
-		var buffer = fileEvent.target.result;
-		var ds = new DataStream(buffer);
-	  	ds.endianness = DataStream.LITTLE_ENDIAN;
-        /// Pass data stream and data length to callback function, keeping "this" scope
-        callback(ds, length);
-	}
-	
-	reader.readAsArrayBuffer(file.slice(offset, offset + length));
+
+/**
+ *   Get a chunk of the specified file. Used mainly to take parts of the Archive before parsing.
+ * 
+ * @param {File} file 
+ * @param {number} offset 
+ * @param {number} length 
+ * @returns {Promise<{ds: DataStream, len: number}>}
+ */
+function getFilePart(file, offset, length){
+    return new Promise((resolve, reject) => {
+        let reader = new FileReader();
+
+        reader.onerror = reject;
+    
+        reader.onload = function(fileEvent){
+            var buffer = fileEvent.target.result;
+            var ds = new DataStream(buffer);
+                ds.endianness = DataStream.LITTLE_ENDIAN;
+            // Pass data stream and data length to callback function
+            resolve({ds: ds, len: length});
+        }
+        
+        // Slicing a File is just reducing the scope of the ArrayBuffer, but doesn't load anything in memory.
+        reader.readAsArrayBuffer(file.slice(offset, offset + length));
+    })
 }
 
 module.exports = {

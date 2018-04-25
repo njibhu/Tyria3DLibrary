@@ -283,7 +283,7 @@ function TerrainRenderer(localReader, mapFile, settings, context, logger){
 			
 					if(  x != 0 && x !=chunkW-1 && y!=0 && y !=chunkW-1 )
 					{
-						chunkGeo.attributes.position.array[cn*3+2] = terrainData.heightMapArray[n];
+						chunkGeo.getAttribute('position').array[cn*3+2] = terrainData.heightMapArray[n];
 						cn++;
 					}
 					
@@ -419,7 +419,7 @@ TerrainRenderer.prototype.renderAsync = function(callback){
 	
 	/// Load all paged Images, requires inflation of other pack files!
 	var pagedImageId =  this.mapFile.getChunk("trn").data.materials.pagedImage;
-	this.localReader.loadFile(pagedImageId,this.loadPagedImageCallback.bind(this, callback));
+	this.localReader.loadFile(pagedImageId, this.loadPagedImageCallback.bind(this, callback));
 }
 
 /**
