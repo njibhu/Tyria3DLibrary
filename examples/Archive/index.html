@@ -11,13 +11,32 @@
     <script src="lib/jquery-1.11.1.min.js"></script>
     <script src="lib/DataStream.js"></script>
     <script src="lib/T3D-1.1.0.js"></script>
+    <script src="lib/T3D-1.1.0.Formats.js"></script>
     <script>
         var lr;
         $("#filePicker").change(function(evt){
             var file = evt.target.files[0];
             T3D.getLocalReader(file, function(result){
                 lr = result;
-                T3D.getFileListAsync(lr, console.log);
+                lr.readFileList().then((res) => {
+                    console.log("Sorting the files");
+                    let myFiles = res.filter(i => i.fileType == "PF_cntc");
+                    console.log("Work:");
+                    for (let elt of myFiles){
+                        lr.readFile(elt.mftId).then((r) => {
+                            let file = new T3D.GW2File(new DataStream(r.buffer), 0);
+                            let mainChunk = file.getChunk('Main').data;
+                            // let found = false;
+                            // for(let i of mainChunk.fileIndices){
+                            //     if(lr._persistantData[i.relocOffset]){
+                            //         break;
+                            //     }
+                            // }
+                            console.log(elt.baseIdList[0], mainChunk.typeInfos.length, mainChunk.content.length, res.buffer.byteLength);
+                        })
+                        
+                    }
+                })
             }, 'lib/t3dworker.js') 
         });
     </script>

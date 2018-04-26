@@ -7,6 +7,42 @@ var beautify = require('js-beautify').js_beautify;
 const outputFolder = '../../src/format/chunks';
 const inputFile = 'data/output.js';
 
+const allFormatsHeader = `
+/*
+Copyright © Tyria3DLibrary project contributors
+
+This file is part of the Tyria 3D Library.
+
+Tyria 3D Library is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Tyria 3D Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
+*/
+var Utils = T3D.ParserUtils;
+
+/**
+ * An auto-generated structure of arrays describing Chunk formats
+ * in the GW2 dat. The main contents of this file is generated
+ * using the IDA script file 'IDA_generator_script.idc'
+ * located in the IDA folder.
+ * 
+ * @for T3D
+ * @property formats
+ * @type Array
+ */
+
+let definitionArray = [];
+
+`;
+
 //Automatically clean the output folder from previous output
 function cleanAndGenerate(){
     fs.readdir(outputFolder, (err, files) => {
@@ -55,7 +91,9 @@ function generate(){
                 `    ///Chunk: ${chunk.slice(0, chunk.indexOf("\n"))}` + "\n" +
                 "    ///==================================================\n" +
                 chunk.slice(chunk.indexOf("\n"));
-		}
+        }
+        
+        let allFormats = allFormatsHeader;
 	
         // Now generate the output
 		for(let chunkName of names){
@@ -66,6 +104,13 @@ function generate(){
             if(names.filter(s => {return s.toLowerCase() == filename}).length > 1){
                 filename += "-" + names.filter(s => {return s.toLowerCase() == filename}).indexOf(chunkName);
             }
+
+            allFormats += 
+            `
+            //Definition for chunks ${chunkName}:
+            let ${chunkName} = require('./${filename}.js');
+            definitionArray = definitionArray.concat(${chunkName});
+            `;
             
             // Add the module.exports at the top
             chunk = 'module.exports = [ \n' + chunk;
@@ -84,7 +129,15 @@ function generate(){
                          beautify(chunk, { indent_size: 4 }), 
                          (err) => { if(err) throw err; }
             );
-		}
+        }
+        
+        allFormats += "\n" + "window.T3D.formats = definitionArray;"
+
+        fs.writeFile(`${outputFolder}/AllFormats.js`,
+                    beautify(allFormats, { indent_size: 4}),
+                    (err) => {if(err) throw err; }
+        );
+
 	});	
 }
 
