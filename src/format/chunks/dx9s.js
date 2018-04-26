@@ -1,3 +1,5 @@
+var Utils = T3D.ParserUtils;
+
 module.exports = [
     ///==================================================
     ///Chunk: DX9S, versions: 12, strucTab: 0x13B5520 

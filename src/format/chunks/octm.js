@@ -1,3 +1,5 @@
+var Utils = T3D.ParserUtils;
+
 module.exports = [
     ///==================================================
     ///Chunk: octm, versions: 1, strucTab: 0x157DAA4 

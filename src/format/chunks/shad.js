@@ -1,3 +1,5 @@
+var Utils = T3D.ParserUtils;
+
 module.exports = [
     ///==================================================
     ///Chunk: shad, versions: 2, strucTab: 0x157F250 

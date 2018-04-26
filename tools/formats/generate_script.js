@@ -26,7 +26,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
-var Utils = T3D.ParserUtils;
 
 /**
  * An auto-generated structure of arrays describing Chunk formats
@@ -113,7 +112,7 @@ function generate(){
             `;
             
             // Add the module.exports at the top
-            chunk = 'module.exports = [ \n' + chunk;
+            chunk = 'var Utils = T3D.ParserUtils; \n\nmodule.exports = [ \n' + chunk;
 
             let endblock = chunk.lastIndexOf('}');
             // Remove the last coma

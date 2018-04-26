@@ -16,16 +16,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
-var Utils = T3D.ParserUtils;
 
 /**
  * An auto-generated structure of arrays describing Chunk formats
  * in the GW2 dat. The main contents of this file is generated
- * using the IDA script file 'ParseAnetStructsJS.idc'
+ * using the IDA script file 'IDA_generator_script.idc'
  * located in the IDA folder.
  * 
  * @for T3D
- * @property Formats
+ * @property formats
  * @type Array
  */
 
