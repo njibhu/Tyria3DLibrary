@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: mach, versions: 1, strucTab: 0x16E9174 
+    ///Chunk: mach, versions: 2, strucTab: 0x1884620 
     ///==================================================
 
 
@@ -10,6 +10,70 @@ module.exports = [
         name: 'mach',
         versions: {
 
+
+            // => Version: 1
+            1: function() {
+                this.PackAnimMachineActionV1 = [
+                    'actionData', Unknown0x1C,
+                ];
+
+                this.PackAnimMachineActionBlockV1 = [
+                    'actions', Utils.getArrayReader(this.PackAnimMachineActionV1),
+                ];
+
+                this.PackAnimMachineActionVariantV1 = [
+                    'token', Utils.getQWordReader(),
+                    'actionBlock', Utils.getPointerReader(this.PackAnimMachineActionBlockV1),
+                ];
+
+                this.PackAnimMachineActionVariantBlockV1 = [
+                    'actionVariants', Utils.getArrayReader(this.PackAnimMachineActionVariantV1),
+                ];
+
+                this.PackAnimMachineTransitionVariantV1 = [
+                    'token', Utils.getQWordReader(),
+                    'actionBlock', Utils.getPointerReader(this.PackAnimMachineActionBlockV1),
+                ];
+
+                this.PackAnimMachineTransitionV1 = [
+                    'name', Utils.getString16Reader(),
+                    'targetStateName', Utils.getString16Reader(),
+                    'actionBlock', Utils.getPointerReader(this.PackAnimMachineActionBlockV1),
+                    'variants', Utils.getArrayReader(this.PackAnimMachineTransitionVariantV1),
+                ];
+
+                this.PackAnimMachineStateVariantV1 = [
+                    'token', Utils.getQWordReader(),
+                    'actionBlock', Utils.getPointerReader(this.PackAnimMachineActionBlockV1),
+                    'actionVariantBlock', Utils.getPointerReader(this.PackAnimMachineActionVariantBlockV1),
+                    'transitions', Utils.getArrayReader(this.PackAnimMachineTransitionV1),
+                ];
+
+                this.PackAnimMachineStateV1 = [
+                    'name', Utils.getString16Reader(),
+                    'actionBlock', Utils.getPointerReader(this.PackAnimMachineActionBlockV1),
+                    'actionVariantBlock', Utils.getPointerReader(this.PackAnimMachineActionVariantBlockV1),
+                    'transitions', Utils.getArrayReader(this.PackAnimMachineTransitionV1),
+                    'variants', Utils.getArrayReader(this.PackAnimMachineStateVariantV1),
+                ];
+
+                this.PackAnimMachineV1 = [
+                    'states', Utils.getArrayReader(this.PackAnimMachineStateV1),
+                ];
+
+                this.PackAnimModelV1 = [
+                    'modelFileId', Utils.getFileNameReader(),
+                    'modelFileRaw', Utils.getString16Reader(),
+                    'machineIndex', 'uint32',
+                    'listeners', ['[]', 'uint8', 16],
+                ];
+
+                this.__root = this.PackAnimMachinesV1 = [
+                    'machines', Utils.getArrayReader(this.PackAnimMachineV1),
+                    'models', Utils.getArrayReader(this.PackAnimModelV1),
+                ];
+
+            },
 
             // => Version: 0
             0: function() {

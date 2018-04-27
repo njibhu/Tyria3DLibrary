@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: lght, versions: 18, strucTab: 0x157D8A8 
+    ///Chunk: lght, versions: 18, strucTab: 0x1720FD0 
     ///==================================================
 
 
@@ -218,7 +218,7 @@ module.exports = [
 
             },
 
-            // => Version: 15, ReferencedFunction: 0xFFB8E0
+            // => Version: 15, ReferencedFunction: 0xEB9730
             15: function() {
                 this.PackMapLight = [
                     'position', ['[]', 'float32', 3],
@@ -410,7 +410,7 @@ module.exports = [
 
             },
 
-            // => Version: 13, ReferencedFunction: 0xFFB780
+            // => Version: 13, ReferencedFunction: 0xEB95D0
             13: function() {
                 this.PackMapLight = [
                     'position', ['[]', 'float32', 3],
@@ -493,7 +493,7 @@ module.exports = [
 
             },
 
-            // => Version: 12, ReferencedFunction: 0xFFB4F0
+            // => Version: 12, ReferencedFunction: 0xEB9310
             12: function() {
                 this.PackMapLight = [
                     'position', ['[]', 'float32', 3],
@@ -576,7 +576,7 @@ module.exports = [
 
             },
 
-            // => Version: 11, ReferencedFunction: 0xFFB4F0
+            // => Version: 11, ReferencedFunction: 0xEB9310
             11: function() {
                 this.PackMapLight = [
                     'position', ['[]', 'float32', 3],
@@ -659,7 +659,7 @@ module.exports = [
 
             },
 
-            // => Version: 10, ReferencedFunction: 0xFFC0D0
+            // => Version: 10, ReferencedFunction: 0xEB9F20
             10: function() {
                 this.PackMapLight = [
                     'position', ['[]', 'float32', 3],
@@ -733,7 +733,7 @@ module.exports = [
 
             },
 
-            // => Version: 9, ReferencedFunction: 0xFFC010
+            // => Version: 9, ReferencedFunction: 0xEB9E60
             9: function() {
                 this.PackMapLight = [
                     'position', ['[]', 'float32', 3],
@@ -807,7 +807,7 @@ module.exports = [
 
             },
 
-            // => Version: 8, ReferencedFunction: 0xFFBF90
+            // => Version: 8, ReferencedFunction: 0xEB9DE0
             8: function() {
                 this.PackMapLight = [
                     'position', ['[]', 'float32', 3],
@@ -1020,7 +1020,7 @@ module.exports = [
 
             },
 
-            // => Version: 5, ReferencedFunction: 0xFFBE00
+            // => Version: 5, ReferencedFunction: 0xEB9C50
             5: function() {
                 this.PackMapLight = [
                     'position', ['[]', 'float32', 3],
@@ -1073,7 +1073,7 @@ module.exports = [
 
             },
 
-            // => Version: 4, ReferencedFunction: 0xFFBC00
+            // => Version: 4, ReferencedFunction: 0xEB9A50
             4: function() {
                 this.PackMapLight = [
                     'position', ['[]', 'float32', 3],
@@ -1106,7 +1106,7 @@ module.exports = [
 
             },
 
-            // => Version: 3, ReferencedFunction: 0xFFBAC0
+            // => Version: 3, ReferencedFunction: 0xEB9910
             3: function() {
                 this.PackMapLight = [
                     'type', 'uint32',
@@ -1139,7 +1139,7 @@ module.exports = [
 
             },
 
-            // => Version: 2, ReferencedFunction: 0xFFB9A0
+            // => Version: 2, ReferencedFunction: 0xEB97F0
             2: function() {
                 this.PackMapLight = [
                     'type', 'uint32',

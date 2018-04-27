@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: fall, versions: 1, strucTab: 0x16E9000 
+    ///Chunk: fall, versions: 1, strucTab: 0x1884460 
     ///==================================================
 
 

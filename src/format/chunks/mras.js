@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: MRAS, versions: 1, strucTab: 0x13B55E0 
+    ///Chunk: MRAS, versions: 1, strucTab: 0x1528BA0 
     ///==================================================
 
 

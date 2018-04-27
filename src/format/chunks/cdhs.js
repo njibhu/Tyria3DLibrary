@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: CDHS, versions: 2, strucTab: 0x13BD204 
+    ///Chunk: CDHS, versions: 2, strucTab: 0x15313C0 
     ///==================================================
 
 
@@ -11,7 +11,7 @@ module.exports = [
         versions: {
 
 
-            // => Version: 1, ReferencedFunction: 0x7B3180
+            // => Version: 1, ReferencedFunction: 0x5B0AE0
             1: function() {
                 this.PackVsGenParams = [
                     'pointWindCount', 'uint8',

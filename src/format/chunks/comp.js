@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: comp, versions: 19, strucTab: 0x16E8D38 
+    ///Chunk: comp, versions: 20, strucTab: 0x18840B0 
     ///==================================================
 
 
@@ -10,6 +10,151 @@ module.exports = [
         name: 'comp',
         versions: {
 
+
+            // => Version: 19
+            19: function() {
+                this.PackCompositeBlitRectSetV19 = [
+                    'name', Utils.getString16Reader(),
+                    'size', ['[]', 'uint32', 2],
+                    'rectIndex', Utils.getArrayReader('uint8'),
+                    'rectArray', Utils.getArrayReader(['[]', 'uint32', 4]),
+                ];
+
+                this.PackCompositeBoneScaleParamV19 = [
+                    'name', Utils.getQWordReader(),
+                    'flags', 'uint8',
+                    'max', 'float32',
+                    'min', 'float32',
+                    'rotate', ['[]', 'float32', 3],
+                    'scale', ['[]', 'float32', 3],
+                    'translate', ['[]', 'float32', 3],
+                ];
+
+                this.PackCompositeBoneScaleRegionV19 = [
+                    'name', Utils.getQWordReader(),
+                    'value', 'float32',
+                    'Bone', Utils.getArrayReader(this.PackCompositeBoneScaleParamV19),
+                ];
+
+                this.PackCompositeMorphWeightV19 = [
+                    'name', Utils.getQWordReader(),
+                    'value', 'float32',
+                ];
+
+                this.PackCompositeBoneScaleV19 = [
+                    'BodyRegion', Utils.getArrayReader(this.PackCompositeBoneScaleRegionV19),
+                    'MorphWeight', Utils.getArrayReader(this.PackCompositeMorphWeightV19),
+                ];
+
+                this.PackCompositeBoneScaleFileV19 = [
+                    'fileName', Utils.getString16Reader(),
+                ];
+
+                this.PackCompositeFileDataV19 = [
+                    'name', Utils.getQWordReader(),
+                    'type', 'uint8',
+                    'flags', 'uint8',
+                    'animRoleOverride', Utils.getQWordReader(),
+                    'meshBase', Utils.getFileNameReader(),
+                    'meshOverlap', Utils.getFileNameReader(),
+                    'maskDye1', Utils.getFileNameReader(),
+                    'maskDye2', Utils.getFileNameReader(),
+                    'maskDye3', Utils.getFileNameReader(),
+                    'maskDye4', Utils.getFileNameReader(),
+                    'maskCut', Utils.getFileNameReader(),
+                    'textureBase', Utils.getFileNameReader(),
+                    'textureNormal', Utils.getFileNameReader(),
+                    'dyeFlags', 'uint32',
+                    'hideFlags', 'uint32',
+                    'skinFlags', 'uint32',
+                    'blitRectIndex', 'uint8',
+                ];
+
+                this.PackCompositeSkinPatternV19 = [
+                    'chest', Utils.getFileNameReader(),
+                    'face', Utils.getFileNameReader(),
+                    'feet', Utils.getFileNameReader(),
+                    'hands', Utils.getFileNameReader(),
+                    'legs', Utils.getFileNameReader(),
+                    'ears', Utils.getFileNameReader(),
+                ];
+
+                this.PackCompositeSkinStyleV19 = [
+                    'chest', Utils.getQWordReader(),
+                    'feet', Utils.getQWordReader(),
+                    'hands', Utils.getQWordReader(),
+                    'legs', Utils.getQWordReader(),
+                ];
+
+                this.PackCompositeColorV19 = [
+                    'brightness', 'uint8',
+                    'contrast', 'uint8',
+                    'hue', 'uint8',
+                    'saturation', 'uint8',
+                    'lightness', 'uint8',
+                ];
+
+                this.PackCompositeVariantComponentV19 = [
+                    'nameToken', Utils.getQWordReader(),
+                    'color0', this.PackCompositeColorV19,
+                    'color1', this.PackCompositeColorV19,
+                    'color2', this.PackCompositeColorV19,
+                    'color3', this.PackCompositeColorV19,
+                ];
+
+                this.PackCompositeVariantV19 = [
+                    'token', Utils.getQWordReader(),
+                    'boneScaleIndex', 'uint32',
+                    'components', Utils.getArrayReader(this.PackCompositeVariantComponentV19),
+                    'eyeColor', this.PackCompositeColorV19,
+                    'hairColor', this.PackCompositeColorV19,
+                    'hairColor2', this.PackCompositeColorV19,
+                    'patternColor', this.PackCompositeColorV19,
+                    'skinColor', this.PackCompositeColorV19,
+                    'skinIndex', 'uint32',
+                    'skinStyle', 'uint32',
+                ];
+
+                this.PackCompositeAnimOverrideV19 = [
+                    'animRole', Utils.getQWordReader(),
+                    'filepath', Utils.getFileNameReader(),
+                ];
+
+                this.PackCompositeRaceDataV19 = [
+                    'name', Utils.getString16Reader(),
+                    'nameToken', Utils.getQWordReader(),
+                    'baseHeadToken', Utils.getQWordReader(),
+                    'beard', Utils.getArrayReader(Utils.getQWordReader()),
+                    'bodyBoneScales', Utils.getArrayReader(this.PackCompositeBoneScaleV19),
+                    'bodyBoneScaleFiles', Utils.getArrayReader(this.PackCompositeBoneScaleFileV19),
+                    'ears', Utils.getArrayReader(Utils.getQWordReader()),
+                    'eyeColorPalette', Utils.getString16Reader(),
+                    'faceBoneScales', Utils.getArrayReader(this.PackCompositeBoneScaleV19),
+                    'faces', Utils.getArrayReader(Utils.getQWordReader()),
+                    'fileData', Utils.getArrayReader(this.PackCompositeFileDataV19),
+                    'flags', 'uint32',
+                    'hairStyles', Utils.getArrayReader(Utils.getQWordReader()),
+                    'hairColorPalette', Utils.getString16Reader(),
+                    'skeletonFile', Utils.getFileNameReader(),
+                    'skinPatterns', Utils.getArrayReader(this.PackCompositeSkinPatternV19),
+                    'skinColorPalette', Utils.getString16Reader(),
+                    'skinPatternPalette', Utils.getString16Reader(),
+                    'skinStyles', Utils.getArrayReader(this.PackCompositeSkinStyleV19),
+                    'type', 'uint32',
+                    'variantRefRace', Utils.getQWordReader(),
+                    'variants', Utils.getArrayReader(this.PackCompositeVariantV19),
+                    'animOverrides', Utils.getArrayReader(this.PackCompositeAnimOverrideV19),
+                ];
+
+                this.__root = this.PackCompositeV19 = [
+                    'armorColorIds', Utils.getArrayReader('uint32'),
+                    'blitRects', Utils.getArrayReader(this.PackCompositeBlitRectSetV19),
+                    'boneScales', Utils.getArrayReader(this.PackCompositeBoneScaleV19),
+                    'raceSexData', Utils.getArrayReader(this.PackCompositeRaceDataV19),
+                    'configVersion', 'uint16',
+                ];
+
+            },
 
             // => Version: 18
             18: function() {
@@ -155,7 +300,7 @@ module.exports = [
 
             },
 
-            // => Version: 17, ReferencedFunction: 0x1228AB0
+            // => Version: 17, ReferencedFunction: 0x1103270
             17: function() {
                 this.PackCompositeBlitRectSetV17 = [
                     'name', Utils.getString16Reader(),
@@ -298,7 +443,7 @@ module.exports = [
 
             },
 
-            // => Version: 16, ReferencedFunction: 0x1228710
+            // => Version: 16, ReferencedFunction: 0x1102ED0
             16: function() {
                 this.PackCompositeBlitRectSetV16 = [
                     'name', Utils.getString16Reader(),
@@ -955,7 +1100,7 @@ module.exports = [
 
             },
 
-            // => Version: 11, ReferencedFunction: 0x12286D0
+            // => Version: 11, ReferencedFunction: 0x1102E90
             11: function() {
                 this.PackCompositeBlitRectSetV11 = [
                     'name', Utils.getString16Reader(),

@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: COLL, versions: 5, strucTab: 0x15D03A8 
+    ///Chunk: COLL, versions: 5, strucTab: 0x1773030 
     ///==================================================
 
 
@@ -72,7 +72,7 @@ module.exports = [
 
             },
 
-            // => Version: 3, ReferencedFunction: 0x1068760
+            // => Version: 3, ReferencedFunction: 0xF277D0
             3: function() {
                 this.ModelCollisionKeyFrameV9 = [
                     'time', 'float32',

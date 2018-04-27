@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: GR2S, versions: 5, strucTab: 0x15D03E4 
+    ///Chunk: GR2S, versions: 5, strucTab: 0x177309C 
     ///==================================================
 
 
@@ -11,7 +11,7 @@ module.exports = [
         versions: {
 
 
-            // => Version: 4, ReferencedFunction: 0x1069BD0
+            // => Version: 4, ReferencedFunction: 0xF28C30
             4: function() {
                 this.ModelGr2DataV4 = [
                     'filename', Utils.getString16Reader(),
@@ -25,7 +25,7 @@ module.exports = [
 
             },
 
-            // => Version: 3, ReferencedFunction: 0x1069840
+            // => Version: 3, ReferencedFunction: 0xF28880
             3: function() {
                 this.ModelGr2DataV3 = [
                     'filename', Utils.getString16Reader(),
@@ -39,7 +39,7 @@ module.exports = [
 
             },
 
-            // => Version: 2, ReferencedFunction: 0x10692C0
+            // => Version: 2, ReferencedFunction: 0xF282D0
             2: function() {
                 this.ModelGr2DataV2 = [
                     'filename', Utils.getString16Reader(),

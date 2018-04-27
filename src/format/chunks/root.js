@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: ROOT, versions: 2, strucTab: 0x15D0638 
+    ///Chunk: ROOT, versions: 2, strucTab: 0x17731F0 
     ///==================================================
 
 
@@ -11,7 +11,7 @@ module.exports = [
         versions: {
 
 
-            // => Version: 1, ReferencedFunction: 0x106A040
+            // => Version: 1, ReferencedFunction: 0xF290C0
             1: function() {
                 this.ModelRootMotionV1 = [
                     'sequence', Utils.getQWordReader(),

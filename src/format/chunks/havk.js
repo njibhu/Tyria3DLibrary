@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: havk, versions: 15, strucTab: 0x1580940 
+    ///Chunk: havk, versions: 15, strucTab: 0x1723760 
     ///==================================================
 
 
@@ -11,7 +11,7 @@ module.exports = [
         versions: {
 
 
-            // => Version: 14, ReferencedFunction: 0xFF70D0
+            // => Version: 14, ReferencedFunction: 0xEBA840
             14: function() {
                 this.PackMoppType = [
                     'moppData', Utils.getArrayReader('uint8'),
@@ -82,7 +82,7 @@ module.exports = [
 
             },
 
-            // => Version: 13, ReferencedFunction: 0xFF6E30
+            // => Version: 13, ReferencedFunction: 0xEBA4F0
             13: function() {
                 this.PackMapCollideCollisionV13 = [
                     'indices', Utils.getArrayReader('uint16'),
@@ -385,7 +385,7 @@ module.exports = [
 
             },
 
-            // => Version: 8, ReferencedFunction: 0xFF7140
+            // => Version: 8, ReferencedFunction: 0xEBA8B0
             8: function() {
                 this.PackMapCollideMeshV8 = [
                     'indices', Utils.getArrayReader('uint16'),

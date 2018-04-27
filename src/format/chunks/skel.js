@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: SKEL, versions: 2, strucTab: 0x15D06AC 
+    ///Chunk: SKEL, versions: 2, strucTab: 0x1773254 
     ///==================================================
 
 
@@ -11,7 +11,7 @@ module.exports = [
         versions: {
 
 
-            // => Version: 1, ReferencedFunction: 0x106A090
+            // => Version: 1, ReferencedFunction: 0xF29110
             1: function() {
                 this.ModelTransformData = [
                     'Flags', 'uint32',
@@ -223,7 +223,7 @@ module.exports = [
 
 
     ///==================================================
-    ///Chunk: SKEL, versions: 4, strucTab: 0x168D74C 
+    ///Chunk: SKEL, versions: 4, strucTab: 0x183055C 
     ///==================================================
 
 

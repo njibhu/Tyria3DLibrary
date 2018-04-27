@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: zon2, versions: 22, strucTab: 0x1580230 
+    ///Chunk: zon2, versions: 22, strucTab: 0x1723840 
     ///==================================================
 
 
@@ -106,7 +106,7 @@ module.exports = [
 
             },
 
-            // => Version: 20, ReferencedFunction: 0xFFC530
+            // => Version: 20, ReferencedFunction: 0xEB7610
             20: function() {
                 this.PackMapZoneModelV21 = [
                     'filename', Utils.getFileNameReader(),
@@ -196,7 +196,7 @@ module.exports = [
 
             },
 
-            // => Version: 19, ReferencedFunction: 0x5EABE0
+            // => Version: 19, ReferencedFunction: 0x452AB0
             19: function() {
                 this.PackMapZoneModelV20 = [
                     'filename', Utils.getFileNameReader(),
@@ -286,7 +286,7 @@ module.exports = [
 
             },
 
-            // => Version: 18, ReferencedFunction: 0xFFC4A0
+            // => Version: 18, ReferencedFunction: 0xEB7580
             18: function() {
                 this.PackMapZoneModelV19 = [
                     'filename', Utils.getFileNameReader(),
@@ -375,7 +375,7 @@ module.exports = [
 
             },
 
-            // => Version: 17, ReferencedFunction: 0xFFC3E0
+            // => Version: 17, ReferencedFunction: 0xEB74C0
             17: function() {
                 this.PackMapZoneModelV18 = [
                     'filename', Utils.getFileNameReader(),
@@ -464,7 +464,7 @@ module.exports = [
 
             },
 
-            // => Version: 16, ReferencedFunction: 0xFFC1A0
+            // => Version: 16, ReferencedFunction: 0xEB72D0
             16: function() {
                 this.PackMapZoneModelV17 = [
                     'filename', Utils.getFileNameReader(),
@@ -550,7 +550,7 @@ module.exports = [
 
             },
 
-            // => Version: 15, ReferencedFunction: 0xFFC1A0
+            // => Version: 15, ReferencedFunction: 0xEB72D0
             15: function() {
                 this.PackMapZoneModelV16 = [
                     'filename', Utils.getFileNameReader(),

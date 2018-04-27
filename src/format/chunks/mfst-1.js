@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: mfst, versions: 3, strucTab: 0x1743B8C 
+    ///Chunk: mfst, versions: 3, strucTab: 0x18FBDC4 
     ///==================================================
 
 
@@ -11,7 +11,7 @@ module.exports = [
         versions: {
 
 
-            // => Version: 2, ReferencedFunction: 0x13458C0
+            // => Version: 2, ReferencedFunction: 0x1408880
             2: function() {
                 this.ContentMapRedirector = [
                     'mapGUID', ['[]', 'uint8', 16],

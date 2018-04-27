@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: cube, versions: 4, strucTab: 0x15813D8 
+    ///Chunk: cube, versions: 4, strucTab: 0x17244E0 
     ///==================================================
 
 
@@ -37,7 +37,7 @@ module.exports = [
 
             },
 
-            // => Version: 2, ReferencedFunction: 0x5EABE0
+            // => Version: 2, ReferencedFunction: 0x452AB0
             2: function() {
                 this.PackMapCubeMapSampleV2 = [
                     'position', ['[]', 'float32', 3],
@@ -61,7 +61,7 @@ module.exports = [
 
             },
 
-            // => Version: 1, ReferencedFunction: 0xFFCB60
+            // => Version: 1, ReferencedFunction: 0xEB92D0
             1: function() {
                 this.PackMapCubeMapSampleV1 = [
                     'position', ['[]', 'float32', 3],

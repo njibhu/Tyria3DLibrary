@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: PS3S, versions: 1, strucTab: 0x13B5514 
+    ///Chunk: PS3S, versions: 1, strucTab: 0x1528AD4 
     ///==================================================
 
 

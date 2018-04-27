@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: trn, versions: 15, strucTab: 0x157FD20 
+    ///Chunk: trn, versions: 15, strucTab: 0x17232A8 
     ///==================================================
 
 
@@ -75,7 +75,7 @@ module.exports = [
 
             },
 
-            // => Version: 13, ReferencedFunction: 0xFFCAA0
+            // => Version: 13, ReferencedFunction: 0xEBAF80
             13: function() {
                 this.PackMapTerrainChunkV13 = [
                     'chunkFlags', 'uint32',
@@ -139,7 +139,7 @@ module.exports = [
 
             },
 
-            // => Version: 12, ReferencedFunction: 0xFFC990
+            // => Version: 12, ReferencedFunction: 0xEBAE60
             12: function() {
                 this.PackMapTerrainChunkV12 = [
                     'chunkFlags', 'uint32',
@@ -200,7 +200,7 @@ module.exports = [
 
             },
 
-            // => Version: 11, ReferencedFunction: 0xFFC900
+            // => Version: 11, ReferencedFunction: 0xEBADD0
             11: function() {
                 this.PackMapTerrainChunkV11 = [
                     'chunkFlags', 'uint32',

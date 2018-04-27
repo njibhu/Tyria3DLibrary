@@ -39,13 +39,25 @@ definitionArray = definitionArray.concat(GRMT);
 let DX9S = require('./dx9s.js');
 definitionArray = definitionArray.concat(DX9S);
 
+//Definition for chunks TOOL:
+let TOOL = require('./tool.js');
+definitionArray = definitionArray.concat(TOOL);
+
 //Definition for chunks XBXS:
 let XBXS = require('./xbxs.js');
 definitionArray = definitionArray.concat(XBXS);
 
+//Definition for chunks UPDB:
+let UPDB = require('./updb.js');
+definitionArray = definitionArray.concat(UPDB);
+
 //Definition for chunks PS3S:
 let PS3S = require('./ps3s.js');
 definitionArray = definitionArray.concat(PS3S);
+
+//Definition for chunks UPDA:
+let UPDA = require('./upda.js');
+definitionArray = definitionArray.concat(UPDA);
 
 //Definition for chunks MRAS:
 let MRAS = require('./mras.js');
@@ -66,18 +78,6 @@ definitionArray = definitionArray.concat(PVSH);
 //Definition for chunks SPPA:
 let SPPA = require('./sppa.js');
 definitionArray = definitionArray.concat(SPPA);
-
-//Definition for chunks TOOL:
-let TOOL = require('./tool.js');
-definitionArray = definitionArray.concat(TOOL);
-
-//Definition for chunks UPDB:
-let UPDB = require('./updb.js');
-definitionArray = definitionArray.concat(UPDB);
-
-//Definition for chunks UPDA:
-let UPDA = require('./upda.js');
-definitionArray = definitionArray.concat(UPDA);
 
 //Definition for chunks CDHS:
 let CDHS = require('./cdhs.js');
@@ -127,13 +127,13 @@ definitionArray = definitionArray.concat(ASND);
 let CSCN = require('./cscn.js');
 definitionArray = definitionArray.concat(CSCN);
 
+//Definition for chunks havk:
+let havk = require('./havk.js');
+definitionArray = definitionArray.concat(havk);
+
 //Definition for chunks shad:
 let shad = require('./shad.js');
 definitionArray = definitionArray.concat(shad);
-
-//Definition for chunks pack:
-let pack = require('./pack.js');
-definitionArray = definitionArray.concat(pack);
 
 //Definition for chunks area:
 let area = require('./area.js');
@@ -147,17 +147,13 @@ definitionArray = definitionArray.concat(audi);
 let bloc = require('./bloc.js');
 definitionArray = definitionArray.concat(bloc);
 
-//Definition for chunks cng:
-let cng = require('./cng.js');
-definitionArray = definitionArray.concat(cng);
+//Definition for chunks cg15:
+let cg15 = require('./cg15.js');
+definitionArray = definitionArray.concat(cg15);
 
 //Definition for chunks cube:
 let cube = require('./cube.js');
 definitionArray = definitionArray.concat(cube);
-
-//Definition for chunks havk:
-let havk = require('./havk.js');
-definitionArray = definitionArray.concat(havk);
 
 //Definition for chunks env:
 let env = require('./env.js');
@@ -175,9 +171,9 @@ definitionArray = definitionArray.concat(lght);
 let msn = require('./msn.js');
 definitionArray = definitionArray.concat(msn);
 
-//Definition for chunks nvms:
-let nvms = require('./nvms.js');
-definitionArray = definitionArray.concat(nvms);
+//Definition for chunks nm15:
+let nm15 = require('./nm15.js');
+definitionArray = definitionArray.concat(nm15);
 
 //Definition for chunks nmex:
 let nmex = require('./nmex.js');
@@ -267,6 +263,10 @@ definitionArray = definitionArray.concat(dcal);
 let exp = require('./exp.js');
 definitionArray = definitionArray.concat(exp);
 
+//Definition for chunks pack:
+let pack = require('./pack.js');
+definitionArray = definitionArray.concat(pack);
+
 //Definition for chunks MODL:
 let MODL = require('./modl.js');
 definitionArray = definitionArray.concat(MODL);
@@ -343,6 +343,10 @@ definitionArray = definitionArray.concat(Main);
 let anim = require('./anim-1.js');
 definitionArray = definitionArray.concat(anim);
 
+//Definition for chunks eula:
+let eula = require('./eula.js');
+definitionArray = definitionArray.concat(eula);
+
 //Definition for chunks mach:
 let mach = require('./mach.js');
 definitionArray = definitionArray.concat(mach);
@@ -358,10 +362,6 @@ definitionArray = definitionArray.concat(seqn);
 //Definition for chunks cnfg:
 let cnfg = require('./cnfg.js');
 definitionArray = definitionArray.concat(cnfg);
-
-//Definition for chunks eula:
-let eula = require('./eula.js');
-definitionArray = definitionArray.concat(eula);
 
 //Definition for chunks mfst:
 let mfst = require('./mfst-1.js');

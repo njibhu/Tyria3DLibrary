@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: shor, versions: 4, strucTab: 0x157F380 
+    ///Chunk: shor, versions: 4, strucTab: 0x1722DE8 
     ///==================================================
 
 
@@ -11,7 +11,7 @@ module.exports = [
         versions: {
 
 
-            // => Version: 3, ReferencedFunction: 0xFFB300
+            // => Version: 3, ReferencedFunction: 0xEBB250
             3: function() {
                 this.MapShoreChain = [
                     'offset', 'float32',

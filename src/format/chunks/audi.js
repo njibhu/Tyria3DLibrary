@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: audi, versions: 9, strucTab: 0x1580178 
+    ///Chunk: audi, versions: 9, strucTab: 0x1723448 
     ///==================================================
 
 
@@ -152,7 +152,7 @@ module.exports = [
 
             },
 
-            // => Version: 4, ReferencedFunction: 0xFFB450
+            // => Version: 4, ReferencedFunction: 0xEBB190
             4: function() {
                 this.PackMapAudioRegion = [
                     'regionType', 'uint32',
@@ -186,7 +186,7 @@ module.exports = [
 
             },
 
-            // => Version: 3, ReferencedFunction: 0xFFB340
+            // => Version: 3, ReferencedFunction: 0xEBB080
             3: function() {
                 this.PackMapAudioRegion = [
                     'regionType', 'uint32',

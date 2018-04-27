@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: DX9S, versions: 12, strucTab: 0x13B5520 
+    ///Chunk: DX9S, versions: 12, strucTab: 0x1528AE0 
     ///==================================================
 
 
@@ -11,7 +11,7 @@ module.exports = [
         versions: {
 
 
-            // => Version: 11, ReferencedFunction: 0x7B0830
+            // => Version: 11, ReferencedFunction: 0x5AE350
             11: function() {
                 this.AmatDx9SamplerV11 = [
                     'textureIndex', 'uint32',
@@ -102,7 +102,7 @@ module.exports = [
 
             },
 
-            // => Version: 9, ReferencedFunction: 0x7B0E70
+            // => Version: 9, ReferencedFunction: 0x5AE990
             9: function() {
                 this.AmatDx9SamplerV9 = [
                     'textureIndex', 'uint32',
@@ -146,7 +146,7 @@ module.exports = [
 
             },
 
-            // => Version: 8, ReferencedFunction: 0x7B0C40
+            // => Version: 8, ReferencedFunction: 0x5AE760
             8: function() {
                 this.AmatDx9SamplerV8 = [
                     'textureIndex', 'uint32',
@@ -189,7 +189,7 @@ module.exports = [
 
             },
 
-            // => Version: 7, ReferencedFunction: 0x7B0BC0
+            // => Version: 7, ReferencedFunction: 0x5AE6E0
             7: function() {
                 this.AmatDx9SamplerV7 = [
                     'textureIndex', 'uint32',
@@ -232,7 +232,7 @@ module.exports = [
 
             },
 
-            // => Version: 6, ReferencedFunction: 0x7B0B70
+            // => Version: 6, ReferencedFunction: 0x5AE690
             6: function() {
                 this.AmatDx9SamplerV6 = [
                     'textureIndex', 'uint32',
@@ -275,7 +275,7 @@ module.exports = [
 
             },
 
-            // => Version: 5, ReferencedFunction: 0x7B0A80
+            // => Version: 5, ReferencedFunction: 0x5AE5A0
             5: function() {
                 this.AmatDx9SamplerV5 = [
                     'textureIndex', 'uint32',
@@ -407,7 +407,7 @@ module.exports = [
 
             },
 
-            // => Version: 2, ReferencedFunction: 0x7B0850
+            // => Version: 2, ReferencedFunction: 0x5AE370
             2: function() {
                 this.AmatDx9SamplerV2 = [
                     'textureIndex', 'uint32',
@@ -451,7 +451,7 @@ module.exports = [
 
             },
 
-            // => Version: 1, ReferencedFunction: 0x7B06A0
+            // => Version: 1, ReferencedFunction: 0x5AE1C0
             1: function() {
                 this.AmatDx9SamplerV1 = [
                     'textureIndex', 'uint32',

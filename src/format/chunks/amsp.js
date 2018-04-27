@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: AMSP, versions: 30, strucTab: 0x1526520 
+    ///Chunk: AMSP, versions: 30, strucTab: 0x16CF138 
     ///==================================================
 
 
@@ -2644,7 +2644,7 @@ module.exports = [
 
             },
 
-            // => Version: 19, ReferencedFunction: 0xF5DB40
+            // => Version: 19, ReferencedFunction: 0xE21080
             19: function() {
                 this.DspDataV19 = [
                     'type', 'uint32',
@@ -2863,7 +2863,7 @@ module.exports = [
 
             },
 
-            // => Version: 18, ReferencedFunction: 0xF5DA00
+            // => Version: 18, ReferencedFunction: 0xE20F40
             18: function() {
                 this.DspDataV18 = [
                     'type', 'uint32',
@@ -4146,7 +4146,7 @@ module.exports = [
 
             },
 
-            // => Version: 12, ReferencedFunction: 0xF5D9E0
+            // => Version: 12, ReferencedFunction: 0xE20F20
             12: function() {
                 this.DspDataV12 = [
                     'type', 'uint32',
@@ -5192,7 +5192,7 @@ module.exports = [
 
             },
 
-            // => Version: 7, ReferencedFunction: 0xF5D970
+            // => Version: 7, ReferencedFunction: 0xE20EB0
             7: function() {
                 this.DspDataV7 = [
                     'type', 'uint32',

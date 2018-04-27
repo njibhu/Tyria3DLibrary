@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: env, versions: 76, strucTab: 0x157D2C0 
+    ///Chunk: env, versions: 76, strucTab: 0x17206D8 
     ///==================================================
 
 
@@ -11,7 +11,7 @@ module.exports = [
         versions: {
 
 
-            // => Version: 75, ReferencedFunction: 0xFF8EA0
+            // => Version: 75, ReferencedFunction: 0xEB9240
             75: function() {
                 this.PackMapEnvDataLightV75 = [
                     'color', ['[]', 'uint8', 3],
@@ -1339,7 +1339,7 @@ module.exports = [
 
             },
 
-            // => Version: 71, ReferencedFunction: 0xFF8E00
+            // => Version: 71, ReferencedFunction: 0xEB91A0
             71: function() {
                 this.PackMapEnvDataLightV71 = [
                     'color', ['[]', 'uint8', 3],
@@ -1637,7 +1637,7 @@ module.exports = [
 
             },
 
-            // => Version: 70, ReferencedFunction: 0xFF8DB0
+            // => Version: 70, ReferencedFunction: 0xEB9150
             70: function() {
                 this.PackMapEnvDataLightV70 = [
                     'color', ['[]', 'uint8', 3],
@@ -2229,7 +2229,7 @@ module.exports = [
 
             },
 
-            // => Version: 68, ReferencedFunction: 0xFF8C90
+            // => Version: 68, ReferencedFunction: 0xEB9030
             68: function() {
                 this.PackMapEnvDataLightV68 = [
                     'color', ['[]', 'uint8', 3],
@@ -2822,7 +2822,7 @@ module.exports = [
 
             },
 
-            // => Version: 66, ReferencedFunction: 0xFF8B40
+            // => Version: 66, ReferencedFunction: 0xEB8EE0
             66: function() {
                 this.PackMapEnvDataLightV66 = [
                     'color', ['[]', 'uint8', 3],
@@ -3117,7 +3117,7 @@ module.exports = [
 
             },
 
-            // => Version: 65, ReferencedFunction: 0xFF8AE0
+            // => Version: 65, ReferencedFunction: 0xEB8E80
             65: function() {
                 this.PackMapEnvDataLightV65 = [
                     'color', ['[]', 'uint8', 3],
@@ -3407,7 +3407,7 @@ module.exports = [
 
             },
 
-            // => Version: 64, ReferencedFunction: 0xFF89F0
+            // => Version: 64, ReferencedFunction: 0xEB8D90
             64: function() {
                 this.PackMapEnvDataLightV64 = [
                     'color', ['[]', 'uint8', 3],
@@ -3696,7 +3696,7 @@ module.exports = [
 
             },
 
-            // => Version: 63, ReferencedFunction: 0xFF88F0
+            // => Version: 63, ReferencedFunction: 0xEB8C90
             63: function() {
                 this.PackMapEnvDataLightV63 = [
                     'color', ['[]', 'uint8', 3],
@@ -3983,7 +3983,7 @@ module.exports = [
 
             },
 
-            // => Version: 62, ReferencedFunction: 0xFF88C0
+            // => Version: 62, ReferencedFunction: 0xEB8C60
             62: function() {
                 this.PackMapEnvDataLightV62 = [
                     'color', ['[]', 'uint8', 3],
@@ -4265,7 +4265,7 @@ module.exports = [
 
             },
 
-            // => Version: 61, ReferencedFunction: 0xFF8890
+            // => Version: 61, ReferencedFunction: 0xEB8C30
             61: function() {
                 this.PackMapEnvDataLightV61 = [
                     'color', ['[]', 'uint8', 3],
@@ -4546,7 +4546,7 @@ module.exports = [
 
             },
 
-            // => Version: 60, ReferencedFunction: 0xFF8860
+            // => Version: 60, ReferencedFunction: 0xEB8C00
             60: function() {
                 this.PackMapEnvDataLightV60 = [
                     'color', ['[]', 'uint8', 3],
@@ -4826,7 +4826,7 @@ module.exports = [
 
             },
 
-            // => Version: 59, ReferencedFunction: 0xFF8750
+            // => Version: 59, ReferencedFunction: 0xEB8AF0
             59: function() {
                 this.PackMapEnvDataLightV59 = [
                     'color', ['[]', 'uint8', 3],
@@ -5105,7 +5105,7 @@ module.exports = [
 
             },
 
-            // => Version: 58, ReferencedFunction: 0xFF8640
+            // => Version: 58, ReferencedFunction: 0xEB89E0
             58: function() {
                 this.PackMapEnvDataLightV58 = [
                     'color', ['[]', 'uint8', 3],
@@ -5662,7 +5662,7 @@ module.exports = [
 
             },
 
-            // => Version: 56, ReferencedFunction: 0xFF8530
+            // => Version: 56, ReferencedFunction: 0xEB88D0
             56: function() {
                 this.PackMapEnvDataLightV56 = [
                     'color', ['[]', 'uint8', 3],
@@ -6212,7 +6212,7 @@ module.exports = [
 
             },
 
-            // => Version: 54, ReferencedFunction: 0xFF8480
+            // => Version: 54, ReferencedFunction: 0xEB8820
             54: function() {
                 this.PackMapEnvDataLightV54 = [
                     'color', ['[]', 'uint8', 3],
@@ -6464,7 +6464,7 @@ module.exports = [
 
             },
 
-            // => Version: 53, ReferencedFunction: 0xFF83D0
+            // => Version: 53, ReferencedFunction: 0xEB8770
             53: function() {
                 this.PackMapEnvDataLightV53 = [
                     'color', ['[]', 'uint8', 3],
@@ -6716,7 +6716,7 @@ module.exports = [
 
             },
 
-            // => Version: 52, ReferencedFunction: 0xFF82F0
+            // => Version: 52, ReferencedFunction: 0xEB8690
             52: function() {
                 this.PackMapEnvDataLightV52 = [
                     'color', ['[]', 'uint8', 3],
@@ -7215,7 +7215,7 @@ module.exports = [
 
             },
 
-            // => Version: 50, ReferencedFunction: 0xFF81E0
+            // => Version: 50, ReferencedFunction: 0xEB8580
             50: function() {
                 this.PackMapEnvDataLightV50 = [
                     'color', ['[]', 'uint8', 3],
@@ -7461,7 +7461,7 @@ module.exports = [
 
             },
 
-            // => Version: 49, ReferencedFunction: 0xFF8090
+            // => Version: 49, ReferencedFunction: 0xEB8430
             49: function() {
                 this.PackMapEnvDataLightV49 = [
                     'color', ['[]', 'uint8', 3],
@@ -8664,7 +8664,7 @@ module.exports = [
 
             },
 
-            // => Version: 44, ReferencedFunction: 0xFF7F80
+            // => Version: 44, ReferencedFunction: 0xEB8320
             44: function() {
                 this.PackMapEnvDataLightV44 = [
                     'color', ['[]', 'uint8', 3],
@@ -8903,7 +8903,7 @@ module.exports = [
 
             },
 
-            // => Version: 43, ReferencedFunction: 0xFF7ED0
+            // => Version: 43, ReferencedFunction: 0xEB8270
             43: function() {
                 this.PackMapEnvDataLightV43 = [
                     'color', ['[]', 'uint8', 3],
@@ -9134,7 +9134,7 @@ module.exports = [
 
             },
 
-            // => Version: 42, ReferencedFunction: 0xFF7E30
+            // => Version: 42, ReferencedFunction: 0xEB81D0
             42: function() {
                 this.PackMapEnvDataLightV42 = [
                     'color', ['[]', 'uint8', 3],
@@ -9360,7 +9360,7 @@ module.exports = [
 
             },
 
-            // => Version: 41, ReferencedFunction: 0xFF7D10
+            // => Version: 41, ReferencedFunction: 0xEB80B0
             41: function() {
                 this.PackMapEnvDataLightV41 = [
                     'color', ['[]', 'uint8', 3],
@@ -9585,7 +9585,7 @@ module.exports = [
 
             },
 
-            // => Version: 40, ReferencedFunction: 0xFF7CD0
+            // => Version: 40, ReferencedFunction: 0xEB8070
             40: function() {
                 this.PackMapEnvDataLightV40 = [
                     'color', ['[]', 'uint8', 3],
@@ -10030,7 +10030,7 @@ module.exports = [
 
             },
 
-            // => Version: 38, ReferencedFunction: 0xFF7C30
+            // => Version: 38, ReferencedFunction: 0xEB7FD0
             38: function() {
                 this.PackMapEnvDataLightV38 = [
                     'color', ['[]', 'uint8', 3],
@@ -10240,7 +10240,7 @@ module.exports = [
 
             },
 
-            // => Version: 37, ReferencedFunction: 0xFF7BB0
+            // => Version: 37, ReferencedFunction: 0xEB7F50
             37: function() {
                 this.PackMapEnvDataLightV37 = [
                     'color', ['[]', 'uint8', 3],
@@ -10655,7 +10655,7 @@ module.exports = [
 
             },
 
-            // => Version: 35, ReferencedFunction: 0xFF7B50
+            // => Version: 35, ReferencedFunction: 0xEB7EF0
             35: function() {
                 this.PackMapEnvDataLightV35 = [
                     'color', ['[]', 'uint8', 3],
@@ -11249,7 +11249,7 @@ module.exports = [
 
             },
 
-            // => Version: 32, ReferencedFunction: 0xFF79C0
+            // => Version: 32, ReferencedFunction: 0xEB7D60
             32: function() {
                 this.PackMapEnvDataLightV32 = [
                     'color', ['[]', 'uint8', 3],
@@ -11440,7 +11440,7 @@ module.exports = [
 
             },
 
-            // => Version: 31, ReferencedFunction: 0xFF7950
+            // => Version: 31, ReferencedFunction: 0xEB7CF0
             31: function() {
                 this.PackMapEnvDataLightV31 = [
                     'color', ['[]', 'uint8', 3],
@@ -11632,7 +11632,7 @@ module.exports = [
 
             },
 
-            // => Version: 30, ReferencedFunction: 0xFF78D0
+            // => Version: 30, ReferencedFunction: 0xEB7C70
             30: function() {
                 this.PackMapEnvDataLightV30 = [
                     'color', ['[]', 'uint8', 3],

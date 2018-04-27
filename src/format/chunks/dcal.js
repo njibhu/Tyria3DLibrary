@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: dcal, versions: 10, strucTab: 0x1581508 
+    ///Chunk: dcal, versions: 10, strucTab: 0x1724720 
     ///==================================================
 
 
@@ -11,7 +11,7 @@ module.exports = [
         versions: {
 
 
-            // => Version: 9, ReferencedFunction: 0xFFCCC0
+            // => Version: 9, ReferencedFunction: 0xEBA2D0
             9: function() {
                 this.PackMapDecalVertexV8 = [
                     'position', ['[]', 'float32', 3],
@@ -92,7 +92,7 @@ module.exports = [
 
             },
 
-            // => Version: 7, ReferencedFunction: 0xFFCC60
+            // => Version: 7, ReferencedFunction: 0xEBA270
             7: function() {
                 this.PackMapDecalVertexV6 = [
                     'position', ['[]', 'float32', 3],
@@ -232,7 +232,7 @@ module.exports = [
 
             },
 
-            // => Version: 3, ReferencedFunction: 0xFFCBE0
+            // => Version: 3, ReferencedFunction: 0xEBA1F0
             3: function() {
                 this.PackMapDecalV3 = [
                     'position', ['[]', 'float32', 3],

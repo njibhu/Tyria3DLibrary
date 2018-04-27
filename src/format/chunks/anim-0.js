@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: ANIM, versions: 26, strucTab: 0x15D0220 
+    ///Chunk: ANIM, versions: 26, strucTab: 0x1772EC8 
     ///==================================================
 
 
@@ -11,7 +11,7 @@ module.exports = [
         versions: {
 
 
-            // => Version: 25, ReferencedFunction: 0x10685D0
+            // => Version: 25, ReferencedFunction: 0xF27630
             25: function() {
                 this.PackGrannyAnimationTypeV1 = [
                     'animation', Utils.getArrayReader('uint8'),
@@ -155,7 +155,7 @@ module.exports = [
 
             },
 
-            // => Version: 24, ReferencedFunction: 0x10683E0
+            // => Version: 24, ReferencedFunction: 0xF27440
             24: function() {
                 this.PackGrannyAnimationTypeV0 = [
                     'animation', Utils.getArrayReader('uint8'),
@@ -298,7 +298,7 @@ module.exports = [
 
             },
 
-            // => Version: 23, ReferencedFunction: 0x1068240
+            // => Version: 23, ReferencedFunction: 0xF272A0
             23: function() {
                 this.PackGrannyAnimationTypeV0 = [
                     'animation', Utils.getArrayReader('uint8'),
@@ -943,7 +943,7 @@ module.exports = [
 
             },
 
-            // => Version: 18, ReferencedFunction: 0x1068190
+            // => Version: 18, ReferencedFunction: 0xF271F0
             18: function() {
                 this.PackGrannyAnimationTypeV0 = [
                     'animation', Utils.getArrayReader('uint8'),
@@ -1063,7 +1063,7 @@ module.exports = [
 
             },
 
-            // => Version: 17, ReferencedFunction: 0x1067C30
+            // => Version: 17, ReferencedFunction: 0xF26BD0
             17: function() {
                 this.PackGrannyAnimationTypeV0 = [
                     'animation', Utils.getArrayReader('uint8'),
@@ -1398,7 +1398,7 @@ module.exports = [
 
             },
 
-            // => Version: 14, ReferencedFunction: 0x10679E0
+            // => Version: 14, ReferencedFunction: 0xF26950
             14: function() {
                 this.ModelVisTrackDataV22 = [
                     'boneToken', Utils.getQWordReader(),
@@ -1586,7 +1586,7 @@ module.exports = [
 
             },
 
-            // => Version: 12, ReferencedFunction: 0x1067930
+            // => Version: 12, ReferencedFunction: 0xF268A0
             12: function() {
                 this.ModelVisTrackDataV20 = [
                     'boneIndex', 'uint32',
@@ -2449,7 +2449,7 @@ module.exports = [
 
 
     ///==================================================
-    ///Chunk: ANIM, versions: 3, strucTab: 0x168D6D4 
+    ///Chunk: ANIM, versions: 3, strucTab: 0x18304E4 
     ///==================================================
 
 

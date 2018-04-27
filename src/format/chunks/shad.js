@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: shad, versions: 2, strucTab: 0x157F250 
+    ///Chunk: shad, versions: 2, strucTab: 0x1722DB8 
     ///==================================================
 
 
@@ -11,7 +11,7 @@ module.exports = [
         versions: {
 
 
-            // => Version: 1, ReferencedFunction: 0xFFD130
+            // => Version: 1, ReferencedFunction: 0xEBB230
             1: function() {
                 this.PackMapShadowTileV1 = [
                     'compressionMode', 'uint32',

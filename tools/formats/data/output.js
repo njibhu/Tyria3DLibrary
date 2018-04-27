@@ -1,7 +1,7 @@
 window.T3D.Formats = [
 
 	///==================================================
-	/// Chunk: GRMT, versions: 7, strucTab: 0x13B54C0 
+	/// Chunk: GRMT, versions: 7, strucTab: 0x1528A80 
 	///==================================================
 	{
 		name:'GRMT',
@@ -119,14 +119,14 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: DX9S, versions: 12, strucTab: 0x13B5520 
+	/// Chunk: DX9S, versions: 12, strucTab: 0x1528AE0 
 	///==================================================
 	{
 		name:'DX9S',
 		versions:{
 
 
-			// => Version: 11, ReferencedFunction: 0x7B0830
+			// => Version: 11, ReferencedFunction: 0x5AE350
 			11:function(){
 						this.AmatDx9SamplerV11 =[
 				'textureIndex' , 'uint32',
@@ -217,7 +217,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 9, ReferencedFunction: 0x7B0E70
+			// => Version: 9, ReferencedFunction: 0x5AE990
 			9:function(){
 						this.AmatDx9SamplerV9 =[
 				'textureIndex' , 'uint32',
@@ -261,7 +261,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 8, ReferencedFunction: 0x7B0C40
+			// => Version: 8, ReferencedFunction: 0x5AE760
 			8:function(){
 						this.AmatDx9SamplerV8 =[
 				'textureIndex' , 'uint32',
@@ -304,7 +304,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 7, ReferencedFunction: 0x7B0BC0
+			// => Version: 7, ReferencedFunction: 0x5AE6E0
 			7:function(){
 						this.AmatDx9SamplerV7 =[
 				'textureIndex' , 'uint32',
@@ -347,7 +347,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 6, ReferencedFunction: 0x7B0B70
+			// => Version: 6, ReferencedFunction: 0x5AE690
 			6:function(){
 						this.AmatDx9SamplerV6 =[
 				'textureIndex' , 'uint32',
@@ -390,7 +390,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 5, ReferencedFunction: 0x7B0A80
+			// => Version: 5, ReferencedFunction: 0x5AE5A0
 			5:function(){
 						this.AmatDx9SamplerV5 =[
 				'textureIndex' , 'uint32',
@@ -522,7 +522,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 2, ReferencedFunction: 0x7B0850
+			// => Version: 2, ReferencedFunction: 0x5AE370
 			2:function(){
 						this.AmatDx9SamplerV2 =[
 				'textureIndex' , 'uint32',
@@ -566,7 +566,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 1, ReferencedFunction: 0x7B06A0
+			// => Version: 1, ReferencedFunction: 0x5AE1C0
 			1:function(){
 						this.AmatDx9SamplerV1 =[
 				'textureIndex' , 'uint32',
@@ -653,7 +653,141 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: XBXS, versions: 1, strucTab: 0x13B55EC 
+	/// Chunk: TOOL, versions: 4, strucTab: 0x1528B70 
+	///==================================================
+	{
+		name:'TOOL',
+		versions:{
+
+
+			// => Version: 3, ReferencedFunction: 0x5AEBF0
+			3:function(){
+						this.AmatToolConstant =[
+				'token' , 'uint32',
+				'displayName', Utils.getString16Reader(),
+				'defaultValue' , ['[]','float32',4],
+				'flags' , 'uint32',
+				'minValue' , ['[]','float32',4],
+				'maxValue' , ['[]','float32',4],
+						];
+
+						this.AmatToolTexture =[
+				'texName', Utils.getString16Reader(),
+				'texDefaultFile', Utils.getString16Reader(),
+				'flags' , 'uint32',
+				'texGen', Utils.getArrayReader('uint32'),
+						];
+
+						this.__root=this.AmatToolParams =[
+				'description', Utils.getString16Reader(),
+				'flags' , 'uint32',
+				'texCoordCount' , 'uint8',
+				'texTransformCount' , 'uint8',
+				'decompressedTextCount' , 'uint32',
+				'compressedText', Utils.getArrayReader('uint8'),
+				'constants', Utils.getArrayReader(this.AmatToolConstant),
+				'textures', Utils.getArrayReader(this.AmatToolTexture),
+						];
+
+			},
+
+			// => Version: 2, ReferencedFunction: 0x5AEB70
+			2:function(){
+						this.AmatToolConstant =[
+				'token' , 'uint32',
+				'displayName', Utils.getString16Reader(),
+				'defaultValue' , ['[]','float32',4],
+				'flags' , 'uint32',
+				'minValue' , ['[]','float32',4],
+				'maxValue' , ['[]','float32',4],
+						];
+
+						this.AmatToolTexture =[
+				'texName', Utils.getString16Reader(),
+				'texDefaultFile', Utils.getString16Reader(),
+				'flags' , 'uint32',
+				'texGen', Utils.getArrayReader('uint32'),
+				'texTransform', Utils.getArrayReader('uint32'),
+						];
+
+						this.__root=this.AmatToolParams =[
+				'description', Utils.getString16Reader(),
+				'flags' , 'uint32',
+				'text', Utils.getStringReader(),
+				'texCoordCount' , 'uint8',
+				'texTransformCount' , 'uint8',
+				'constants', Utils.getArrayReader(this.AmatToolConstant),
+				'textures', Utils.getArrayReader(this.AmatToolTexture),
+						];
+
+			},
+
+			// => Version: 1, ReferencedFunction: 0x5AEB10
+			1:function(){
+						this.AmatToolConstantV1 =[
+				'token' , 'uint32',
+				'displayName', Utils.getString16Reader(),
+				'defaultValue' , ['[]','float32',4],
+				'flags' , 'uint32',
+				'minValue' , ['[]','float32',4],
+				'maxValue' , ['[]','float32',4],
+						];
+
+						this.AmatToolTextureV1 =[
+				'texName', Utils.getString16Reader(),
+				'texDefaultFile', Utils.getString16Reader(),
+				'flags' , 'uint32',
+				'texGen', Utils.getArrayReader('uint32'),
+				'texTransform', Utils.getArrayReader('uint32'),
+						];
+
+						this.__root=this.AmatToolParamsV1 =[
+				'description', Utils.getString16Reader(),
+				'flags' , 'uint32',
+				'text', Utils.getStringReader(),
+				'texCoordCount' , 'uint8',
+				'texTransformCount' , 'uint8',
+				'constants', Utils.getArrayReader(this.AmatToolConstantV1),
+				'textures', Utils.getArrayReader(this.AmatToolTextureV1),
+						];
+
+			},
+
+			// => Version: 0
+			0:function(){
+						this.AmatToolConstantV0 =[
+				'token' , 'uint32',
+				'displayName', Utils.getString16Reader(),
+				'defaultValue' , ['[]','float32',4],
+				'flags' , 'uint32',
+				'minValue' , ['[]','float32',4],
+				'maxValue' , ['[]','float32',4],
+						];
+
+						this.AmatToolTextureV0 =[
+				'texName', Utils.getString16Reader(),
+				'texDefaultFile', Utils.getString16Reader(),
+				'flags' , 'uint32',
+				'texGen', Utils.getArrayReader('uint32'),
+				'texTransform', Utils.getArrayReader('uint32'),
+						];
+
+						this.__root=this.AmatToolParamsV0 =[
+				'description', Utils.getString16Reader(),
+				'flags' , 'uint32',
+				'text', Utils.getStringReader(),
+				'texCoordCount' , 'uint8',
+				'texTransformCount' , 'uint8',
+				'constants', Utils.getArrayReader(this.AmatToolConstantV0),
+				'textures', Utils.getArrayReader(this.AmatToolTextureV0),
+						];
+
+			},
+		}
+	},
+
+	///==================================================
+	/// Chunk: XBXS, versions: 1, strucTab: 0x1528BAC 
 	///==================================================
 	{
 		name:'XBXS',
@@ -731,7 +865,31 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: PS3S, versions: 1, strucTab: 0x13B5514 
+	/// Chunk: UPDB, versions: 1, strucTab: 0x1528BC4 
+	///==================================================
+	{
+		name:'UPDB',
+		versions:{
+
+
+			// => Version: 0
+			0:function(){
+						this.AmatXbxUPDBentry =[
+				'originalSize' , 'uint32',
+				'compressedData', Utils.getArrayReader('uint8'),
+				'originalName', Utils.getStringReader(),
+						];
+
+						this.__root=this.AmatXbxUPDBinfo =[
+				'uPDBarray', Utils.getArrayReader(this.AmatXbxUPDBentry),
+						];
+
+			},
+		}
+	},
+
+	///==================================================
+	/// Chunk: PS3S, versions: 1, strucTab: 0x1528AD4 
 	///==================================================
 	{
 		name:'PS3S',
@@ -825,7 +983,31 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: MRAS, versions: 1, strucTab: 0x13B55E0 
+	/// Chunk: UPDA, versions: 1, strucTab: 0x1528BB8 
+	///==================================================
+	{
+		name:'UPDA',
+		versions:{
+
+
+			// => Version: 0
+			0:function(){
+						this.AmatAppleUPDBentry =[
+				'originalSize' , 'uint32',
+				'compressedData', Utils.getArrayReader('uint8'),
+				'originalName', Utils.getStringReader(),
+						];
+
+						this.__root=this.AmatAppleUPDBinfo =[
+				'uPDBarray', Utils.getArrayReader(this.AmatAppleUPDBentry),
+						];
+
+			},
+		}
+	},
+
+	///==================================================
+	/// Chunk: MRAS, versions: 1, strucTab: 0x1528BA0 
 	///==================================================
 	{
 		name:'MRAS',
@@ -897,7 +1079,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: XSHD, versions: 1, strucTab: 0x13B5628 
+	/// Chunk: XSHD, versions: 1, strucTab: 0x1528BE8 
 	///==================================================
 	{
 		name:'XSHD',
@@ -931,7 +1113,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: PPSH, versions: 1, strucTab: 0x13B5610 
+	/// Chunk: PPSH, versions: 1, strucTab: 0x1528BD0 
 	///==================================================
 	{
 		name:'PPSH',
@@ -972,7 +1154,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: PVSH, versions: 1, strucTab: 0x13B561C 
+	/// Chunk: PVSH, versions: 1, strucTab: 0x1528BDC 
 	///==================================================
 	{
 		name:'PVSH',
@@ -1010,7 +1192,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: SPPA, versions: 1, strucTab: 0x13B5634 
+	/// Chunk: SPPA, versions: 1, strucTab: 0x1528BF4 
 	///==================================================
 	{
 		name:'SPPA',
@@ -1038,196 +1220,14 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: TOOL, versions: 4, strucTab: 0x13B55B0 
-	///==================================================
-	{
-		name:'TOOL',
-		versions:{
-
-
-			// => Version: 3, ReferencedFunction: 0x7B10F0
-			3:function(){
-						this.AmatToolConstant =[
-				'token' , 'uint32',
-				'displayName', Utils.getString16Reader(),
-				'defaultValue' , ['[]','float32',4],
-				'flags' , 'uint32',
-				'minValue' , ['[]','float32',4],
-				'maxValue' , ['[]','float32',4],
-						];
-
-						this.AmatToolTexture =[
-				'texName', Utils.getString16Reader(),
-				'texDefaultFile', Utils.getString16Reader(),
-				'flags' , 'uint32',
-				'texGen', Utils.getArrayReader('uint32'),
-						];
-
-						this.__root=this.AmatToolParams =[
-				'description', Utils.getString16Reader(),
-				'flags' , 'uint32',
-				'texCoordCount' , 'uint8',
-				'texTransformCount' , 'uint8',
-				'decompressedTextCount' , 'uint32',
-				'compressedText', Utils.getArrayReader('uint8'),
-				'constants', Utils.getArrayReader(this.AmatToolConstant),
-				'textures', Utils.getArrayReader(this.AmatToolTexture),
-						];
-
-			},
-
-			// => Version: 2, ReferencedFunction: 0x7B1050
-			2:function(){
-						this.AmatToolConstant =[
-				'token' , 'uint32',
-				'displayName', Utils.getString16Reader(),
-				'defaultValue' , ['[]','float32',4],
-				'flags' , 'uint32',
-				'minValue' , ['[]','float32',4],
-				'maxValue' , ['[]','float32',4],
-						];
-
-						this.AmatToolTexture =[
-				'texName', Utils.getString16Reader(),
-				'texDefaultFile', Utils.getString16Reader(),
-				'flags' , 'uint32',
-				'texGen', Utils.getArrayReader('uint32'),
-				'texTransform', Utils.getArrayReader('uint32'),
-						];
-
-						this.__root=this.AmatToolParams =[
-				'description', Utils.getString16Reader(),
-				'flags' , 'uint32',
-				'text', Utils.getStringReader(),
-				'texCoordCount' , 'uint8',
-				'texTransformCount' , 'uint8',
-				'constants', Utils.getArrayReader(this.AmatToolConstant),
-				'textures', Utils.getArrayReader(this.AmatToolTexture),
-						];
-
-			},
-
-			// => Version: 1, ReferencedFunction: 0x7B0FF0
-			1:function(){
-						this.AmatToolConstantV1 =[
-				'token' , 'uint32',
-				'displayName', Utils.getString16Reader(),
-				'defaultValue' , ['[]','float32',4],
-				'flags' , 'uint32',
-				'minValue' , ['[]','float32',4],
-				'maxValue' , ['[]','float32',4],
-						];
-
-						this.AmatToolTextureV1 =[
-				'texName', Utils.getString16Reader(),
-				'texDefaultFile', Utils.getString16Reader(),
-				'flags' , 'uint32',
-				'texGen', Utils.getArrayReader('uint32'),
-				'texTransform', Utils.getArrayReader('uint32'),
-						];
-
-						this.__root=this.AmatToolParamsV1 =[
-				'description', Utils.getString16Reader(),
-				'flags' , 'uint32',
-				'text', Utils.getStringReader(),
-				'texCoordCount' , 'uint8',
-				'texTransformCount' , 'uint8',
-				'constants', Utils.getArrayReader(this.AmatToolConstantV1),
-				'textures', Utils.getArrayReader(this.AmatToolTextureV1),
-						];
-
-			},
-
-			// => Version: 0
-			0:function(){
-						this.AmatToolConstantV0 =[
-				'token' , 'uint32',
-				'displayName', Utils.getString16Reader(),
-				'defaultValue' , ['[]','float32',4],
-				'flags' , 'uint32',
-				'minValue' , ['[]','float32',4],
-				'maxValue' , ['[]','float32',4],
-						];
-
-						this.AmatToolTextureV0 =[
-				'texName', Utils.getString16Reader(),
-				'texDefaultFile', Utils.getString16Reader(),
-				'flags' , 'uint32',
-				'texGen', Utils.getArrayReader('uint32'),
-				'texTransform', Utils.getArrayReader('uint32'),
-						];
-
-						this.__root=this.AmatToolParamsV0 =[
-				'description', Utils.getString16Reader(),
-				'flags' , 'uint32',
-				'text', Utils.getStringReader(),
-				'texCoordCount' , 'uint8',
-				'texTransformCount' , 'uint8',
-				'constants', Utils.getArrayReader(this.AmatToolConstantV0),
-				'textures', Utils.getArrayReader(this.AmatToolTextureV0),
-						];
-
-			},
-		}
-	},
-
-	///==================================================
-	/// Chunk: UPDB, versions: 1, strucTab: 0x13B5604 
-	///==================================================
-	{
-		name:'UPDB',
-		versions:{
-
-
-			// => Version: 0
-			0:function(){
-						this.AmatXbxUPDBentry =[
-				'originalSize' , 'uint32',
-				'compressedData', Utils.getArrayReader('uint8'),
-				'originalName', Utils.getStringReader(),
-						];
-
-						this.__root=this.AmatXbxUPDBinfo =[
-				'uPDBarray', Utils.getArrayReader(this.AmatXbxUPDBentry),
-						];
-
-			},
-		}
-	},
-
-	///==================================================
-	/// Chunk: UPDA, versions: 1, strucTab: 0x13B55F8 
-	///==================================================
-	{
-		name:'UPDA',
-		versions:{
-
-
-			// => Version: 0
-			0:function(){
-						this.AmatAppleUPDBentry =[
-				'originalSize' , 'uint32',
-				'compressedData', Utils.getArrayReader('uint8'),
-				'originalName', Utils.getStringReader(),
-						];
-
-						this.__root=this.AmatAppleUPDBinfo =[
-				'uPDBarray', Utils.getArrayReader(this.AmatAppleUPDBentry),
-						];
-
-			},
-		}
-	},
-
-	///==================================================
-	/// Chunk: CDHS, versions: 2, strucTab: 0x13BD204 
+	/// Chunk: CDHS, versions: 2, strucTab: 0x15313C0 
 	///==================================================
 	{
 		name:'CDHS',
 		versions:{
 
 
-			// => Version: 1, ReferencedFunction: 0x7B3180
+			// => Version: 1, ReferencedFunction: 0x5B0AE0
 			1:function(){
 						this.PackVsGenParams =[
 				'pointWindCount' , 'uint8',
@@ -1271,14 +1271,14 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: PGTB, versions: 4, strucTab: 0x13C7628 
+	/// Chunk: PGTB, versions: 4, strucTab: 0x153BDD8 
 	///==================================================
 	{
 		name:'PGTB',
 		versions:{
 
 
-			// => Version: 3, ReferencedFunction: 0x816360
+			// => Version: 3, ReferencedFunction: 0x6127C0
 			3:function(){
 						this.PagedImageLayerDataV3 =[
 				'rawDims', ['[]', 'uint32', 2],
@@ -1383,14 +1383,14 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: DATA, versions: 4, strucTab: 0x13C7658 
+	/// Chunk: DATA, versions: 4, strucTab: 0x153BE08 
 	///==================================================
 	{
 		name:'DATA',
 		versions:{
 
 
-			// => Version: 3, ReferencedFunction: 0x816500
+			// => Version: 3, ReferencedFunction: 0x612960
 			3:function(){
 						this.PagedImageLayerDataV3 =[
 				'rawDims', ['[]', 'uint32', 2],
@@ -1486,7 +1486,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: txtm, versions: 1, strucTab: 0x13F0884 
+	/// Chunk: txtm, versions: 1, strucTab: 0x15657D4 
 	///==================================================
 	{
 		name:'txtm',
@@ -1509,7 +1509,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: txtp, versions: 1, strucTab: 0x13F089C 
+	/// Chunk: txtp, versions: 1, strucTab: 0x15657EC 
 	///==================================================
 	{
 		name:'txtp',
@@ -1533,7 +1533,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: txtv, versions: 1, strucTab: 0x13F08B4 
+	/// Chunk: txtv, versions: 1, strucTab: 0x1565804 
 	///==================================================
 	{
 		name:'txtv',
@@ -1556,7 +1556,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: vari, versions: 1, strucTab: 0x13F08CC 
+	/// Chunk: vari, versions: 1, strucTab: 0x156581C 
 	///==================================================
 	{
 		name:'vari',
@@ -1579,7 +1579,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: AMSP, versions: 30, strucTab: 0x1526520 
+	/// Chunk: AMSP, versions: 30, strucTab: 0x16CF138 
 	///==================================================
 	{
 		name:'AMSP',
@@ -4219,7 +4219,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 19, ReferencedFunction: 0xF5DB40
+			// => Version: 19, ReferencedFunction: 0xE21080
 			19:function(){
 						this.DspDataV19 =[
 				'type' , 'uint32',
@@ -4438,7 +4438,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 18, ReferencedFunction: 0xF5DA00
+			// => Version: 18, ReferencedFunction: 0xE20F40
 			18:function(){
 						this.DspDataV18 =[
 				'type' , 'uint32',
@@ -5721,7 +5721,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 12, ReferencedFunction: 0xF5D9E0
+			// => Version: 12, ReferencedFunction: 0xE20F20
 			12:function(){
 						this.DspDataV12 =[
 				'type' , 'uint32',
@@ -6767,7 +6767,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 7, ReferencedFunction: 0xF5D970
+			// => Version: 7, ReferencedFunction: 0xE20EB0
 			7:function(){
 						this.DspDataV7 =[
 				'type' , 'uint32',
@@ -8061,7 +8061,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: BKCK, versions: 3, strucTab: 0x1526B90 
+	/// Chunk: BKCK, versions: 3, strucTab: 0x16CF458 
 	///==================================================
 	{
 		name:'BKCK',
@@ -8147,7 +8147,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: BIDX, versions: 1, strucTab: 0x1526E2C 
+	/// Chunk: BIDX, versions: 1, strucTab: 0x16CF834 
 	///==================================================
 	{
 		name:'BIDX',
@@ -8173,7 +8173,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: ASND, versions: 3, strucTab: 0x1526FF0 
+	/// Chunk: ASND, versions: 3, strucTab: 0x16CF998 
 	///==================================================
 	{
 		name:'ASND',
@@ -8214,7 +8214,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 1, ReferencedFunction: 0xF5DC10
+			// => Version: 1, ReferencedFunction: 0xE21150
 			1:function(){
 						this.__root=this.WaveformDataV1 =[
 				'length' , 'float32',
@@ -8257,14 +8257,14 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: CSCN, versions: 37, strucTab: 0x1540030 
+	/// Chunk: CSCN, versions: 37, strucTab: 0x16E8BC8 
 	///==================================================
 	{
 		name:'CSCN',
 		versions:{
 
 
-			// => Version: 36, ReferencedFunction: 0xF73C40
+			// => Version: 36, ReferencedFunction: 0xE37660
 			36:function(){
 						this.PropertyDataV36 =[
 				'value', Utils.getQWordReader(),
@@ -8506,7 +8506,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 34, ReferencedFunction: 0xF73BA0
+			// => Version: 34, ReferencedFunction: 0xE375C0
 			34:function(){
 						this.PropertyDataV34 =[
 				'value', Utils.getQWordReader(),
@@ -8626,7 +8626,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 33, ReferencedFunction: 0xF73B00
+			// => Version: 33, ReferencedFunction: 0xE37520
 			33:function(){
 						this.PropertyDataV33 =[
 				'value', Utils.getQWordReader(),
@@ -8740,7 +8740,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 32, ReferencedFunction: 0xF73A60
+			// => Version: 32, ReferencedFunction: 0xE37480
 			32:function(){
 						this.PropertyDataV32 =[
 				'value', Utils.getQWordReader(),
@@ -8854,7 +8854,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 31, ReferencedFunction: 0xF739C0
+			// => Version: 31, ReferencedFunction: 0xE373E0
 			31:function(){
 						this.PropertyDataV31 =[
 				'value', Utils.getQWordReader(),
@@ -8968,7 +8968,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 30, ReferencedFunction: 0xF73970
+			// => Version: 30, ReferencedFunction: 0xE37390
 			30:function(){
 						this.PropertyDataV30 =[
 				'value', Utils.getQWordReader(),
@@ -9197,7 +9197,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 28, ReferencedFunction: 0xF738D0
+			// => Version: 28, ReferencedFunction: 0xE372F0
 			28:function(){
 						this.PropertyDataV28 =[
 				'value', Utils.getQWordReader(),
@@ -9311,7 +9311,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 27, ReferencedFunction: 0xF73830
+			// => Version: 27, ReferencedFunction: 0xE37250
 			27:function(){
 						this.PropertyDataV27 =[
 				'value', Utils.getQWordReader(),
@@ -9425,7 +9425,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 26, ReferencedFunction: 0xF73790
+			// => Version: 26, ReferencedFunction: 0xE371B0
 			26:function(){
 						this.PropertyDataV26 =[
 				'value', Utils.getQWordReader(),
@@ -9539,7 +9539,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 25, ReferencedFunction: 0xF736F0
+			// => Version: 25, ReferencedFunction: 0xE37110
 			25:function(){
 						this.PropertyDataV25 =[
 				'value', Utils.getQWordReader(),
@@ -9653,7 +9653,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 24, ReferencedFunction: 0xF73650
+			// => Version: 24, ReferencedFunction: 0xE37070
 			24:function(){
 						this.PropertyDataV24 =[
 				'value', Utils.getQWordReader(),
@@ -9880,7 +9880,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 22, ReferencedFunction: 0xF735B0
+			// => Version: 22, ReferencedFunction: 0xE36FD0
 			22:function(){
 						this.PropertyDataV22 =[
 				'value', Utils.getQWordReader(),
@@ -10104,7 +10104,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 20, ReferencedFunction: 0xF73510
+			// => Version: 20, ReferencedFunction: 0xE36F30
 			20:function(){
 						this.PropertyDataV20 =[
 				'value', Utils.getQWordReader(),
@@ -10215,7 +10215,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 19, ReferencedFunction: 0xF73470
+			// => Version: 19, ReferencedFunction: 0xE36E90
 			19:function(){
 						this.PropertyDataV19 =[
 				'value', Utils.getQWordReader(),
@@ -10326,7 +10326,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 18, ReferencedFunction: 0xF73470
+			// => Version: 18, ReferencedFunction: 0xE36E90
 			18:function(){
 						this.PropertyDataV18 =[
 				'value', Utils.getQWordReader(),
@@ -10437,7 +10437,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 17, ReferencedFunction: 0xF733D0
+			// => Version: 17, ReferencedFunction: 0xE36DF0
 			17:function(){
 						this.PropertyDataV17 =[
 				'value', Utils.getQWordReader(),
@@ -10548,7 +10548,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 16, ReferencedFunction: 0xF73330
+			// => Version: 16, ReferencedFunction: 0xE36D50
 			16:function(){
 						this.PropertyDataV16 =[
 				'value', Utils.getQWordReader(),
@@ -10880,7 +10880,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 13, ReferencedFunction: 0xF732B0
+			// => Version: 13, ReferencedFunction: 0xE36CD0
 			13:function(){
 						this.PropertyDataV13 =[
 				'value', Utils.getQWordReader(),
@@ -10989,7 +10989,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 12, ReferencedFunction: 0xF731C0
+			// => Version: 12, ReferencedFunction: 0xE36BE0
 			12:function(){
 						this.PropertyDataV12 =[
 				'value', Utils.getQWordReader(),
@@ -11098,7 +11098,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 11, ReferencedFunction: 0xF73120
+			// => Version: 11, ReferencedFunction: 0xE36B40
 			11:function(){
 						this.PropertyDataV11 =[
 				'type' , 'uint8',
@@ -11207,7 +11207,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 10, ReferencedFunction: 0xF730C0
+			// => Version: 10, ReferencedFunction: 0xE36AE0
 			10:function(){
 						this.PropertyDataV10 =[
 				'type' , 'uint8',
@@ -11316,7 +11316,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 9, ReferencedFunction: 0xF73010
+			// => Version: 9, ReferencedFunction: 0xE36A30
 			9:function(){
 						this.PropertyDataV9 =[
 				'type' , 'uint8',
@@ -11533,7 +11533,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 7, ReferencedFunction: 0xF72F30
+			// => Version: 7, ReferencedFunction: 0xE36950
 			7:function(){
 						this.PropertyDataV7 =[
 				'type' , 'uint8',
@@ -11635,7 +11635,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 6, ReferencedFunction: 0xF72E60
+			// => Version: 6, ReferencedFunction: 0xE36880
 			6:function(){
 						this.PropertyDataV6 =[
 				'type' , 'uint8',
@@ -11737,7 +11737,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 5, ReferencedFunction: 0xF72DC0
+			// => Version: 5, ReferencedFunction: 0xE367E0
 			5:function(){
 						this.PropertyDataV5 =[
 				'type' , 'uint8',
@@ -11839,7 +11839,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 4, ReferencedFunction: 0xF72D20
+			// => Version: 4, ReferencedFunction: 0xE36740
 			4:function(){
 						this.PropertyDataV4 =[
 				'type' , 'uint8',
@@ -11941,7 +11941,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 3, ReferencedFunction: 0xF72C80
+			// => Version: 3, ReferencedFunction: 0xE366A0
 			3:function(){
 						this.PropertyDataV3 =[
 				'type' , 'uint8',
@@ -12143,7 +12143,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 1, ReferencedFunction: 0xF72B70
+			// => Version: 1, ReferencedFunction: 0xE36590
 			1:function(){
 						this.PropertyDataV1 =[
 				'type' , 'uint8',
@@ -12340,737 +12340,14 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: shad, versions: 2, strucTab: 0x157F250 
-	///==================================================
-	{
-		name:'shad',
-		versions:{
-
-
-			// => Version: 1, ReferencedFunction: 0xFFD130
-			1:function(){
-						this.PackMapShadowTileV1 =[
-				'compressionMode' , 'uint32',
-				'bytes', Utils.getArrayReader('uint8'),
-						];
-
-						this.__root=this.PackMapShadowV1 =[
-				'shadowDims', ['[]', 'uint32', 2],
-				'tileDims', ['[]', 'uint32', 2],
-				'tiles', Utils.getArrayReader(this.PackMapShadowTileV1),
-				'worldToShadow', ['[]', 'float32', 16],
-				's' , ['[]','float32',2],
-				't' , ['[]','float32',2],
-				'u' , ['[]','float32',2],
-				'shadowEye' , ['[]','float32',3],
-				'shadowDir' , ['[]','float32',3],
-				'shadowUp' , ['[]','float32',3],
-						];
-
-			},
-
-			// => Version: 0
-			0:function(){
-						this.PackMapShadowTileV0 =[
-				'compressionMode' , 'uint32',
-				'bytes', Utils.getArrayReader('uint8'),
-						];
-
-						this.__root=this.PackMapShadowV0 =[
-				'shadowDims', ['[]', 'uint32', 2],
-				'tileDims', ['[]', 'uint32', 2],
-				'tiles', Utils.getArrayReader(this.PackMapShadowTileV0),
-				'worldToShadow', ['[]', 'float32', 16],
-				's' , ['[]','float32',2],
-				't' , ['[]','float32',2],
-				'u' , ['[]','float32',2],
-						];
-
-			},
-		}
-	},
-
-	///==================================================
-	/// Chunk: pack, versions: 1, strucTab: 0x157DABC 
-	///==================================================
-	{
-		name:'pack',
-		versions:{
-
-
-			// => Version: 0
-			0:function(){
-						this.MapVariant =[
-				'file', Utils.getString16Reader(),
-				'name', Utils.getString16Reader(),
-				'token', Utils.getQWordReader(),
-				'flags' , 'uint32',
-						];
-
-						this.__root=this.MapPackage =[
-				'baseFile' , Utils.getFileNameReader(),
-				'variants', Utils.getArrayReader(this.MapVariant),
-				'flags' , 'uint32',
-						];
-
-			},
-		}
-	},
-
-	///==================================================
-	/// Chunk: area, versions: 5, strucTab: 0x157FEB0 
-	///==================================================
-	{
-		name:'area',
-		versions:{
-
-
-			// => Version: 4, ReferencedFunction: 0xFFCBA0
-			4:function(){
-						this.PackMapAreaPolygonV4 =[
-				'points', Utils.getArrayReader(['[]','float32',3]),
-				'height' , 'float32',
-						];
-
-						this.PackMapAreaPortalV4 =[
-				'position' , ['[]','float32',3],
-				'extents' , ['[]','float32',3],
-				'rotation' , ['[]','float32',3],
-						];
-
-						this.PackMapAreaVolumeV4 =[
-				'portals', Utils.getArrayReader(this.PackMapAreaPortalV4),
-				'position' , ['[]','float32',3],
-				'extents' , ['[]','float32',3],
-				'pointInterior' , ['[]','float32',3],
-				'pointExterior' , ['[]','float32',3],
-						];
-
-						this.PackMapAreaV4 =[
-				'token', Utils.getQWordReader(),
-				'type' , 'uint8',
-				'floor' , 'uint8',
-				'flags' , 'uint32',
-				'polygon', this.PackMapAreaPolygonV4,
-				'volume', this.PackMapAreaVolumeV4,
-						];
-
-						this.PackMapAreaToolV4 =[
-				'annotation', Utils.getString16Reader(),
-				'renderOffset' , 'float32',
-						];
-
-						this.__root=this.PackMapAreasV4 =[
-				'areas', Utils.getArrayReader(this.PackMapAreaV4),
-				'areaTools', Utils.getArrayReader(this.PackMapAreaToolV4),
-						];
-
-			},
-
-			// => Version: 3
-			3:function(){
-						this.PackMapAreaPolygonV3 =[
-				'points', Utils.getArrayReader(['[]','float32',3]),
-				'height' , 'float32',
-						];
-
-						this.PackMapAreaPortalV3 =[
-				'position' , ['[]','float32',3],
-				'extents' , ['[]','float32',3],
-				'rotation' , ['[]','float32',3],
-						];
-
-						this.PackMapAreaVolumeV3 =[
-				'portals', Utils.getArrayReader(this.PackMapAreaPortalV3),
-				'position' , ['[]','float32',3],
-				'extents' , ['[]','float32',3],
-				'pointInterior' , ['[]','float32',3],
-				'pointExterior' , ['[]','float32',3],
-						];
-
-						this.PackMapAreaV3 =[
-				'token', Utils.getQWordReader(),
-				'type' , 'uint8',
-				'floor' , 'uint8',
-				'flags' , 'uint32',
-				'polygon', this.PackMapAreaPolygonV3,
-				'volume', this.PackMapAreaVolumeV3,
-						];
-
-						this.PackMapAreaToolV3 =[
-				'annotation', Utils.getString16Reader(),
-				'renderOffset' , 'float32',
-						];
-
-						this.__root=this.PackMapAreasV3 =[
-				'areas', Utils.getArrayReader(this.PackMapAreaV3),
-				'areaTools', Utils.getArrayReader(this.PackMapAreaToolV3),
-						];
-
-			},
-
-			// => Version: 2
-			2:function(){
-						this.PackMapAreaPolygonV2 =[
-				'points', Utils.getArrayReader(['[]','float32',3]),
-				'height' , 'float32',
-						];
-
-						this.PackMapAreaPortalV2 =[
-				'position' , ['[]','float32',3],
-				'extents' , ['[]','float32',3],
-				'rotation' , ['[]','float32',3],
-						];
-
-						this.PackMapAreaVolumeV2 =[
-				'portals', Utils.getArrayReader(this.PackMapAreaPortalV2),
-				'position' , ['[]','float32',3],
-				'extents' , ['[]','float32',3],
-				'pointInterior' , ['[]','float32',3],
-				'pointExterior' , ['[]','float32',3],
-						];
-
-						this.PackMapAreaV2 =[
-				'token', Utils.getQWordReader(),
-				'type' , 'uint8',
-				'floor' , 'uint8',
-				'flags' , 'uint32',
-				'polygon', this.PackMapAreaPolygonV2,
-				'volume', this.PackMapAreaVolumeV2,
-						];
-
-						this.PackMapAreaToolV2 =[
-				'annotation', Utils.getString16Reader(),
-						];
-
-						this.__root=this.PackMapAreasV2 =[
-				'areas', Utils.getArrayReader(this.PackMapAreaV2),
-				'areaTools', Utils.getArrayReader(this.PackMapAreaToolV2),
-						];
-
-			},
-
-			// => Version: 1, ReferencedFunction: 0xF6B280
-			1:function(){
-						this.PackMapAreaPolygonV1 =[
-				'points', Utils.getArrayReader(['[]','float32',3]),
-				'height' , 'float32',
-						];
-
-						this.PackMapAreaPortalV1 =[
-				'position' , ['[]','float32',3],
-				'extents' , ['[]','float32',3],
-				'rotation' , ['[]','float32',3],
-						];
-
-						this.PackMapAreaVolumeV1 =[
-				'portals', Utils.getArrayReader(this.PackMapAreaPortalV1),
-				'position' , ['[]','float32',3],
-				'extents' , ['[]','float32',3],
-				'pointInterior' , ['[]','float32',3],
-				'pointExterior' , ['[]','float32',3],
-						];
-
-						this.PackMapAreaV1 =[
-				'token', Utils.getQWordReader(),
-				'type' , 'uint8',
-				'floor' , 'uint8',
-				'polygon', this.PackMapAreaPolygonV1,
-				'volume', this.PackMapAreaVolumeV1,
-						];
-
-						this.__root=this.PackMapAreasV1 =[
-				'areas', Utils.getArrayReader(this.PackMapAreaV1),
-						];
-
-			},
-
-			// => Version: 0
-			0:function(){
-						this.PackMapAreaV0 =[
-				'min' , ['[]','float32',3],
-				'max' , ['[]','float32',3],
-				'internal' , ['[]','float32',3],
-				'external' , ['[]','float32',3],
-				'token' , 'uint32',
-				'flags' , 'uint32',
-						];
-
-						this.PackMapPortalV0 =[
-				'portalVerts', Utils.getArrayReader(['[]','float32',3]),
-						];
-
-						this.__root=this.PackMapAreasV0 =[
-				'areas', Utils.getArrayReader(this.PackMapAreaV0),
-				'portals', Utils.getArrayReader(this.PackMapPortalV0),
-						];
-
-			},
-		}
-	},
-
-	///==================================================
-	/// Chunk: audi, versions: 9, strucTab: 0x1580178 
-	///==================================================
-	{
-		name:'audi',
-		versions:{
-
-
-			// => Version: 8
-			8:function(){
-						this.PackMapAudioRegion =[
-				'regionType' , 'uint32',
-				'overrideMode' , 'uint32',
-				'filenameSourceDay' , Utils.getFileNameReader(),
-				'filenameAmbientDay' , Utils.getFileNameReader(),
-				'filenameSourceNight' , Utils.getFileNameReader(),
-				'filenameAmbientNight' , Utils.getFileNameReader(),
-				'filenameInterior' , Utils.getFileNameReader(),
-				'exteriorVolume' , 'float32',
-				'priority' , 'uint32',
-				'points', Utils.getArrayReader(['[]','float32',3]),
-				'position' , ['[]','float32',3],
-				'orientation' , ['[]','float32',3],
-				'fadeBand' , 'float32',
-				'height' , 'float32',
-				'radius' , 'float32',
-				'guid', Utils.getQWordReader(),
-				'flags' , 'uint32',
-						];
-
-						this.PackMapAudioRegionTool =[
-				'annotation', Utils.getString16Reader(),
-						];
-
-						this.PackMapAudioDep =[
-				'dependency' , Utils.getFileNameReader(),
-				'flags' , 'uint32',
-						];
-
-						this.__root=this.MapAudio =[
-				'filenameAmbientDaySurface' , Utils.getFileNameReader(),
-				'filenameAmbientDayUnderwater' , Utils.getFileNameReader(),
-				'filenameAmbientNightSurface' , Utils.getFileNameReader(),
-				'filenameAmbientNightUnderwater' , Utils.getFileNameReader(),
-				'audioRegions', Utils.getArrayReader(this.PackMapAudioRegion),
-				'audioRegionTools', Utils.getArrayReader(this.PackMapAudioRegionTool),
-				'audioDepArray', Utils.getArrayReader(this.PackMapAudioDep),
-						];
-
-			},
-
-			// => Version: 7
-			7:function(){
-						this.PackMapAudioRegion =[
-				'regionType' , 'uint32',
-				'overrideMode' , 'uint32',
-				'filenameSourceDay' , Utils.getFileNameReader(),
-				'filenameAmbientDay' , Utils.getFileNameReader(),
-				'filenameSourceNight' , Utils.getFileNameReader(),
-				'filenameAmbientNight' , Utils.getFileNameReader(),
-				'filenameInterior' , Utils.getFileNameReader(),
-				'exteriorVolume' , 'float32',
-				'priority' , 'uint32',
-				'points', Utils.getArrayReader(['[]','float32',3]),
-				'position' , ['[]','float32',3],
-				'orientation' , ['[]','float32',3],
-				'fadeBand' , 'float32',
-				'height' , 'float32',
-				'radius' , 'float32',
-				'guid', Utils.getQWordReader(),
-				'flags' , 'uint32',
-						];
-
-						this.PackMapAudioRegionTool =[
-				'annotation', Utils.getString16Reader(),
-						];
-
-						this.__root=this.MapAudio =[
-				'filenameAmbientDaySurface' , Utils.getFileNameReader(),
-				'filenameAmbientDayUnderwater' , Utils.getFileNameReader(),
-				'filenameAmbientNightSurface' , Utils.getFileNameReader(),
-				'filenameAmbientNightUnderwater' , Utils.getFileNameReader(),
-				'audioRegions', Utils.getArrayReader(this.PackMapAudioRegion),
-				'audioRegionTools', Utils.getArrayReader(this.PackMapAudioRegionTool),
-						];
-
-			},
-
-			// => Version: 6
-			6:function(){
-						this.PackMapAudioRegion =[
-				'regionType' , 'uint32',
-				'overrideMode' , 'uint32',
-				'filenameSourceDay' , Utils.getFileNameReader(),
-				'filenameAmbientDay' , Utils.getFileNameReader(),
-				'filenameSourceNight' , Utils.getFileNameReader(),
-				'filenameAmbientNight' , Utils.getFileNameReader(),
-				'filenameInterior' , Utils.getFileNameReader(),
-				'exteriorVolume' , 'float32',
-				'priority' , 'uint32',
-				'points', Utils.getArrayReader(['[]','float32',3]),
-				'position' , ['[]','float32',3],
-				'orientation' , ['[]','float32',3],
-				'fadeBand' , 'float32',
-				'height' , 'float32',
-				'radius' , 'float32',
-				'guid', Utils.getQWordReader(),
-				'flags' , 'uint32',
-						];
-
-						this.__root=this.MapAudio =[
-				'filenameAmbientDaySurface' , Utils.getFileNameReader(),
-				'filenameAmbientDayUnderwater' , Utils.getFileNameReader(),
-				'filenameAmbientNightSurface' , Utils.getFileNameReader(),
-				'filenameAmbientNightUnderwater' , Utils.getFileNameReader(),
-				'audioRegions', Utils.getArrayReader(this.PackMapAudioRegion),
-						];
-
-			},
-
-			// => Version: 5
-			5:function(){
-						this.PackMapAudioRegion =[
-				'regionType' , 'uint32',
-				'overrideMode' , 'uint32',
-				'filenameSourceDay' , Utils.getFileNameReader(),
-				'filenameAmbientDay' , Utils.getFileNameReader(),
-				'filenameSourceNight' , Utils.getFileNameReader(),
-				'filenameAmbientNight' , Utils.getFileNameReader(),
-				'points', Utils.getArrayReader(['[]','float32',3]),
-				'position' , ['[]','float32',3],
-				'orientation' , ['[]','float32',3],
-				'fadeBand' , 'float32',
-				'height' , 'float32',
-				'radius' , 'float32',
-				'guid', Utils.getQWordReader(),
-				'flags' , 'uint32',
-						];
-
-						this.__root=this.MapAudio =[
-				'filenameAmbientDaySurface' , Utils.getFileNameReader(),
-				'filenameAmbientDayUnderwater' , Utils.getFileNameReader(),
-				'filenameAmbientNightSurface' , Utils.getFileNameReader(),
-				'filenameAmbientNightUnderwater' , Utils.getFileNameReader(),
-				'audioRegions', Utils.getArrayReader(this.PackMapAudioRegion),
-						];
-
-			},
-
-			// => Version: 4, ReferencedFunction: 0xFFB450
-			4:function(){
-						this.PackMapAudioRegion =[
-				'regionType' , 'uint32',
-				'overrideMode' , 'uint32',
-				'filenameSourceDay' , Utils.getFileNameReader(),
-				'filenameAmbientDay' , Utils.getFileNameReader(),
-				'filenameMusicDay' , Utils.getFileNameReader(),
-				'filenameSourceNight' , Utils.getFileNameReader(),
-				'filenameAmbientNight' , Utils.getFileNameReader(),
-				'filenameMusicNight' , Utils.getFileNameReader(),
-				'points', Utils.getArrayReader(['[]','float32',3]),
-				'position' , ['[]','float32',3],
-				'orientation' , ['[]','float32',3],
-				'fadeBand' , 'float32',
-				'height' , 'float32',
-				'radius' , 'float32',
-				'guid', Utils.getQWordReader(),
-						];
-
-						this.__root=this.MapAudio =[
-				'filenameAmbientDaySurface' , Utils.getFileNameReader(),
-				'filenameMusicDaySurface' , Utils.getFileNameReader(),
-				'filenameAmbientDayUnderwater' , Utils.getFileNameReader(),
-				'filenameMusicDayUnderwater' , Utils.getFileNameReader(),
-				'filenameAmbientNightSurface' , Utils.getFileNameReader(),
-				'filenameMusicNightSurface' , Utils.getFileNameReader(),
-				'filenameAmbientNightUnderwater' , Utils.getFileNameReader(),
-				'filenameMusicNightUnderwater' , Utils.getFileNameReader(),
-				'audioRegions', Utils.getArrayReader(this.PackMapAudioRegion),
-						];
-
-			},
-
-			// => Version: 3, ReferencedFunction: 0xFFB340
-			3:function(){
-						this.PackMapAudioRegion =[
-				'regionType' , 'uint32',
-				'overrideMode' , 'uint32',
-				'filenameSourceDay' , Utils.getFileNameReader(),
-				'filenameAmbientDay' , Utils.getFileNameReader(),
-				'filenameMusicDay' , Utils.getFileNameReader(),
-				'filenameSourceNight' , Utils.getFileNameReader(),
-				'filenameAmbientNight' , Utils.getFileNameReader(),
-				'filenameMusicNight' , Utils.getFileNameReader(),
-				'points', Utils.getArrayReader(['[]','float32',3]),
-				'position' , ['[]','float32',3],
-				'orientation' , ['[]','float32',3],
-				'fadeBand' , 'float32',
-				'height' , 'float32',
-				'radius' , 'float32',
-						];
-
-						this.__root=this.MapAudio =[
-				'filenameAmbientDaySurface' , Utils.getFileNameReader(),
-				'filenameMusicDaySurface' , Utils.getFileNameReader(),
-				'filenameAmbientDayUnderwater' , Utils.getFileNameReader(),
-				'filenameMusicDayUnderwater' , Utils.getFileNameReader(),
-				'filenameAmbientNightSurface' , Utils.getFileNameReader(),
-				'filenameMusicNightSurface' , Utils.getFileNameReader(),
-				'filenameAmbientNightUnderwater' , Utils.getFileNameReader(),
-				'filenameMusicNightUnderwater' , Utils.getFileNameReader(),
-				'audioRegions', Utils.getArrayReader(this.PackMapAudioRegion),
-						];
-
-			},
-
-			// => Version: 2
-			2:function(){
-						this.PackMapAudioRegion =[
-				'regionType' , 'uint32',
-				'overrideMode' , 'uint32',
-				'filenameSource' , Utils.getFileNameReader(),
-				'filenameAmbient' , Utils.getFileNameReader(),
-				'filenameMusic' , Utils.getFileNameReader(),
-				'points', Utils.getArrayReader(['[]','float32',3]),
-				'position' , ['[]','float32',3],
-				'orientation' , ['[]','float32',3],
-				'fadeBand' , 'float32',
-				'height' , 'float32',
-				'radius' , 'float32',
-						];
-
-						this.__root=this.MapAudio =[
-				'globalAmbientScriptFilename' , Utils.getFileNameReader(),
-				'globalMusicScriptFilename' , Utils.getFileNameReader(),
-				'globalAmbientUnderwaterScriptFilename' , Utils.getFileNameReader(),
-				'globalMusicUnderwaterScriptFilename' , Utils.getFileNameReader(),
-				'audioRegions', Utils.getArrayReader(this.PackMapAudioRegion),
-						];
-
-			},
-
-			// => Version: 1
-			1:function(){
-						this.PackMapAudioRegion =[
-				'regionType' , 'uint32',
-				'overrideMode' , 'uint32',
-				'filenameSource' , Utils.getFileNameReader(),
-				'filenameAmbient' , Utils.getFileNameReader(),
-				'filenameMusic' , Utils.getFileNameReader(),
-				'points', Utils.getArrayReader(['[]','float32',3]),
-				'position' , ['[]','float32',3],
-				'orientation' , ['[]','float32',3],
-				'fadeBand' , 'float32',
-				'height' , 'float32',
-				'radius' , 'float32',
-						];
-
-						this.__root=this.MapAudio =[
-				'globalAmbientScriptFilename' , Utils.getFileNameReader(),
-				'globalMusicScriptFilename' , Utils.getFileNameReader(),
-				'audioRegions', Utils.getArrayReader(this.PackMapAudioRegion),
-						];
-
-			},
-
-			// => Version: 0
-			0:function(){
-						this.__root=this.MapAudio =[
-				'globalAmbientScriptFilename' , Utils.getFileNameReader(),
-				'globalMusicScriptFilename' , Utils.getFileNameReader(),
-						];
-
-			},
-		}
-	},
-
-	///==================================================
-	/// Chunk: bloc, versions: 1, strucTab: 0x1581298 
-	///==================================================
-	{
-		name:'bloc',
-		versions:{
-
-
-			// => Version: 0
-			0:function(){
-						this.PackMapBlockRecord =[
-				'filename' , Utils.getFileNameReader(),
-						];
-
-						this.__root=this.PackMapBlock =[
-				'blockDims', ['[]', 'uint32', 2],
-				'blockRecordArray', Utils.getArrayReader(this.PackMapBlockRecord),
-						];
-
-			},
-		}
-	},
-
-	///==================================================
-	/// Chunk: cng, versions: 1, strucTab: 0x1580D9C 
-	///==================================================
-	{
-		name:'cng',
-		versions:{
-
-
-			// => Version: 0
-			0:function(){
-						this.PackMapCoarseNavGraphNodeV0 =[
-				'materialId' , 'uint32',
-				'bottomLeftBound' , ['[]','float32',3],
-				'topRightBound' , ['[]','float32',3],
-				'centroid' , ['[]','float32',3],
-				'faces', Utils.getArrayReader('uint32'),
-						];
-
-						this.PackMapCoarseNavGraphConnectionEdgeV0 =[
-				'edgeStart' , ['[]','float32',3],
-				'edgeEnd' , ['[]','float32',3],
-						];
-
-						this.PackMapCoarseNavGraphConnectionV0 =[
-				'targetSectionUid' , 'uint32',
-				'targetNodeIndex' , 'uint32',
-				'edges', Utils.getArrayReader(this.PackMapCoarseNavGraphConnectionEdgeV0),
-						];
-
-						this.PackMapCoarseNavGraphNodeConnectionsV0 =[
-				'nodeIndex' , 'uint32',
-				'connections', Utils.getArrayReader(this.PackMapCoarseNavGraphConnectionV0),
-						];
-
-						this.PackMapCoarseNavGraphSectionV0 =[
-				'sectionUid' , 'uint32',
-				'nodes', Utils.getArrayReader(this.PackMapCoarseNavGraphNodeV0),
-				'nodeConnections', Utils.getArrayReader(this.PackMapCoarseNavGraphNodeConnectionsV0),
-						];
-
-						this.__root=this.PackMapCoarseNavGraphV0 =[
-				'sections', Utils.getArrayReader(this.PackMapCoarseNavGraphSectionV0),
-						];
-
-			},
-		}
-	},
-
-	///==================================================
-	/// Chunk: cube, versions: 4, strucTab: 0x15813D8 
-	///==================================================
-	{
-		name:'cube',
-		versions:{
-
-
-			// => Version: 3
-			3:function(){
-						this.PackMapCubeMapSampleV3 =[
-				'position' , ['[]','float32',3],
-				'filenameDayDefault' , Utils.getFileNameReader(),
-				'filenameNightDefault' , Utils.getFileNameReader(),
-				'filenameDayScript' , Utils.getFileNameReader(),
-				'filenameNightScript' , Utils.getFileNameReader(),
-				'envID', Utils.getQWordReader(),
-						];
-
-						this.PackMapCubeMapParamsV3 =[
-				'modulateColor' , 'uint32',
-				'brightness' , 'float32',
-				'contrast' , 'float32',
-				'blurPasses' , 'uint32',
-				'envVolume', Utils.getString16Reader(),
-						];
-
-						this.__root=this.PackMapCubeMapV3 =[
-				'sampleArray', Utils.getArrayReader(this.PackMapCubeMapSampleV3),
-				'paramsArray', Utils.getArrayReader(this.PackMapCubeMapParamsV3),
-						];
-
-			},
-
-			// => Version: 2, ReferencedFunction: 0x5EABE0
-			2:function(){
-						this.PackMapCubeMapSampleV2 =[
-				'position' , ['[]','float32',3],
-				'filenameDayDefault' , Utils.getFileNameReader(),
-				'filenameNightDefault' , Utils.getFileNameReader(),
-				'filenameDayScript' , Utils.getFileNameReader(),
-				'filenameNightScript' , Utils.getFileNameReader(),
-						];
-
-						this.PackMapCubeMapParamsV2 =[
-				'modulateColor' , 'uint32',
-				'brightness' , 'float32',
-				'contrast' , 'float32',
-				'blurPasses' , 'uint32',
-						];
-
-						this.__root=this.PackMapCubeMapV2 =[
-				'sampleArray', Utils.getArrayReader(this.PackMapCubeMapSampleV2),
-				'paramsArray', Utils.getArrayReader(this.PackMapCubeMapParamsV2),
-						];
-
-			},
-
-			// => Version: 1, ReferencedFunction: 0xFFCB60
-			1:function(){
-						this.PackMapCubeMapSampleV1 =[
-				'position' , ['[]','float32',3],
-				'flags' , 'uint32',
-				'dayPtr', Utils.getArrayReader('uint8'),
-				'nightPtr', Utils.getArrayReader('uint8'),
-						];
-
-						this.PackMapCubeMapParamsV1 =[
-				'modulateColor' , 'uint32',
-				'brightness' , 'float32',
-				'contrast' , 'float32',
-				'blurPasses' , 'uint32',
-						];
-
-						this.__root=this.PackMapCubeMapV1 =[
-				'sampleArray', Utils.getArrayReader(this.PackMapCubeMapSampleV1),
-				'paramsArray', Utils.getArrayReader(this.PackMapCubeMapParamsV1),
-						];
-
-			},
-
-			// => Version: 0
-			0:function(){
-						this.PackMapCubeMapSampleV0 =[
-				'position' , ['[]','float32',3],
-				'flags' , 'uint32',
-				'dataPtr', Utils.getArrayReader('uint8'),
-						];
-
-						this.PackMapCubeMapParamsV0 =[
-				'modulateColor' , 'uint32',
-				'brightness' , 'float32',
-				'contrast' , 'float32',
-				'blurPasses' , 'uint32',
-						];
-
-						this.__root=this.PackMapCubeMapV0 =[
-				'sampleArray', Utils.getArrayReader(this.PackMapCubeMapSampleV0),
-				'paramsArray', Utils.getArrayReader(this.PackMapCubeMapParamsV0),
-						];
-
-			},
-		}
-	},
-
-	///==================================================
-	/// Chunk: havk, versions: 15, strucTab: 0x1580940 
+	/// Chunk: havk, versions: 15, strucTab: 0x1723760 
 	///==================================================
 	{
 		name:'havk',
 		versions:{
 
 
-			// => Version: 14, ReferencedFunction: 0xFF70D0
+			// => Version: 14, ReferencedFunction: 0xEBA840
 			14:function(){
 						this.PackMoppType =[
 				'moppData', Utils.getArrayReader('uint8'),
@@ -13141,7 +12418,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 13, ReferencedFunction: 0xFF6E30
+			// => Version: 13, ReferencedFunction: 0xEBA4F0
 			13:function(){
 						this.PackMapCollideCollisionV13 =[
 				'indices', Utils.getArrayReader('uint16'),
@@ -13444,7 +12721,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 8, ReferencedFunction: 0xFF7140
+			// => Version: 8, ReferencedFunction: 0xEBA8B0
 			8:function(){
 						this.PackMapCollideMeshV8 =[
 				'indices', Utils.getArrayReader('uint16'),
@@ -13618,14 +12895,710 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: env, versions: 76, strucTab: 0x157D2C0 
+	/// Chunk: shad, versions: 2, strucTab: 0x1722DB8 
+	///==================================================
+	{
+		name:'shad',
+		versions:{
+
+
+			// => Version: 1, ReferencedFunction: 0xEBB230
+			1:function(){
+						this.PackMapShadowTileV1 =[
+				'compressionMode' , 'uint32',
+				'bytes', Utils.getArrayReader('uint8'),
+						];
+
+						this.__root=this.PackMapShadowV1 =[
+				'shadowDims', ['[]', 'uint32', 2],
+				'tileDims', ['[]', 'uint32', 2],
+				'tiles', Utils.getArrayReader(this.PackMapShadowTileV1),
+				'worldToShadow', ['[]', 'float32', 16],
+				's' , ['[]','float32',2],
+				't' , ['[]','float32',2],
+				'u' , ['[]','float32',2],
+				'shadowEye' , ['[]','float32',3],
+				'shadowDir' , ['[]','float32',3],
+				'shadowUp' , ['[]','float32',3],
+						];
+
+			},
+
+			// => Version: 0
+			0:function(){
+						this.PackMapShadowTileV0 =[
+				'compressionMode' , 'uint32',
+				'bytes', Utils.getArrayReader('uint8'),
+						];
+
+						this.__root=this.PackMapShadowV0 =[
+				'shadowDims', ['[]', 'uint32', 2],
+				'tileDims', ['[]', 'uint32', 2],
+				'tiles', Utils.getArrayReader(this.PackMapShadowTileV0),
+				'worldToShadow', ['[]', 'float32', 16],
+				's' , ['[]','float32',2],
+				't' , ['[]','float32',2],
+				'u' , ['[]','float32',2],
+						];
+
+			},
+		}
+	},
+
+	///==================================================
+	/// Chunk: area, versions: 5, strucTab: 0x1722F9C 
+	///==================================================
+	{
+		name:'area',
+		versions:{
+
+
+			// => Version: 4, ReferencedFunction: 0xEBB040
+			4:function(){
+						this.PackMapAreaPolygonV4 =[
+				'points', Utils.getArrayReader(['[]','float32',3]),
+				'height' , 'float32',
+						];
+
+						this.PackMapAreaPortalV4 =[
+				'position' , ['[]','float32',3],
+				'extents' , ['[]','float32',3],
+				'rotation' , ['[]','float32',3],
+						];
+
+						this.PackMapAreaVolumeV4 =[
+				'portals', Utils.getArrayReader(this.PackMapAreaPortalV4),
+				'position' , ['[]','float32',3],
+				'extents' , ['[]','float32',3],
+				'pointInterior' , ['[]','float32',3],
+				'pointExterior' , ['[]','float32',3],
+						];
+
+						this.PackMapAreaV4 =[
+				'token', Utils.getQWordReader(),
+				'type' , 'uint8',
+				'floor' , 'uint8',
+				'flags' , 'uint32',
+				'polygon', this.PackMapAreaPolygonV4,
+				'volume', this.PackMapAreaVolumeV4,
+						];
+
+						this.PackMapAreaToolV4 =[
+				'annotation', Utils.getString16Reader(),
+				'renderOffset' , 'float32',
+						];
+
+						this.__root=this.PackMapAreasV4 =[
+				'areas', Utils.getArrayReader(this.PackMapAreaV4),
+				'areaTools', Utils.getArrayReader(this.PackMapAreaToolV4),
+						];
+
+			},
+
+			// => Version: 3
+			3:function(){
+						this.PackMapAreaPolygonV3 =[
+				'points', Utils.getArrayReader(['[]','float32',3]),
+				'height' , 'float32',
+						];
+
+						this.PackMapAreaPortalV3 =[
+				'position' , ['[]','float32',3],
+				'extents' , ['[]','float32',3],
+				'rotation' , ['[]','float32',3],
+						];
+
+						this.PackMapAreaVolumeV3 =[
+				'portals', Utils.getArrayReader(this.PackMapAreaPortalV3),
+				'position' , ['[]','float32',3],
+				'extents' , ['[]','float32',3],
+				'pointInterior' , ['[]','float32',3],
+				'pointExterior' , ['[]','float32',3],
+						];
+
+						this.PackMapAreaV3 =[
+				'token', Utils.getQWordReader(),
+				'type' , 'uint8',
+				'floor' , 'uint8',
+				'flags' , 'uint32',
+				'polygon', this.PackMapAreaPolygonV3,
+				'volume', this.PackMapAreaVolumeV3,
+						];
+
+						this.PackMapAreaToolV3 =[
+				'annotation', Utils.getString16Reader(),
+				'renderOffset' , 'float32',
+						];
+
+						this.__root=this.PackMapAreasV3 =[
+				'areas', Utils.getArrayReader(this.PackMapAreaV3),
+				'areaTools', Utils.getArrayReader(this.PackMapAreaToolV3),
+						];
+
+			},
+
+			// => Version: 2
+			2:function(){
+						this.PackMapAreaPolygonV2 =[
+				'points', Utils.getArrayReader(['[]','float32',3]),
+				'height' , 'float32',
+						];
+
+						this.PackMapAreaPortalV2 =[
+				'position' , ['[]','float32',3],
+				'extents' , ['[]','float32',3],
+				'rotation' , ['[]','float32',3],
+						];
+
+						this.PackMapAreaVolumeV2 =[
+				'portals', Utils.getArrayReader(this.PackMapAreaPortalV2),
+				'position' , ['[]','float32',3],
+				'extents' , ['[]','float32',3],
+				'pointInterior' , ['[]','float32',3],
+				'pointExterior' , ['[]','float32',3],
+						];
+
+						this.PackMapAreaV2 =[
+				'token', Utils.getQWordReader(),
+				'type' , 'uint8',
+				'floor' , 'uint8',
+				'flags' , 'uint32',
+				'polygon', this.PackMapAreaPolygonV2,
+				'volume', this.PackMapAreaVolumeV2,
+						];
+
+						this.PackMapAreaToolV2 =[
+				'annotation', Utils.getString16Reader(),
+						];
+
+						this.__root=this.PackMapAreasV2 =[
+				'areas', Utils.getArrayReader(this.PackMapAreaV2),
+				'areaTools', Utils.getArrayReader(this.PackMapAreaToolV2),
+						];
+
+			},
+
+			// => Version: 1, ReferencedFunction: 0xE2EE00
+			1:function(){
+						this.PackMapAreaPolygonV1 =[
+				'points', Utils.getArrayReader(['[]','float32',3]),
+				'height' , 'float32',
+						];
+
+						this.PackMapAreaPortalV1 =[
+				'position' , ['[]','float32',3],
+				'extents' , ['[]','float32',3],
+				'rotation' , ['[]','float32',3],
+						];
+
+						this.PackMapAreaVolumeV1 =[
+				'portals', Utils.getArrayReader(this.PackMapAreaPortalV1),
+				'position' , ['[]','float32',3],
+				'extents' , ['[]','float32',3],
+				'pointInterior' , ['[]','float32',3],
+				'pointExterior' , ['[]','float32',3],
+						];
+
+						this.PackMapAreaV1 =[
+				'token', Utils.getQWordReader(),
+				'type' , 'uint8',
+				'floor' , 'uint8',
+				'polygon', this.PackMapAreaPolygonV1,
+				'volume', this.PackMapAreaVolumeV1,
+						];
+
+						this.__root=this.PackMapAreasV1 =[
+				'areas', Utils.getArrayReader(this.PackMapAreaV1),
+						];
+
+			},
+
+			// => Version: 0
+			0:function(){
+						this.PackMapAreaV0 =[
+				'min' , ['[]','float32',3],
+				'max' , ['[]','float32',3],
+				'internal' , ['[]','float32',3],
+				'external' , ['[]','float32',3],
+				'token' , 'uint32',
+				'flags' , 'uint32',
+						];
+
+						this.PackMapPortalV0 =[
+				'portalVerts', Utils.getArrayReader(['[]','float32',3]),
+						];
+
+						this.__root=this.PackMapAreasV0 =[
+				'areas', Utils.getArrayReader(this.PackMapAreaV0),
+				'portals', Utils.getArrayReader(this.PackMapPortalV0),
+						];
+
+			},
+		}
+	},
+
+	///==================================================
+	/// Chunk: audi, versions: 9, strucTab: 0x1723448 
+	///==================================================
+	{
+		name:'audi',
+		versions:{
+
+
+			// => Version: 8
+			8:function(){
+						this.PackMapAudioRegion =[
+				'regionType' , 'uint32',
+				'overrideMode' , 'uint32',
+				'filenameSourceDay' , Utils.getFileNameReader(),
+				'filenameAmbientDay' , Utils.getFileNameReader(),
+				'filenameSourceNight' , Utils.getFileNameReader(),
+				'filenameAmbientNight' , Utils.getFileNameReader(),
+				'filenameInterior' , Utils.getFileNameReader(),
+				'exteriorVolume' , 'float32',
+				'priority' , 'uint32',
+				'points', Utils.getArrayReader(['[]','float32',3]),
+				'position' , ['[]','float32',3],
+				'orientation' , ['[]','float32',3],
+				'fadeBand' , 'float32',
+				'height' , 'float32',
+				'radius' , 'float32',
+				'guid', Utils.getQWordReader(),
+				'flags' , 'uint32',
+						];
+
+						this.PackMapAudioRegionTool =[
+				'annotation', Utils.getString16Reader(),
+						];
+
+						this.PackMapAudioDep =[
+				'dependency' , Utils.getFileNameReader(),
+				'flags' , 'uint32',
+						];
+
+						this.__root=this.MapAudio =[
+				'filenameAmbientDaySurface' , Utils.getFileNameReader(),
+				'filenameAmbientDayUnderwater' , Utils.getFileNameReader(),
+				'filenameAmbientNightSurface' , Utils.getFileNameReader(),
+				'filenameAmbientNightUnderwater' , Utils.getFileNameReader(),
+				'audioRegions', Utils.getArrayReader(this.PackMapAudioRegion),
+				'audioRegionTools', Utils.getArrayReader(this.PackMapAudioRegionTool),
+				'audioDepArray', Utils.getArrayReader(this.PackMapAudioDep),
+						];
+
+			},
+
+			// => Version: 7
+			7:function(){
+						this.PackMapAudioRegion =[
+				'regionType' , 'uint32',
+				'overrideMode' , 'uint32',
+				'filenameSourceDay' , Utils.getFileNameReader(),
+				'filenameAmbientDay' , Utils.getFileNameReader(),
+				'filenameSourceNight' , Utils.getFileNameReader(),
+				'filenameAmbientNight' , Utils.getFileNameReader(),
+				'filenameInterior' , Utils.getFileNameReader(),
+				'exteriorVolume' , 'float32',
+				'priority' , 'uint32',
+				'points', Utils.getArrayReader(['[]','float32',3]),
+				'position' , ['[]','float32',3],
+				'orientation' , ['[]','float32',3],
+				'fadeBand' , 'float32',
+				'height' , 'float32',
+				'radius' , 'float32',
+				'guid', Utils.getQWordReader(),
+				'flags' , 'uint32',
+						];
+
+						this.PackMapAudioRegionTool =[
+				'annotation', Utils.getString16Reader(),
+						];
+
+						this.__root=this.MapAudio =[
+				'filenameAmbientDaySurface' , Utils.getFileNameReader(),
+				'filenameAmbientDayUnderwater' , Utils.getFileNameReader(),
+				'filenameAmbientNightSurface' , Utils.getFileNameReader(),
+				'filenameAmbientNightUnderwater' , Utils.getFileNameReader(),
+				'audioRegions', Utils.getArrayReader(this.PackMapAudioRegion),
+				'audioRegionTools', Utils.getArrayReader(this.PackMapAudioRegionTool),
+						];
+
+			},
+
+			// => Version: 6
+			6:function(){
+						this.PackMapAudioRegion =[
+				'regionType' , 'uint32',
+				'overrideMode' , 'uint32',
+				'filenameSourceDay' , Utils.getFileNameReader(),
+				'filenameAmbientDay' , Utils.getFileNameReader(),
+				'filenameSourceNight' , Utils.getFileNameReader(),
+				'filenameAmbientNight' , Utils.getFileNameReader(),
+				'filenameInterior' , Utils.getFileNameReader(),
+				'exteriorVolume' , 'float32',
+				'priority' , 'uint32',
+				'points', Utils.getArrayReader(['[]','float32',3]),
+				'position' , ['[]','float32',3],
+				'orientation' , ['[]','float32',3],
+				'fadeBand' , 'float32',
+				'height' , 'float32',
+				'radius' , 'float32',
+				'guid', Utils.getQWordReader(),
+				'flags' , 'uint32',
+						];
+
+						this.__root=this.MapAudio =[
+				'filenameAmbientDaySurface' , Utils.getFileNameReader(),
+				'filenameAmbientDayUnderwater' , Utils.getFileNameReader(),
+				'filenameAmbientNightSurface' , Utils.getFileNameReader(),
+				'filenameAmbientNightUnderwater' , Utils.getFileNameReader(),
+				'audioRegions', Utils.getArrayReader(this.PackMapAudioRegion),
+						];
+
+			},
+
+			// => Version: 5
+			5:function(){
+						this.PackMapAudioRegion =[
+				'regionType' , 'uint32',
+				'overrideMode' , 'uint32',
+				'filenameSourceDay' , Utils.getFileNameReader(),
+				'filenameAmbientDay' , Utils.getFileNameReader(),
+				'filenameSourceNight' , Utils.getFileNameReader(),
+				'filenameAmbientNight' , Utils.getFileNameReader(),
+				'points', Utils.getArrayReader(['[]','float32',3]),
+				'position' , ['[]','float32',3],
+				'orientation' , ['[]','float32',3],
+				'fadeBand' , 'float32',
+				'height' , 'float32',
+				'radius' , 'float32',
+				'guid', Utils.getQWordReader(),
+				'flags' , 'uint32',
+						];
+
+						this.__root=this.MapAudio =[
+				'filenameAmbientDaySurface' , Utils.getFileNameReader(),
+				'filenameAmbientDayUnderwater' , Utils.getFileNameReader(),
+				'filenameAmbientNightSurface' , Utils.getFileNameReader(),
+				'filenameAmbientNightUnderwater' , Utils.getFileNameReader(),
+				'audioRegions', Utils.getArrayReader(this.PackMapAudioRegion),
+						];
+
+			},
+
+			// => Version: 4, ReferencedFunction: 0xEBB190
+			4:function(){
+						this.PackMapAudioRegion =[
+				'regionType' , 'uint32',
+				'overrideMode' , 'uint32',
+				'filenameSourceDay' , Utils.getFileNameReader(),
+				'filenameAmbientDay' , Utils.getFileNameReader(),
+				'filenameMusicDay' , Utils.getFileNameReader(),
+				'filenameSourceNight' , Utils.getFileNameReader(),
+				'filenameAmbientNight' , Utils.getFileNameReader(),
+				'filenameMusicNight' , Utils.getFileNameReader(),
+				'points', Utils.getArrayReader(['[]','float32',3]),
+				'position' , ['[]','float32',3],
+				'orientation' , ['[]','float32',3],
+				'fadeBand' , 'float32',
+				'height' , 'float32',
+				'radius' , 'float32',
+				'guid', Utils.getQWordReader(),
+						];
+
+						this.__root=this.MapAudio =[
+				'filenameAmbientDaySurface' , Utils.getFileNameReader(),
+				'filenameMusicDaySurface' , Utils.getFileNameReader(),
+				'filenameAmbientDayUnderwater' , Utils.getFileNameReader(),
+				'filenameMusicDayUnderwater' , Utils.getFileNameReader(),
+				'filenameAmbientNightSurface' , Utils.getFileNameReader(),
+				'filenameMusicNightSurface' , Utils.getFileNameReader(),
+				'filenameAmbientNightUnderwater' , Utils.getFileNameReader(),
+				'filenameMusicNightUnderwater' , Utils.getFileNameReader(),
+				'audioRegions', Utils.getArrayReader(this.PackMapAudioRegion),
+						];
+
+			},
+
+			// => Version: 3, ReferencedFunction: 0xEBB080
+			3:function(){
+						this.PackMapAudioRegion =[
+				'regionType' , 'uint32',
+				'overrideMode' , 'uint32',
+				'filenameSourceDay' , Utils.getFileNameReader(),
+				'filenameAmbientDay' , Utils.getFileNameReader(),
+				'filenameMusicDay' , Utils.getFileNameReader(),
+				'filenameSourceNight' , Utils.getFileNameReader(),
+				'filenameAmbientNight' , Utils.getFileNameReader(),
+				'filenameMusicNight' , Utils.getFileNameReader(),
+				'points', Utils.getArrayReader(['[]','float32',3]),
+				'position' , ['[]','float32',3],
+				'orientation' , ['[]','float32',3],
+				'fadeBand' , 'float32',
+				'height' , 'float32',
+				'radius' , 'float32',
+						];
+
+						this.__root=this.MapAudio =[
+				'filenameAmbientDaySurface' , Utils.getFileNameReader(),
+				'filenameMusicDaySurface' , Utils.getFileNameReader(),
+				'filenameAmbientDayUnderwater' , Utils.getFileNameReader(),
+				'filenameMusicDayUnderwater' , Utils.getFileNameReader(),
+				'filenameAmbientNightSurface' , Utils.getFileNameReader(),
+				'filenameMusicNightSurface' , Utils.getFileNameReader(),
+				'filenameAmbientNightUnderwater' , Utils.getFileNameReader(),
+				'filenameMusicNightUnderwater' , Utils.getFileNameReader(),
+				'audioRegions', Utils.getArrayReader(this.PackMapAudioRegion),
+						];
+
+			},
+
+			// => Version: 2
+			2:function(){
+						this.PackMapAudioRegion =[
+				'regionType' , 'uint32',
+				'overrideMode' , 'uint32',
+				'filenameSource' , Utils.getFileNameReader(),
+				'filenameAmbient' , Utils.getFileNameReader(),
+				'filenameMusic' , Utils.getFileNameReader(),
+				'points', Utils.getArrayReader(['[]','float32',3]),
+				'position' , ['[]','float32',3],
+				'orientation' , ['[]','float32',3],
+				'fadeBand' , 'float32',
+				'height' , 'float32',
+				'radius' , 'float32',
+						];
+
+						this.__root=this.MapAudio =[
+				'globalAmbientScriptFilename' , Utils.getFileNameReader(),
+				'globalMusicScriptFilename' , Utils.getFileNameReader(),
+				'globalAmbientUnderwaterScriptFilename' , Utils.getFileNameReader(),
+				'globalMusicUnderwaterScriptFilename' , Utils.getFileNameReader(),
+				'audioRegions', Utils.getArrayReader(this.PackMapAudioRegion),
+						];
+
+			},
+
+			// => Version: 1
+			1:function(){
+						this.PackMapAudioRegion =[
+				'regionType' , 'uint32',
+				'overrideMode' , 'uint32',
+				'filenameSource' , Utils.getFileNameReader(),
+				'filenameAmbient' , Utils.getFileNameReader(),
+				'filenameMusic' , Utils.getFileNameReader(),
+				'points', Utils.getArrayReader(['[]','float32',3]),
+				'position' , ['[]','float32',3],
+				'orientation' , ['[]','float32',3],
+				'fadeBand' , 'float32',
+				'height' , 'float32',
+				'radius' , 'float32',
+						];
+
+						this.__root=this.MapAudio =[
+				'globalAmbientScriptFilename' , Utils.getFileNameReader(),
+				'globalMusicScriptFilename' , Utils.getFileNameReader(),
+				'audioRegions', Utils.getArrayReader(this.PackMapAudioRegion),
+						];
+
+			},
+
+			// => Version: 0
+			0:function(){
+						this.__root=this.MapAudio =[
+				'globalAmbientScriptFilename' , Utils.getFileNameReader(),
+				'globalMusicScriptFilename' , Utils.getFileNameReader(),
+						];
+
+			},
+		}
+	},
+
+	///==================================================
+	/// Chunk: bloc, versions: 1, strucTab: 0x1724304 
+	///==================================================
+	{
+		name:'bloc',
+		versions:{
+
+
+			// => Version: 0
+			0:function(){
+						this.PackMapBlockRecord =[
+				'filename' , Utils.getFileNameReader(),
+						];
+
+						this.__root=this.PackMapBlock =[
+				'blockDims', ['[]', 'uint32', 2],
+				'blockRecordArray', Utils.getArrayReader(this.PackMapBlockRecord),
+						];
+
+			},
+		}
+	},
+
+	///==================================================
+	/// Chunk: cg15, versions: 1, strucTab: 0x17242C8 
+	///==================================================
+	{
+		name:'cg15',
+		versions:{
+
+
+			// => Version: 0
+			0:function(){
+						this.PackMapCoarseNavGraphNodeV0 =[
+				'materialId' , 'uint32',
+				'bottomLeftBound' , ['[]','float32',3],
+				'topRightBound' , ['[]','float32',3],
+				'centroid' , ['[]','float32',3],
+				'faces', Utils.getArrayReader('uint32'),
+						];
+
+						this.PackMapCoarseNavGraphConnectionEdgeV0 =[
+				'edgeStart' , ['[]','float32',3],
+				'edgeEnd' , ['[]','float32',3],
+						];
+
+						this.PackMapCoarseNavGraphConnectionV0 =[
+				'targetSectionUid' , 'uint32',
+				'targetNodeIndex' , 'uint32',
+				'edges', Utils.getArrayReader(this.PackMapCoarseNavGraphConnectionEdgeV0),
+						];
+
+						this.PackMapCoarseNavGraphNodeConnectionsV0 =[
+				'nodeIndex' , 'uint32',
+				'connections', Utils.getArrayReader(this.PackMapCoarseNavGraphConnectionV0),
+						];
+
+						this.PackMapCoarseNavGraphSectionV0 =[
+				'sectionUid' , 'uint32',
+				'nodes', Utils.getArrayReader(this.PackMapCoarseNavGraphNodeV0),
+				'nodeConnections', Utils.getArrayReader(this.PackMapCoarseNavGraphNodeConnectionsV0),
+						];
+
+						this.__root=this.PackMapCoarseNavGraphV0 =[
+				'sections', Utils.getArrayReader(this.PackMapCoarseNavGraphSectionV0),
+						];
+
+			},
+		}
+	},
+
+	///==================================================
+	/// Chunk: cube, versions: 4, strucTab: 0x17244E0 
+	///==================================================
+	{
+		name:'cube',
+		versions:{
+
+
+			// => Version: 3
+			3:function(){
+						this.PackMapCubeMapSampleV3 =[
+				'position' , ['[]','float32',3],
+				'filenameDayDefault' , Utils.getFileNameReader(),
+				'filenameNightDefault' , Utils.getFileNameReader(),
+				'filenameDayScript' , Utils.getFileNameReader(),
+				'filenameNightScript' , Utils.getFileNameReader(),
+				'envID', Utils.getQWordReader(),
+						];
+
+						this.PackMapCubeMapParamsV3 =[
+				'modulateColor' , 'uint32',
+				'brightness' , 'float32',
+				'contrast' , 'float32',
+				'blurPasses' , 'uint32',
+				'envVolume', Utils.getString16Reader(),
+						];
+
+						this.__root=this.PackMapCubeMapV3 =[
+				'sampleArray', Utils.getArrayReader(this.PackMapCubeMapSampleV3),
+				'paramsArray', Utils.getArrayReader(this.PackMapCubeMapParamsV3),
+						];
+
+			},
+
+			// => Version: 2, ReferencedFunction: 0x452AB0
+			2:function(){
+						this.PackMapCubeMapSampleV2 =[
+				'position' , ['[]','float32',3],
+				'filenameDayDefault' , Utils.getFileNameReader(),
+				'filenameNightDefault' , Utils.getFileNameReader(),
+				'filenameDayScript' , Utils.getFileNameReader(),
+				'filenameNightScript' , Utils.getFileNameReader(),
+						];
+
+						this.PackMapCubeMapParamsV2 =[
+				'modulateColor' , 'uint32',
+				'brightness' , 'float32',
+				'contrast' , 'float32',
+				'blurPasses' , 'uint32',
+						];
+
+						this.__root=this.PackMapCubeMapV2 =[
+				'sampleArray', Utils.getArrayReader(this.PackMapCubeMapSampleV2),
+				'paramsArray', Utils.getArrayReader(this.PackMapCubeMapParamsV2),
+						];
+
+			},
+
+			// => Version: 1, ReferencedFunction: 0xEB92D0
+			1:function(){
+						this.PackMapCubeMapSampleV1 =[
+				'position' , ['[]','float32',3],
+				'flags' , 'uint32',
+				'dayPtr', Utils.getArrayReader('uint8'),
+				'nightPtr', Utils.getArrayReader('uint8'),
+						];
+
+						this.PackMapCubeMapParamsV1 =[
+				'modulateColor' , 'uint32',
+				'brightness' , 'float32',
+				'contrast' , 'float32',
+				'blurPasses' , 'uint32',
+						];
+
+						this.__root=this.PackMapCubeMapV1 =[
+				'sampleArray', Utils.getArrayReader(this.PackMapCubeMapSampleV1),
+				'paramsArray', Utils.getArrayReader(this.PackMapCubeMapParamsV1),
+						];
+
+			},
+
+			// => Version: 0
+			0:function(){
+						this.PackMapCubeMapSampleV0 =[
+				'position' , ['[]','float32',3],
+				'flags' , 'uint32',
+				'dataPtr', Utils.getArrayReader('uint8'),
+						];
+
+						this.PackMapCubeMapParamsV0 =[
+				'modulateColor' , 'uint32',
+				'brightness' , 'float32',
+				'contrast' , 'float32',
+				'blurPasses' , 'uint32',
+						];
+
+						this.__root=this.PackMapCubeMapV0 =[
+				'sampleArray', Utils.getArrayReader(this.PackMapCubeMapSampleV0),
+				'paramsArray', Utils.getArrayReader(this.PackMapCubeMapParamsV0),
+						];
+
+			},
+		}
+	},
+
+	///==================================================
+	/// Chunk: env, versions: 76, strucTab: 0x17206D8 
 	///==================================================
 	{
 		name:'env',
 		versions:{
 
 
-			// => Version: 75, ReferencedFunction: 0xFF8EA0
+			// => Version: 75, ReferencedFunction: 0xEB9240
 			75:function(){
 						this.PackMapEnvDataLightV75 =[
 				'color', ['[]', 'uint8', 3],
@@ -14953,7 +14926,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 71, ReferencedFunction: 0xFF8E00
+			// => Version: 71, ReferencedFunction: 0xEB91A0
 			71:function(){
 						this.PackMapEnvDataLightV71 =[
 				'color', ['[]', 'uint8', 3],
@@ -15251,7 +15224,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 70, ReferencedFunction: 0xFF8DB0
+			// => Version: 70, ReferencedFunction: 0xEB9150
 			70:function(){
 						this.PackMapEnvDataLightV70 =[
 				'color', ['[]', 'uint8', 3],
@@ -15843,7 +15816,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 68, ReferencedFunction: 0xFF8C90
+			// => Version: 68, ReferencedFunction: 0xEB9030
 			68:function(){
 						this.PackMapEnvDataLightV68 =[
 				'color', ['[]', 'uint8', 3],
@@ -16436,7 +16409,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 66, ReferencedFunction: 0xFF8B40
+			// => Version: 66, ReferencedFunction: 0xEB8EE0
 			66:function(){
 						this.PackMapEnvDataLightV66 =[
 				'color', ['[]', 'uint8', 3],
@@ -16731,7 +16704,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 65, ReferencedFunction: 0xFF8AE0
+			// => Version: 65, ReferencedFunction: 0xEB8E80
 			65:function(){
 						this.PackMapEnvDataLightV65 =[
 				'color', ['[]', 'uint8', 3],
@@ -17021,7 +16994,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 64, ReferencedFunction: 0xFF89F0
+			// => Version: 64, ReferencedFunction: 0xEB8D90
 			64:function(){
 						this.PackMapEnvDataLightV64 =[
 				'color', ['[]', 'uint8', 3],
@@ -17310,7 +17283,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 63, ReferencedFunction: 0xFF88F0
+			// => Version: 63, ReferencedFunction: 0xEB8C90
 			63:function(){
 						this.PackMapEnvDataLightV63 =[
 				'color', ['[]', 'uint8', 3],
@@ -17597,7 +17570,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 62, ReferencedFunction: 0xFF88C0
+			// => Version: 62, ReferencedFunction: 0xEB8C60
 			62:function(){
 						this.PackMapEnvDataLightV62 =[
 				'color', ['[]', 'uint8', 3],
@@ -17879,7 +17852,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 61, ReferencedFunction: 0xFF8890
+			// => Version: 61, ReferencedFunction: 0xEB8C30
 			61:function(){
 						this.PackMapEnvDataLightV61 =[
 				'color', ['[]', 'uint8', 3],
@@ -18160,7 +18133,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 60, ReferencedFunction: 0xFF8860
+			// => Version: 60, ReferencedFunction: 0xEB8C00
 			60:function(){
 						this.PackMapEnvDataLightV60 =[
 				'color', ['[]', 'uint8', 3],
@@ -18440,7 +18413,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 59, ReferencedFunction: 0xFF8750
+			// => Version: 59, ReferencedFunction: 0xEB8AF0
 			59:function(){
 						this.PackMapEnvDataLightV59 =[
 				'color', ['[]', 'uint8', 3],
@@ -18719,7 +18692,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 58, ReferencedFunction: 0xFF8640
+			// => Version: 58, ReferencedFunction: 0xEB89E0
 			58:function(){
 						this.PackMapEnvDataLightV58 =[
 				'color', ['[]', 'uint8', 3],
@@ -19276,7 +19249,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 56, ReferencedFunction: 0xFF8530
+			// => Version: 56, ReferencedFunction: 0xEB88D0
 			56:function(){
 						this.PackMapEnvDataLightV56 =[
 				'color', ['[]', 'uint8', 3],
@@ -19826,7 +19799,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 54, ReferencedFunction: 0xFF8480
+			// => Version: 54, ReferencedFunction: 0xEB8820
 			54:function(){
 						this.PackMapEnvDataLightV54 =[
 				'color', ['[]', 'uint8', 3],
@@ -20078,7 +20051,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 53, ReferencedFunction: 0xFF83D0
+			// => Version: 53, ReferencedFunction: 0xEB8770
 			53:function(){
 						this.PackMapEnvDataLightV53 =[
 				'color', ['[]', 'uint8', 3],
@@ -20330,7 +20303,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 52, ReferencedFunction: 0xFF82F0
+			// => Version: 52, ReferencedFunction: 0xEB8690
 			52:function(){
 						this.PackMapEnvDataLightV52 =[
 				'color', ['[]', 'uint8', 3],
@@ -20829,7 +20802,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 50, ReferencedFunction: 0xFF81E0
+			// => Version: 50, ReferencedFunction: 0xEB8580
 			50:function(){
 						this.PackMapEnvDataLightV50 =[
 				'color', ['[]', 'uint8', 3],
@@ -21075,7 +21048,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 49, ReferencedFunction: 0xFF8090
+			// => Version: 49, ReferencedFunction: 0xEB8430
 			49:function(){
 						this.PackMapEnvDataLightV49 =[
 				'color', ['[]', 'uint8', 3],
@@ -22278,7 +22251,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 44, ReferencedFunction: 0xFF7F80
+			// => Version: 44, ReferencedFunction: 0xEB8320
 			44:function(){
 						this.PackMapEnvDataLightV44 =[
 				'color', ['[]', 'uint8', 3],
@@ -22517,7 +22490,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 43, ReferencedFunction: 0xFF7ED0
+			// => Version: 43, ReferencedFunction: 0xEB8270
 			43:function(){
 						this.PackMapEnvDataLightV43 =[
 				'color', ['[]', 'uint8', 3],
@@ -22748,7 +22721,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 42, ReferencedFunction: 0xFF7E30
+			// => Version: 42, ReferencedFunction: 0xEB81D0
 			42:function(){
 						this.PackMapEnvDataLightV42 =[
 				'color', ['[]', 'uint8', 3],
@@ -22974,7 +22947,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 41, ReferencedFunction: 0xFF7D10
+			// => Version: 41, ReferencedFunction: 0xEB80B0
 			41:function(){
 						this.PackMapEnvDataLightV41 =[
 				'color', ['[]', 'uint8', 3],
@@ -23199,7 +23172,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 40, ReferencedFunction: 0xFF7CD0
+			// => Version: 40, ReferencedFunction: 0xEB8070
 			40:function(){
 						this.PackMapEnvDataLightV40 =[
 				'color', ['[]', 'uint8', 3],
@@ -23644,7 +23617,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 38, ReferencedFunction: 0xFF7C30
+			// => Version: 38, ReferencedFunction: 0xEB7FD0
 			38:function(){
 						this.PackMapEnvDataLightV38 =[
 				'color', ['[]', 'uint8', 3],
@@ -23854,7 +23827,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 37, ReferencedFunction: 0xFF7BB0
+			// => Version: 37, ReferencedFunction: 0xEB7F50
 			37:function(){
 						this.PackMapEnvDataLightV37 =[
 				'color', ['[]', 'uint8', 3],
@@ -24269,7 +24242,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 35, ReferencedFunction: 0xFF7B50
+			// => Version: 35, ReferencedFunction: 0xEB7EF0
 			35:function(){
 						this.PackMapEnvDataLightV35 =[
 				'color', ['[]', 'uint8', 3],
@@ -24863,7 +24836,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 32, ReferencedFunction: 0xFF79C0
+			// => Version: 32, ReferencedFunction: 0xEB7D60
 			32:function(){
 						this.PackMapEnvDataLightV32 =[
 				'color', ['[]', 'uint8', 3],
@@ -25054,7 +25027,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 31, ReferencedFunction: 0xFF7950
+			// => Version: 31, ReferencedFunction: 0xEB7CF0
 			31:function(){
 						this.PackMapEnvDataLightV31 =[
 				'color', ['[]', 'uint8', 3],
@@ -25246,7 +25219,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 30, ReferencedFunction: 0xFF78D0
+			// => Version: 30, ReferencedFunction: 0xEB7C70
 			30:function(){
 						this.PackMapEnvDataLightV30 =[
 				'color', ['[]', 'uint8', 3],
@@ -25624,7 +25597,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: laye, versions: 1, strucTab: 0x157D75C 
+	/// Chunk: laye, versions: 1, strucTab: 0x1720B64 
 	///==================================================
 	{
 		name:'laye',
@@ -25653,7 +25626,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: lght, versions: 18, strucTab: 0x157D8A8 
+	/// Chunk: lght, versions: 18, strucTab: 0x1720FD0 
 	///==================================================
 	{
 		name:'lght',
@@ -25867,7 +25840,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 15, ReferencedFunction: 0xFFB8E0
+			// => Version: 15, ReferencedFunction: 0xEB9730
 			15:function(){
 						this.PackMapLight =[
 				'position' , ['[]','float32',3],
@@ -26059,7 +26032,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 13, ReferencedFunction: 0xFFB780
+			// => Version: 13, ReferencedFunction: 0xEB95D0
 			13:function(){
 						this.PackMapLight =[
 				'position' , ['[]','float32',3],
@@ -26142,7 +26115,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 12, ReferencedFunction: 0xFFB4F0
+			// => Version: 12, ReferencedFunction: 0xEB9310
 			12:function(){
 						this.PackMapLight =[
 				'position' , ['[]','float32',3],
@@ -26225,7 +26198,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 11, ReferencedFunction: 0xFFB4F0
+			// => Version: 11, ReferencedFunction: 0xEB9310
 			11:function(){
 						this.PackMapLight =[
 				'position' , ['[]','float32',3],
@@ -26308,7 +26281,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 10, ReferencedFunction: 0xFFC0D0
+			// => Version: 10, ReferencedFunction: 0xEB9F20
 			10:function(){
 						this.PackMapLight =[
 				'position' , ['[]','float32',3],
@@ -26382,7 +26355,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 9, ReferencedFunction: 0xFFC010
+			// => Version: 9, ReferencedFunction: 0xEB9E60
 			9:function(){
 						this.PackMapLight =[
 				'position' , ['[]','float32',3],
@@ -26456,7 +26429,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 8, ReferencedFunction: 0xFFBF90
+			// => Version: 8, ReferencedFunction: 0xEB9DE0
 			8:function(){
 						this.PackMapLight =[
 				'position' , ['[]','float32',3],
@@ -26669,7 +26642,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 5, ReferencedFunction: 0xFFBE00
+			// => Version: 5, ReferencedFunction: 0xEB9C50
 			5:function(){
 						this.PackMapLight =[
 				'position' , ['[]','float32',3],
@@ -26722,7 +26695,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 4, ReferencedFunction: 0xFFBC00
+			// => Version: 4, ReferencedFunction: 0xEB9A50
 			4:function(){
 						this.PackMapLight =[
 				'position' , ['[]','float32',3],
@@ -26755,7 +26728,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 3, ReferencedFunction: 0xFFBAC0
+			// => Version: 3, ReferencedFunction: 0xEB9910
 			3:function(){
 						this.PackMapLight =[
 				'type' , 'uint32',
@@ -26788,7 +26761,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 2, ReferencedFunction: 0xFFB9A0
+			// => Version: 2, ReferencedFunction: 0xEB97F0
 			2:function(){
 						this.PackMapLight =[
 				'type' , 'uint32',
@@ -26834,7 +26807,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: msn, versions: 3, strucTab: 0x157D980 
+	/// Chunk: msn, versions: 3, strucTab: 0x1721258 
 	///==================================================
 	{
 		name:'msn',
@@ -26871,12 +26844,41 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: nvms, versions: 3, strucTab: 0x1580A24 
+	/// Chunk: nm15, versions: 4, strucTab: 0x1723E10 
 	///==================================================
 	{
-		name:'nvms',
+		name:'nm15',
 		versions:{
 
+
+			// => Version: 3, ReferencedFunction: 0x452AB0
+			3:function(){
+						this.PackMapNavMeshChunkV3 =[
+				'chunkIndex' , 'uint32',
+				'boundsMin' , ['[]','float32',3],
+				'boundsMax' , ['[]','float32',3],
+				'navMeshData', Utils.getArrayReader('uint8'),
+				'coarseGraphData', Utils.getArrayReader('uint8'),
+				'queryMediatorMoppData', Utils.getArrayReader('uint8'),
+						];
+
+						this.PackMapNavMeshMoverV3 =[
+				'chunkIndex' , 'uint32',
+				'mapPropId', Utils.getQWordReader(),
+				'navMeshData', Utils.getArrayReader('uint8'),
+				'coarseGraphData', Utils.getArrayReader('uint8'),
+				'mediatorData', Utils.getArrayReader('uint8'),
+						];
+
+						this.__root=this.PackMapNavMeshV3 =[
+				'boundsMin' , ['[]','float32',3],
+				'boundsMax' , ['[]','float32',3],
+				'chunkDims', ['[]', 'uint32', 2],
+				'chunkArray', Utils.getArrayReader(this.PackMapNavMeshChunkV3),
+				'dynamicArray', Utils.getArrayReader(this.PackMapNavMeshMoverV3),
+						];
+
+			},
 
 			// => Version: 2
 			2:function(){
@@ -26905,7 +26907,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 1, ReferencedFunction: 0xFFCF40
+			// => Version: 1, ReferencedFunction: 0xEB7230
 			1:function(){
 						this.PackMapNavMeshChunkV1 =[
 				'boundsMin' , ['[]','float32',3],
@@ -26946,12 +26948,38 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: nmex, versions: 3, strucTab: 0x1580D18 
+	/// Chunk: nmex, versions: 4, strucTab: 0x1723E40 
 	///==================================================
 	{
 		name:'nmex',
 		versions:{
 
+
+			// => Version: 3
+			3:function(){
+						this.PackMapNavMeshChunkExternalV3 =[
+				'boundsMin' , ['[]','float32',3],
+				'boundsMax' , ['[]','float32',3],
+				'filename' , Utils.getFileNameReader(),
+						];
+
+						this.PackMapNavMeshMoverV3 =[
+				'chunkIndex' , 'uint32',
+				'mapPropId', Utils.getQWordReader(),
+				'navMeshData', Utils.getArrayReader('uint8'),
+				'coarseGraphData', Utils.getArrayReader('uint8'),
+				'mediatorData', Utils.getArrayReader('uint8'),
+						];
+
+						this.__root=this.PackMapNavMeshExternalV3 =[
+				'boundsMin' , ['[]','float32',3],
+				'boundsMax' , ['[]','float32',3],
+				'chunkDims', ['[]', 'uint32', 2],
+				'chunkArray', Utils.getArrayReader(this.PackMapNavMeshChunkExternalV3),
+				'dynamicArray', Utils.getArrayReader(this.PackMapNavMeshMoverV3),
+						];
+
+			},
 
 			// => Version: 2
 			2:function(){
@@ -27015,7 +27043,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: obs, versions: 3, strucTab: 0x157D9A4 
+	/// Chunk: obs, versions: 3, strucTab: 0x172127C 
 	///==================================================
 	{
 		name:'obs',
@@ -27073,7 +27101,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: occ, versions: 1, strucTab: 0x157DA98 
+	/// Chunk: occ, versions: 1, strucTab: 0x17213F0 
 	///==================================================
 	{
 		name:'occ',
@@ -27098,7 +27126,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: octm, versions: 1, strucTab: 0x157DAA4 
+	/// Chunk: octm, versions: 1, strucTab: 0x17213FC 
 	///==================================================
 	{
 		name:'octm',
@@ -27119,7 +27147,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: parm, versions: 1, strucTab: 0x157DAB0 
+	/// Chunk: parm, versions: 1, strucTab: 0x1721458 
 	///==================================================
 	{
 		name:'parm',
@@ -27139,7 +27167,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: phys, versions: 11, strucTab: 0x157DE58 
+	/// Chunk: phys, versions: 11, strucTab: 0x17219F0 
 	///==================================================
 	{
 		name:'phys',
@@ -27210,7 +27238,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 9, ReferencedFunction: 0xFFB230
+			// => Version: 9, ReferencedFunction: 0xEBA150
 			9:function(){
 						this.PackMapPhysicsMeshV9 =[
 				'indexArray', Utils.getArrayReader('uint16'),
@@ -27538,7 +27566,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 6, ReferencedFunction: 0xFFB210
+			// => Version: 6, ReferencedFunction: 0xEBA130
 			6:function(){
 						this.PackMapPhysicsMeshV6 =[
 				'indexArray', Utils.getArrayReader('uint16'),
@@ -27664,7 +27692,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 5, ReferencedFunction: 0xFFB210
+			// => Version: 5, ReferencedFunction: 0xEBA130
 			5:function(){
 						this.PackMapPhysicsMeshV5 =[
 				'indexArray', Utils.getArrayReader('uint16'),
@@ -27786,7 +27814,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 4, ReferencedFunction: 0xFFB210
+			// => Version: 4, ReferencedFunction: 0xEBA130
 			4:function(){
 						this.PackMapPhysicsMeshV4 =[
 				'indexArray', Utils.getArrayReader('uint16'),
@@ -27952,7 +27980,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 2, ReferencedFunction: 0xFFB1F0
+			// => Version: 2, ReferencedFunction: 0xEBA110
 			2:function(){
 						this.PackMapPhysicsShapeDataV2 =[
 				'scale' , 'float32',
@@ -27989,7 +28017,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 1, ReferencedFunction: 0xFFB1D0
+			// => Version: 1, ReferencedFunction: 0xEBA0F0
 			1:function(){
 						this.PackMapPhysicsShapeDataV1 =[
 				'scale' , 'float32',
@@ -28021,7 +28049,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: pnvm, versions: 3, strucTab: 0x157DFC4 
+	/// Chunk: pnvm, versions: 3, strucTab: 0x172158C 
 	///==================================================
 	{
 		name:'pnvm',
@@ -28046,7 +28074,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 1, ReferencedFunction: 0xFFD110
+			// => Version: 1, ReferencedFunction: 0xEBB290
 			1:function(){
 						this.PackMapPhysicsNavMeshChunkV1 =[
 				'boundsMin' , ['[]','float32',3],
@@ -28086,7 +28114,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: prp2, versions: 22, strucTab: 0x157E208 
+	/// Chunk: prp2, versions: 22, strucTab: 0x1721F10 
 	///==================================================
 	{
 		name:'prp2',
@@ -28630,7 +28658,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 17, ReferencedFunction: 0xFFA800
+			// => Version: 17, ReferencedFunction: 0xEB6AF0
 			17:function(){
 						this.PackMapPropObjV17 =[
 				'filename' , Utils.getFileNameReader(),
@@ -28992,7 +29020,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 14, ReferencedFunction: 0xFFA790
+			// => Version: 14, ReferencedFunction: 0xEB6A80
 			14:function(){
 						this.PackMapPropObjV14 =[
 				'filename' , Utils.getFileNameReader(),
@@ -29167,7 +29195,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 12, ReferencedFunction: 0xFF95A0
+			// => Version: 12, ReferencedFunction: 0xEB5900
 			12:function(){
 						this.PackMapPropObjV12 =[
 				'filename' , Utils.getFileNameReader(),
@@ -29251,7 +29279,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 11, ReferencedFunction: 0xFF93A0
+			// => Version: 11, ReferencedFunction: 0xEB5740
 			11:function(){
 						this.PackMapPropObjV11 =[
 				'filename' , Utils.getFileNameReader(),
@@ -29307,7 +29335,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 10, ReferencedFunction: 0xFFACB0
+			// => Version: 10, ReferencedFunction: 0xEB6F90
 			10:function(){
 						this.PackMapPropObjV10 =[
 				'filename' , Utils.getFileNameReader(),
@@ -29355,7 +29383,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 9, ReferencedFunction: 0xFFAB60
+			// => Version: 9, ReferencedFunction: 0xEB6E40
 			9:function(){
 						this.PackMapPropObjV9 =[
 				'filename' , Utils.getFileNameReader(),
@@ -29451,7 +29479,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 7, ReferencedFunction: 0xFFAB10
+			// => Version: 7, ReferencedFunction: 0xEB6DF0
 			7:function(){
 						this.PackMapPropObjV7 =[
 				'filename' , Utils.getFileNameReader(),
@@ -29497,7 +29525,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 6, ReferencedFunction: 0xFFA960
+			// => Version: 6, ReferencedFunction: 0xEB6C50
 			6:function(){
 						this.PackMapPropObjV6 =[
 				'filename' , Utils.getFileNameReader(),
@@ -29666,7 +29694,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: reso, versions: 2, strucTab: 0x157EBD0 
+	/// Chunk: reso, versions: 2, strucTab: 0x17228C8 
 	///==================================================
 	{
 		name:'reso',
@@ -29715,14 +29743,14 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: rive, versions: 6, strucTab: 0x157EED8 
+	/// Chunk: rive, versions: 6, strucTab: 0x1722A90 
 	///==================================================
 	{
 		name:'rive',
 		versions:{
 
 
-			// => Version: 5, ReferencedFunction: 0xFFCFE0
+			// => Version: 5, ReferencedFunction: 0xEB50C0
 			5:function(){
 						this.PackMapRiverProperty =[
 				'type' , 'uint32',
@@ -30004,7 +30032,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: tlfs, versions: 1, strucTab: 0x157DBB8 
+	/// Chunk: tlfs, versions: 1, strucTab: 0x1721550 
 	///==================================================
 	{
 		name:'tlfs',
@@ -30028,7 +30056,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: shex, versions: 2, strucTab: 0x157F268 
+	/// Chunk: shex, versions: 2, strucTab: 0x1722DD0 
 	///==================================================
 	{
 		name:'shex',
@@ -30047,14 +30075,14 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: shor, versions: 4, strucTab: 0x157F380 
+	/// Chunk: shor, versions: 4, strucTab: 0x1722DE8 
 	///==================================================
 	{
 		name:'shor',
 		versions:{
 
 
-			// => Version: 3, ReferencedFunction: 0xFFB300
+			// => Version: 3, ReferencedFunction: 0xEBB250
 			3:function(){
 						this.MapShoreChain =[
 				'offset' , 'float32',
@@ -30102,7 +30130,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: snd, versions: 1, strucTab: 0x157F584 
+	/// Chunk: snd, versions: 1, strucTab: 0x1721AA4 
 	///==================================================
 	{
 		name:'snd',
@@ -30121,7 +30149,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: surf, versions: 3, strucTab: 0x157F560 
+	/// Chunk: surf, versions: 3, strucTab: 0x1722F58 
 	///==================================================
 	{
 		name:'surf',
@@ -30211,7 +30239,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: zon2, versions: 22, strucTab: 0x1580230 
+	/// Chunk: zon2, versions: 22, strucTab: 0x1723840 
 	///==================================================
 	{
 		name:'zon2',
@@ -30313,7 +30341,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 20, ReferencedFunction: 0xFFC530
+			// => Version: 20, ReferencedFunction: 0xEB7610
 			20:function(){
 						this.PackMapZoneModelV21 =[
 				'filename' , Utils.getFileNameReader(),
@@ -30403,7 +30431,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 19, ReferencedFunction: 0x5EABE0
+			// => Version: 19, ReferencedFunction: 0x452AB0
 			19:function(){
 						this.PackMapZoneModelV20 =[
 				'filename' , Utils.getFileNameReader(),
@@ -30493,7 +30521,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 18, ReferencedFunction: 0xFFC4A0
+			// => Version: 18, ReferencedFunction: 0xEB7580
 			18:function(){
 						this.PackMapZoneModelV19 =[
 				'filename' , Utils.getFileNameReader(),
@@ -30582,7 +30610,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 17, ReferencedFunction: 0xFFC3E0
+			// => Version: 17, ReferencedFunction: 0xEB74C0
 			17:function(){
 						this.PackMapZoneModelV18 =[
 				'filename' , Utils.getFileNameReader(),
@@ -30671,7 +30699,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 16, ReferencedFunction: 0xFFC1A0
+			// => Version: 16, ReferencedFunction: 0xEB72D0
 			16:function(){
 						this.PackMapZoneModelV17 =[
 				'filename' , Utils.getFileNameReader(),
@@ -30757,7 +30785,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 15, ReferencedFunction: 0xFFC1A0
+			// => Version: 15, ReferencedFunction: 0xEB72D0
 			15:function(){
 						this.PackMapZoneModelV16 =[
 				'filename' , Utils.getFileNameReader(),
@@ -31132,7 +31160,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: trn, versions: 15, strucTab: 0x157FD20 
+	/// Chunk: trn, versions: 15, strucTab: 0x17232A8 
 	///==================================================
 	{
 		name:'trn',
@@ -31203,7 +31231,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 13, ReferencedFunction: 0xFFCAA0
+			// => Version: 13, ReferencedFunction: 0xEBAF80
 			13:function(){
 						this.PackMapTerrainChunkV13 =[
 				'chunkFlags' , 'uint32',
@@ -31267,7 +31295,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 12, ReferencedFunction: 0xFFC990
+			// => Version: 12, ReferencedFunction: 0xEBAE60
 			12:function(){
 						this.PackMapTerrainChunkV12 =[
 				'chunkFlags' , 'uint32',
@@ -31328,7 +31356,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 11, ReferencedFunction: 0xFFC900
+			// => Version: 11, ReferencedFunction: 0xEBADD0
 			11:function(){
 						this.PackMapTerrainChunkV11 =[
 				'chunkFlags' , 'uint32',
@@ -31453,14 +31481,14 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: trni, versions: 4, strucTab: 0x157FDD4 
+	/// Chunk: trni, versions: 4, strucTab: 0x1723418 
 	///==================================================
 	{
 		name:'trni',
 		versions:{
 
 
-			// => Version: 3, ReferencedFunction: 0xFFCB00
+			// => Version: 3, ReferencedFunction: 0xEBAFE0
 			3:function(){
 						this.PagedImageLayerDataV3 =[
 				'rawDims', ['[]', 'uint32', 2],
@@ -31629,7 +31657,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: watr, versions: 1, strucTab: 0x157FE34 
+	/// Chunk: watr, versions: 1, strucTab: 0x172335C 
 	///==================================================
 	{
 		name:'watr',
@@ -31648,14 +31676,225 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: edit, versions: 15, strucTab: 0x1581920 
+	/// Chunk: edit, versions: 17, strucTab: 0x1724B58 
 	///==================================================
 	{
 		name:'edit',
 		versions:{
 
 
-			// => Version: 14, ReferencedFunction: 0x5EABE0
+			// => Version: 16, ReferencedFunction: 0x452AB0
+			16:function(){
+						this.MapEditLayerItem =[
+				'guid', Utils.getQWordReader(),
+				'moduleId' , 'uint32',
+				'layerFlags', Utils.getArrayReader('uint32'),
+						];
+
+						this.MapEditLayers =[
+				'layerStates', Utils.getArrayReader('uint8'),
+				'layerNames', Utils.getArrayReader(Utils.getString16Reader()),
+				'layerIds', Utils.getArrayReader('uint32'),
+				'items', Utils.getArrayReader(this.MapEditLayerItem),
+						];
+
+						this.PackMapEditAnnotation =[
+				'name', Utils.getString16Reader(),
+				'flags' , 'uint32',
+				'anchors', Utils.getArrayReader(['[]','float32',2]),
+				'zRange' , ['[]','float32',2],
+						];
+
+						this.PackMapEditAnnotations =[
+				'annotations', Utils.getArrayReader(this.PackMapEditAnnotation),
+						];
+
+						this.PackMapEditDirtyChunks =[
+				'dirtyFlags' , 'uint32',
+				'chunkCoord', ['[]', 'uint32', 2],
+						];
+
+						this.MapEditCamLocations =[
+				'attack' , 'float32',
+				'rotation' , 'float32',
+				'position' , ['[]','float32',3],
+				'name', Utils.getString16Reader(),
+						];
+
+						this.PackMapEditDirtyChunks =[
+				'flags' , 'uint32',
+				'position' , ['[]','float32',3],
+						];
+
+						this.PackMapEditSurfacePoly =[
+				'name', Utils.getString16Reader(),
+				'surfaceType' , 'uint32',
+				'vertices', Utils.getArrayReader(['[]','float32',2]),
+				'range' , ['[]','float32',2],
+						];
+
+						this.PackMapEditSurfaceRoadNode =[
+				'position' , ['[]','float32',3],
+				'radius' , 'float32',
+						];
+
+						this.PackMapEditSurfaceRoad =[
+				'name', Utils.getString16Reader(),
+				'surfaceType' , 'uint32',
+				'nodes', Utils.getArrayReader(this.PackMapEditSurfaceRoadNode),
+						];
+
+						this.PackMapEditNavmeshGenPropMode =[
+				'propId', Utils.getQWordReader(),
+				'mode' , 'uint8',
+				'animSequence', Utils.getQWordReader(),
+						];
+
+						this.PackMapEditNavMeshData =[
+				'floodPoints', Utils.getArrayReader(this.PackMapEditDirtyChunks),
+				'surfacePolys', Utils.getArrayReader(this.PackMapEditSurfacePoly),
+				'surfaceRoads', Utils.getArrayReader(this.PackMapEditSurfaceRoad),
+				'propModesForGeneration', Utils.getArrayReader(this.PackMapEditNavmeshGenPropMode),
+						];
+
+						this.MapEditSnapPoint =[
+				'guid', Utils.getQWordReader(),
+				'moduleId' , 'uint32',
+				'flags' , 'uint32',
+				'position' , ['[]','float32',3],
+				'rotation' , ['[]','float32',3],
+				'scale' , 'float32',
+						];
+
+						this.MapEditMeasureSpan =[
+				'name', Utils.getString16Reader(),
+				'substrateId0', Utils.getQWordReader(),
+				'substrateId1', Utils.getQWordReader(),
+				'substrateModuleId0' , 'uint32',
+				'substrateModuleId1' , 'uint32',
+				'position0' , ['[]','float32',3],
+				'position1' , ['[]','float32',3],
+				'limits' , ['[]','float32',3],
+						];
+
+						this.__root=this.MapEditData =[
+				'layers', this.MapEditLayers,
+				'annotations', this.PackMapEditAnnotations,
+				'dirtyChunks', Utils.getArrayReader(this.PackMapEditDirtyChunks),
+				'camLocations', Utils.getArrayReader(this.MapEditCamLocations),
+				'navMeshData', this.PackMapEditNavMeshData,
+				'snapPoints', Utils.getArrayReader(this.MapEditSnapPoint),
+				'measureSpans', Utils.getArrayReader(this.MapEditMeasureSpan),
+				'mapHome', Utils.getString16Reader(),
+				'homeSave' , 'uint8',
+				'reserved', Utils.getString16Reader(),
+						];
+
+			},
+
+			// => Version: 15, ReferencedFunction: 0x452AB0
+			15:function(){
+						this.MapEditLayerItem =[
+				'guid', Utils.getQWordReader(),
+				'moduleId' , 'uint32',
+				'layerFlags', Utils.getArrayReader('uint32'),
+						];
+
+						this.MapEditLayers =[
+				'layerStates', Utils.getArrayReader('uint8'),
+				'layerNames', Utils.getArrayReader(Utils.getString16Reader()),
+				'layerIds', Utils.getArrayReader('uint32'),
+				'items', Utils.getArrayReader(this.MapEditLayerItem),
+						];
+
+						this.PackMapEditAnnotation =[
+				'name', Utils.getString16Reader(),
+				'flags' , 'uint32',
+				'anchors', Utils.getArrayReader(['[]','float32',2]),
+				'zRange' , ['[]','float32',2],
+						];
+
+						this.PackMapEditAnnotations =[
+				'annotations', Utils.getArrayReader(this.PackMapEditAnnotation),
+						];
+
+						this.PackMapEditDirtyChunks =[
+				'dirtyFlags' , 'uint32',
+				'chunkCoord', ['[]', 'uint32', 2],
+						];
+
+						this.MapEditCamLocations =[
+				'attack' , 'float32',
+				'rotation' , 'float32',
+				'position' , ['[]','float32',3],
+				'name', Utils.getString16Reader(),
+						];
+
+						this.PackMapEditDirtyChunks =[
+				'flags' , 'uint32',
+				'position' , ['[]','float32',3],
+						];
+
+						this.PackMapEditSurfacePoly =[
+				'name', Utils.getString16Reader(),
+				'surfaceType' , 'uint32',
+				'vertices', Utils.getArrayReader(['[]','float32',2]),
+				'range' , ['[]','float32',2],
+						];
+
+						this.PackMapEditSurfaceRoadNode =[
+				'position' , ['[]','float32',3],
+				'radius' , 'float32',
+						];
+
+						this.PackMapEditSurfaceRoad =[
+				'name', Utils.getString16Reader(),
+				'surfaceType' , 'uint32',
+				'nodes', Utils.getArrayReader(this.PackMapEditSurfaceRoadNode),
+						];
+
+						this.PackMapEditNavMeshData =[
+				'floodPoints', Utils.getArrayReader(this.PackMapEditDirtyChunks),
+				'surfacePolys', Utils.getArrayReader(this.PackMapEditSurfacePoly),
+				'surfaceRoads', Utils.getArrayReader(this.PackMapEditSurfaceRoad),
+						];
+
+						this.MapEditSnapPoint =[
+				'guid', Utils.getQWordReader(),
+				'moduleId' , 'uint32',
+				'flags' , 'uint32',
+				'position' , ['[]','float32',3],
+				'rotation' , ['[]','float32',3],
+				'scale' , 'float32',
+						];
+
+						this.MapEditMeasureSpan =[
+				'name', Utils.getString16Reader(),
+				'substrateId0', Utils.getQWordReader(),
+				'substrateId1', Utils.getQWordReader(),
+				'substrateModuleId0' , 'uint32',
+				'substrateModuleId1' , 'uint32',
+				'position0' , ['[]','float32',3],
+				'position1' , ['[]','float32',3],
+				'limits' , ['[]','float32',3],
+						];
+
+						this.__root=this.MapEditData =[
+				'layers', this.MapEditLayers,
+				'annotations', this.PackMapEditAnnotations,
+				'dirtyChunks', Utils.getArrayReader(this.PackMapEditDirtyChunks),
+				'camLocations', Utils.getArrayReader(this.MapEditCamLocations),
+				'navMeshData', this.PackMapEditNavMeshData,
+				'snapPoints', Utils.getArrayReader(this.MapEditSnapPoint),
+				'measureSpans', Utils.getArrayReader(this.MapEditMeasureSpan),
+				'mapHome', Utils.getString16Reader(),
+				'homeSave' , 'uint8',
+				'reserved', Utils.getString16Reader(),
+						];
+
+			},
+
+			// => Version: 14, ReferencedFunction: 0x452AB0
 			14:function(){
 						this.MapEditLayerItem =[
 				'guid', Utils.getQWordReader(),
@@ -31745,7 +31984,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 13, ReferencedFunction: 0x5EABE0
+			// => Version: 13, ReferencedFunction: 0x452AB0
 			13:function(){
 						this.MapEditLayerItem =[
 				'guid', Utils.getQWordReader(),
@@ -31811,7 +32050,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 12, ReferencedFunction: 0x5EABE0
+			// => Version: 12, ReferencedFunction: 0x452AB0
 			12:function(){
 						this.MapEditLayerItem =[
 				'guid', Utils.getQWordReader(),
@@ -32186,7 +32425,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 5, ReferencedFunction: 0x5EABE0
+			// => Version: 5, ReferencedFunction: 0x452AB0
 			5:function(){
 						this.MapEditRegion =[
 				'regions', Utils.getArrayReader(Utils.getString16Reader()),
@@ -32237,7 +32476,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 4, ReferencedFunction: 0x5EABE0
+			// => Version: 4, ReferencedFunction: 0x452AB0
 			4:function(){
 						this.MapEditRegion =[
 				'regions', Utils.getArrayReader(Utils.getString16Reader()),
@@ -32329,14 +32568,14 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: dcal, versions: 10, strucTab: 0x1581508 
+	/// Chunk: dcal, versions: 10, strucTab: 0x1724720 
 	///==================================================
 	{
 		name:'dcal',
 		versions:{
 
 
-			// => Version: 9, ReferencedFunction: 0xFFCCC0
+			// => Version: 9, ReferencedFunction: 0xEBA2D0
 			9:function(){
 						this.PackMapDecalVertexV8 =[
 				'position' , ['[]','float32',3],
@@ -32417,7 +32656,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 7, ReferencedFunction: 0xFFCC60
+			// => Version: 7, ReferencedFunction: 0xEBA270
 			7:function(){
 						this.PackMapDecalVertexV6 =[
 				'position' , ['[]','float32',3],
@@ -32557,7 +32796,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 3, ReferencedFunction: 0xFFCBE0
+			// => Version: 3, ReferencedFunction: 0xEBA1F0
 			3:function(){
 						this.PackMapDecalV3 =[
 				'position' , ['[]','float32',3],
@@ -32630,7 +32869,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: exp, versions: 1, strucTab: 0x157D700 
+	/// Chunk: exp, versions: 1, strucTab: 0x1720B58 
 	///==================================================
 	{
 		name:'exp',
@@ -32654,12 +32893,52 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: nvms, versions: 3, strucTab: 0x1580D3C 
+	/// Chunk: pack, versions: 1, strucTab: 0x1721464 
 	///==================================================
 	{
-		name:'nvms',
+		name:'pack',
 		versions:{
 
+
+			// => Version: 0
+			0:function(){
+						this.MapVariant =[
+				'file', Utils.getString16Reader(),
+				'name', Utils.getString16Reader(),
+				'token', Utils.getQWordReader(),
+				'flags' , 'uint32',
+						];
+
+						this.__root=this.MapPackage =[
+				'baseFile' , Utils.getFileNameReader(),
+				'variants', Utils.getArrayReader(this.MapVariant),
+				'flags' , 'uint32',
+						];
+
+			},
+		}
+	},
+
+	///==================================================
+	/// Chunk: nm15, versions: 4, strucTab: 0x1723F40 
+	///==================================================
+	{
+		name:'nm15',
+		versions:{
+
+
+			// => Version: 3
+			3:function(){
+						this.__root=this.PackMapNavMeshChunkV3 =[
+				'chunkIndex' , 'uint32',
+				'boundsMin' , ['[]','float32',3],
+				'boundsMax' , ['[]','float32',3],
+				'navMeshData', Utils.getArrayReader('uint8'),
+				'coarseGraphData', Utils.getArrayReader('uint8'),
+				'queryMediatorMoppData', Utils.getArrayReader('uint8'),
+						];
+
+			},
 
 			// => Version: 2
 			2:function(){
@@ -32673,7 +32952,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 1, ReferencedFunction: 0xFFCEE0
+			// => Version: 1, ReferencedFunction: 0xEB71D0
 			1:function(){
 						this.__root=this.PackMapNavMeshChunkV1 =[
 				'boundsMin' , ['[]','float32',3],
@@ -32700,14 +32979,14 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: MODL, versions: 66, strucTab: 0x15CFF08 
+	/// Chunk: MODL, versions: 66, strucTab: 0x1772BB0 
 	///==================================================
 	{
 		name:'MODL',
 		versions:{
 
 
-			// => Version: 65, ReferencedFunction: 0x106D490
+			// => Version: 65, ReferencedFunction: 0xF2C4D0
 			65:function(){
 						this.ModelTextureDataV65 =[
 				'filename' , Utils.getFileNameReader(),
@@ -33482,7 +33761,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 63, ReferencedFunction: 0x106D3D0
+			// => Version: 63, ReferencedFunction: 0xF2C410
 			63:function(){
 						this.ModelTextureDataV63 =[
 				'filename' , Utils.getFileNameReader(),
@@ -33884,7 +34163,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 62, ReferencedFunction: 0x106D2B0
+			// => Version: 62, ReferencedFunction: 0xF2C2F0
 			62:function(){
 						this.ModelTextureDataV62 =[
 				'filename' , Utils.getFileNameReader(),
@@ -34286,7 +34565,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 61, ReferencedFunction: 0x106D250
+			// => Version: 61, ReferencedFunction: 0xF2C290
 			61:function(){
 						this.ModelTextureDataV61 =[
 				'filename' , Utils.getFileNameReader(),
@@ -34791,7 +35070,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 60, ReferencedFunction: 0x106CE50
+			// => Version: 60, ReferencedFunction: 0xF2BE90
 			60:function(){
 						this.ModelTextureDataV60 =[
 				'filename' , Utils.getFileNameReader(),
@@ -35282,7 +35561,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 59, ReferencedFunction: 0x106CE00
+			// => Version: 59, ReferencedFunction: 0xF2BE40
 			59:function(){
 						this.ModelTextureDataV59 =[
 				'filename' , Utils.getFileNameReader(),
@@ -35765,7 +36044,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 58, ReferencedFunction: 0x106CD10
+			// => Version: 58, ReferencedFunction: 0xF2BD50
 			58:function(){
 						this.ModelTextureDataV58 =[
 				'filename' , Utils.getFileNameReader(),
@@ -37192,7 +37471,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 55, ReferencedFunction: 0x106CC30
+			// => Version: 55, ReferencedFunction: 0xF2BC60
 			55:function(){
 						this.ModelTextureDataV55 =[
 				'filename' , Utils.getFileNameReader(),
@@ -38127,7 +38406,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 53, ReferencedFunction: 0x106C930
+			// => Version: 53, ReferencedFunction: 0xF2B980
 			53:function(){
 						this.ModelTextureDataV53 =[
 				'filename' , Utils.getFileNameReader(),
@@ -38585,7 +38864,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 52, ReferencedFunction: 0x106C7E0
+			// => Version: 52, ReferencedFunction: 0xF2B830
 			52:function(){
 						this.ModelTextureDataV52 =[
 				'filename' , Utils.getFileNameReader(),
@@ -39041,7 +39320,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 51, ReferencedFunction: 0x106C560
+			// => Version: 51, ReferencedFunction: 0xF2B5B0
 			51:function(){
 						this.ModelTextureDataV51 =[
 				'filename' , Utils.getFileNameReader(),
@@ -39488,7 +39767,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 50, ReferencedFunction: 0x106C520
+			// => Version: 50, ReferencedFunction: 0xF2B570
 			50:function(){
 						this.ModelTextureDataV50 =[
 				'filename' , Utils.getFileNameReader(),
@@ -40357,7 +40636,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 48, ReferencedFunction: 0x106BD20
+			// => Version: 48, ReferencedFunction: 0xF2ADE0
 			48:function(){
 						this.ModelTextureDataV48 =[
 				'filename' , Utils.getFileNameReader(),
@@ -40785,7 +41064,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 47, ReferencedFunction: 0x106BAA0
+			// => Version: 47, ReferencedFunction: 0xF2AB60
 			47:function(){
 						this.ModelTextureDataV47 =[
 				'filename' , Utils.getFileNameReader(),
@@ -41206,7 +41485,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 46, ReferencedFunction: 0x106BA10
+			// => Version: 46, ReferencedFunction: 0xF2AAD0
 			46:function(){
 						this.ModelTextureDataV46 =[
 				'filename' , Utils.getFileNameReader(),
@@ -42042,7 +42321,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 44, ReferencedFunction: 0x106B850
+			// => Version: 44, ReferencedFunction: 0xF2A910
 			44:function(){
 						this.ModelTextureDataV44 =[
 				'filename' , Utils.getFileNameReader(),
@@ -43661,7 +43940,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 40, ReferencedFunction: 0x106B800
+			// => Version: 40, ReferencedFunction: 0xF2A8C0
 			40:function(){
 						this.ModelTextureDataV40 =[
 				'filename' , Utils.getFileNameReader(),
@@ -44053,7 +44332,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 39, ReferencedFunction: 0x106B750
+			// => Version: 39, ReferencedFunction: 0xF2A810
 			39:function(){
 						this.ModelTextureDataV39 =[
 				'filename' , Utils.getFileNameReader(),
@@ -44442,7 +44721,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 38, ReferencedFunction: 0x106B5D0
+			// => Version: 38, ReferencedFunction: 0xF2A6A0
 			38:function(){
 						this.ModelTextureDataV38 =[
 				'filename' , Utils.getFileNameReader(),
@@ -45218,7 +45497,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 36, ReferencedFunction: 0x106B490
+			// => Version: 36, ReferencedFunction: 0xF2A560
 			36:function(){
 						this.ModelTextureDataV36 =[
 				'filename' , Utils.getFileNameReader(),
@@ -45607,7 +45886,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 35, ReferencedFunction: 0x106B330
+			// => Version: 35, ReferencedFunction: 0xF2A400
 			35:function(){
 						this.ModelTextureDataV35 =[
 				'filename' , Utils.getFileNameReader(),
@@ -45988,7 +46267,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 34, ReferencedFunction: 0x106B230
+			// => Version: 34, ReferencedFunction: 0xF2A2E0
 			34:function(){
 						this.ModelTextureDataV34 =[
 				'filename' , Utils.getFileNameReader(),
@@ -47724,7 +48003,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 29, ReferencedFunction: 0x106B180
+			// => Version: 29, ReferencedFunction: 0xF2A230
 			29:function(){
 						this.ModelTextureDataV29 =[
 				'filename' , Utils.getFileNameReader(),
@@ -48606,7 +48885,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 26, ReferencedFunction: 0x106ADD0
+			// => Version: 26, ReferencedFunction: 0xF29DB0
 			26:function(){
 						this.ModelTextureDataV26 =[
 				'filename' , Utils.getFileNameReader(),
@@ -48890,7 +49169,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 25, ReferencedFunction: 0x106AC30
+			// => Version: 25, ReferencedFunction: 0xF29C20
 			25:function(){
 						this.ModelTextureDataV25 =[
 				'filename' , Utils.getFileNameReader(),
@@ -49176,7 +49455,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 24, ReferencedFunction: 0x106ABD0
+			// => Version: 24, ReferencedFunction: 0xF29BC0
 			24:function(){
 						this.ModelTextureDataV24 =[
 				'filename' , Utils.getFileNameReader(),
@@ -49461,7 +49740,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 23, ReferencedFunction: 0x106AB60
+			// => Version: 23, ReferencedFunction: 0xF29B50
 			23:function(){
 						this.ModelTextureDataV23 =[
 				'filename' , Utils.getFileNameReader(),
@@ -50029,7 +50308,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 21, ReferencedFunction: 0x106AAA0
+			// => Version: 21, ReferencedFunction: 0xF29A90
 			21:function(){
 						this.ModelTextureDataV21 =[
 				'filename' , Utils.getFileNameReader(),
@@ -50313,7 +50592,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 20, ReferencedFunction: 0x106A8F0
+			// => Version: 20, ReferencedFunction: 0xF298E0
 			20:function(){
 						this.ModelTextureDataV20 =[
 				'filename' , Utils.getFileNameReader(),
@@ -52328,7 +52607,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 11, ReferencedFunction: 0x106A6B0
+			// => Version: 11, ReferencedFunction: 0xF296A0
 			11:function(){
 						this.ModelTextureDataV11 =[
 				'filename' , Utils.getFileNameReader(),
@@ -52854,7 +53133,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 8, ReferencedFunction: 0x106D750
+			// => Version: 8, ReferencedFunction: 0xF2C790
 			8:function(){
 						this.ModelTextureDataV8 =[
 				'filename' , Utils.getFileNameReader(),
@@ -53221,7 +53500,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 6, ReferencedFunction: 0x106CE90
+			// => Version: 6, ReferencedFunction: 0xF2BED0
 			6:function(){
 						this.ModelTextureDataV6 =[
 				'filename' , Utils.getFileNameReader(),
@@ -54425,14 +54704,14 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: ANIM, versions: 26, strucTab: 0x15D0220 
+	/// Chunk: ANIM, versions: 26, strucTab: 0x1772EC8 
 	///==================================================
 	{
 		name:'ANIM',
 		versions:{
 
 
-			// => Version: 25, ReferencedFunction: 0x10685D0
+			// => Version: 25, ReferencedFunction: 0xF27630
 			25:function(){
 						this.PackGrannyAnimationTypeV1 =[
 				'animation', Utils.getArrayReader('uint8'),
@@ -54576,7 +54855,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 24, ReferencedFunction: 0x10683E0
+			// => Version: 24, ReferencedFunction: 0xF27440
 			24:function(){
 						this.PackGrannyAnimationTypeV0 =[
 				'animation', Utils.getArrayReader('uint8'),
@@ -54719,7 +54998,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 23, ReferencedFunction: 0x1068240
+			// => Version: 23, ReferencedFunction: 0xF272A0
 			23:function(){
 						this.PackGrannyAnimationTypeV0 =[
 				'animation', Utils.getArrayReader('uint8'),
@@ -55364,7 +55643,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 18, ReferencedFunction: 0x1068190
+			// => Version: 18, ReferencedFunction: 0xF271F0
 			18:function(){
 						this.PackGrannyAnimationTypeV0 =[
 				'animation', Utils.getArrayReader('uint8'),
@@ -55484,7 +55763,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 17, ReferencedFunction: 0x1067C30
+			// => Version: 17, ReferencedFunction: 0xF26BD0
 			17:function(){
 						this.PackGrannyAnimationTypeV0 =[
 				'animation', Utils.getArrayReader('uint8'),
@@ -55819,7 +56098,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 14, ReferencedFunction: 0x10679E0
+			// => Version: 14, ReferencedFunction: 0xF26950
 			14:function(){
 						this.ModelVisTrackDataV22 =[
 				'boneToken', Utils.getQWordReader(),
@@ -56007,7 +56286,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 12, ReferencedFunction: 0x1067930
+			// => Version: 12, ReferencedFunction: 0xF268A0
 			12:function(){
 						this.ModelVisTrackDataV20 =[
 				'boneIndex' , 'uint32',
@@ -56869,7 +57148,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: COLL, versions: 5, strucTab: 0x15D03A8 
+	/// Chunk: COLL, versions: 5, strucTab: 0x1773030 
 	///==================================================
 	{
 		name:'COLL',
@@ -56937,7 +57216,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 3, ReferencedFunction: 0x1068760
+			// => Version: 3, ReferencedFunction: 0xF277D0
 			3:function(){
 						this.ModelCollisionKeyFrameV9 =[
 				'time' , 'float32',
@@ -57127,14 +57406,14 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: GR2S, versions: 5, strucTab: 0x15D03E4 
+	/// Chunk: GR2S, versions: 5, strucTab: 0x177309C 
 	///==================================================
 	{
 		name:'GR2S',
 		versions:{
 
 
-			// => Version: 4, ReferencedFunction: 0x1069BD0
+			// => Version: 4, ReferencedFunction: 0xF28C30
 			4:function(){
 						this.ModelGr2DataV4 =[
 				'filename', Utils.getString16Reader(),
@@ -57148,7 +57427,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 3, ReferencedFunction: 0x1069840
+			// => Version: 3, ReferencedFunction: 0xF28880
 			3:function(){
 						this.ModelGr2DataV3 =[
 				'filename', Utils.getString16Reader(),
@@ -57162,7 +57441,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 2, ReferencedFunction: 0x10692C0
+			// => Version: 2, ReferencedFunction: 0xF282D0
 			2:function(){
 						this.ModelGr2DataV2 =[
 				'filename', Utils.getString16Reader(),
@@ -57205,14 +57484,14 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: TOOL, versions: 17, strucTab: 0x15D0520 
+	/// Chunk: TOOL, versions: 17, strucTab: 0x17730D8 
 	///==================================================
 	{
 		name:'TOOL',
 		versions:{
 
 
-			// => Version: 16, ReferencedFunction: 0x106A400
+			// => Version: 16, ReferencedFunction: 0xF29440
 			16:function(){
 						this.ModelToolCloudV16 =[
 				'cloudNames', Utils.getArrayReader(Utils.getStringReader()),
@@ -57471,7 +57750,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 11, ReferencedFunction: 0x106A3E0
+			// => Version: 11, ReferencedFunction: 0xF29420
 			11:function(){
 						this.ModelToolCloudV11 =[
 				'cloudNames', Utils.getArrayReader(Utils.getStringReader()),
@@ -57507,7 +57786,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 10, ReferencedFunction: 0x106A5A0
+			// => Version: 10, ReferencedFunction: 0xF29590
 			10:function(){
 						this.ModelToolCloudV10 =[
 				'cloudNames', Utils.getArrayReader(Utils.getStringReader()),
@@ -57660,7 +57939,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 6, ReferencedFunction: 0x106A560
+			// => Version: 6, ReferencedFunction: 0xF29550
 			6:function(){
 						this.ModelToolCloudV6 =[
 				'cloudNames', Utils.getArrayReader(Utils.getStringReader()),
@@ -57688,7 +57967,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 5, ReferencedFunction: 0x106A530
+			// => Version: 5, ReferencedFunction: 0xF29520
 			5:function(){
 						this.ModelToolCloudV5 =[
 				'cloudNames', Utils.getArrayReader(Utils.getStringReader()),
@@ -57855,14 +58134,14 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: ROOT, versions: 2, strucTab: 0x15D0638 
+	/// Chunk: ROOT, versions: 2, strucTab: 0x17731F0 
 	///==================================================
 	{
 		name:'ROOT',
 		versions:{
 
 
-			// => Version: 1, ReferencedFunction: 0x106A040
+			// => Version: 1, ReferencedFunction: 0xF290C0
 			1:function(){
 						this.ModelRootMotionV1 =[
 				'sequence', Utils.getQWordReader(),
@@ -57894,7 +58173,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: GAME, versions: 1, strucTab: 0x15D05EC 
+	/// Chunk: GAME, versions: 1, strucTab: 0x17731A4 
 	///==================================================
 	{
 		name:'GAME',
@@ -57912,7 +58191,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: ICON, versions: 1, strucTab: 0x15D06A0 
+	/// Chunk: ICON, versions: 1, strucTab: 0x1773248 
 	///==================================================
 	{
 		name:'ICON',
@@ -57930,14 +58209,14 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: SKEL, versions: 2, strucTab: 0x15D06AC 
+	/// Chunk: SKEL, versions: 2, strucTab: 0x1773254 
 	///==================================================
 	{
 		name:'SKEL',
 		versions:{
 
 
-			// => Version: 1, ReferencedFunction: 0x106A090
+			// => Version: 1, ReferencedFunction: 0xF29110
 			1:function(){
 						this.ModelTransformData =[
 				'Flags' , 'uint32',
@@ -58148,7 +58427,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: PRPS, versions: 1, strucTab: 0x15D06C4 
+	/// Chunk: PRPS, versions: 1, strucTab: 0x177326C 
 	///==================================================
 	{
 		name:'PRPS',
@@ -58182,14 +58461,14 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: GEOM, versions: 2, strucTab: 0x15D06D0 
+	/// Chunk: GEOM, versions: 2, strucTab: 0x1773278 
 	///==================================================
 	{
 		name:'GEOM',
 		versions:{
 
 
-			// => Version: 1, ReferencedFunction: 0x1069000
+			// => Version: 1, ReferencedFunction: 0xF28010
 			1:function(){
 						this.ModelMeshMorphVertV66 =[
 				'index', 'uint16',
@@ -58313,7 +58592,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: EXPA, versions: 4, strucTab: 0x15D06E8 
+	/// Chunk: EXPA, versions: 4, strucTab: 0x1773290 
 	///==================================================
 	{
 		name:'EXPA',
@@ -58411,7 +58690,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: PHYS, versions: 9, strucTab: 0x168D668 
+	/// Chunk: PHYS, versions: 9, strucTab: 0x1830478 
 	///==================================================
 	{
 		name:'PHYS',
@@ -58766,7 +59045,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: ANIM, versions: 3, strucTab: 0x168D6D4 
+	/// Chunk: ANIM, versions: 3, strucTab: 0x18304E4 
 	///==================================================
 	{
 		name:'ANIM',
@@ -58910,7 +59189,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: GAME, versions: 7, strucTab: 0x168D6F8 
+	/// Chunk: GAME, versions: 7, strucTab: 0x1830508 
 	///==================================================
 	{
 		name:'GAME',
@@ -59209,7 +59488,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: SKEL, versions: 4, strucTab: 0x168D74C 
+	/// Chunk: SKEL, versions: 4, strucTab: 0x183055C 
 	///==================================================
 	{
 		name:'SKEL',
@@ -59382,7 +59661,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: MFST, versions: 7, strucTab: 0x1691408 
+	/// Chunk: MFST, versions: 7, strucTab: 0x18341D0 
 	///==================================================
 	{
 		name:'MFST',
@@ -59588,7 +59867,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: ARMF, versions: 2, strucTab: 0x1691468 
+	/// Chunk: ARMF, versions: 2, strucTab: 0x1834230 
 	///==================================================
 	{
 		name:'ARMF',
@@ -59639,7 +59918,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: TKAC, versions: 1, strucTab: 0x16923B8 
+	/// Chunk: TKAC, versions: 1, strucTab: 0x1835188 
 	///==================================================
 	{
 		name:'TKAC',
@@ -59663,7 +59942,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: main, versions: 1, strucTab: 0x16E3B90 
+	/// Chunk: main, versions: 1, strucTab: 0x187F4D0 
 	///==================================================
 	{
 		name:'main',
@@ -59690,7 +59969,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: main, versions: 1, strucTab: 0x16E3BA8 
+	/// Chunk: main, versions: 1, strucTab: 0x187F4E8 
 	///==================================================
 	{
 		name:'main',
@@ -59710,7 +59989,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: main, versions: 2, strucTab: 0x16E3BC0 
+	/// Chunk: main, versions: 2, strucTab: 0x187F500 
 	///==================================================
 	{
 		name:'main',
@@ -59749,12 +60028,157 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: comp, versions: 19, strucTab: 0x16E8D38 
+	/// Chunk: comp, versions: 20, strucTab: 0x18840B0 
 	///==================================================
 	{
 		name:'comp',
 		versions:{
 
+
+			// => Version: 19
+			19:function(){
+						this.PackCompositeBlitRectSetV19 =[
+				'name', Utils.getString16Reader(),
+				'size', ['[]', 'uint32', 2],
+				'rectIndex', Utils.getArrayReader('uint8'),
+				'rectArray', Utils.getArrayReader(['[]','uint32',4]),
+						];
+
+						this.PackCompositeBoneScaleParamV19 =[
+				'name', Utils.getQWordReader(),
+				'flags' , 'uint8',
+				'max' , 'float32',
+				'min' , 'float32',
+				'rotate' , ['[]','float32',3],
+				'scale' , ['[]','float32',3],
+				'translate' , ['[]','float32',3],
+						];
+
+						this.PackCompositeBoneScaleRegionV19 =[
+				'name', Utils.getQWordReader(),
+				'value' , 'float32',
+				'Bone', Utils.getArrayReader(this.PackCompositeBoneScaleParamV19),
+						];
+
+						this.PackCompositeMorphWeightV19 =[
+				'name', Utils.getQWordReader(),
+				'value' , 'float32',
+						];
+
+						this.PackCompositeBoneScaleV19 =[
+				'BodyRegion', Utils.getArrayReader(this.PackCompositeBoneScaleRegionV19),
+				'MorphWeight', Utils.getArrayReader(this.PackCompositeMorphWeightV19),
+						];
+
+						this.PackCompositeBoneScaleFileV19 =[
+				'fileName', Utils.getString16Reader(),
+						];
+
+						this.PackCompositeFileDataV19 =[
+				'name', Utils.getQWordReader(),
+				'type' , 'uint8',
+				'flags' , 'uint8',
+				'animRoleOverride', Utils.getQWordReader(),
+				'meshBase', Utils.getFileNameReader(),
+				'meshOverlap', Utils.getFileNameReader(),
+				'maskDye1', Utils.getFileNameReader(),
+				'maskDye2', Utils.getFileNameReader(),
+				'maskDye3', Utils.getFileNameReader(),
+				'maskDye4', Utils.getFileNameReader(),
+				'maskCut', Utils.getFileNameReader(),
+				'textureBase', Utils.getFileNameReader(),
+				'textureNormal', Utils.getFileNameReader(),
+				'dyeFlags' , 'uint32',
+				'hideFlags' , 'uint32',
+				'skinFlags' , 'uint32',
+				'blitRectIndex' , 'uint8',
+						];
+
+						this.PackCompositeSkinPatternV19 =[
+				'chest', Utils.getFileNameReader(),
+				'face', Utils.getFileNameReader(),
+				'feet', Utils.getFileNameReader(),
+				'hands', Utils.getFileNameReader(),
+				'legs', Utils.getFileNameReader(),
+				'ears', Utils.getFileNameReader(),
+						];
+
+						this.PackCompositeSkinStyleV19 =[
+				'chest', Utils.getQWordReader(),
+				'feet', Utils.getQWordReader(),
+				'hands', Utils.getQWordReader(),
+				'legs', Utils.getQWordReader(),
+						];
+
+						this.PackCompositeColorV19 =[
+				'brightness' , 'uint8',
+				'contrast' , 'uint8',
+				'hue' , 'uint8',
+				'saturation' , 'uint8',
+				'lightness' , 'uint8',
+						];
+
+						this.PackCompositeVariantComponentV19 =[
+				'nameToken', Utils.getQWordReader(),
+				'color0', this.PackCompositeColorV19,
+				'color1', this.PackCompositeColorV19,
+				'color2', this.PackCompositeColorV19,
+				'color3', this.PackCompositeColorV19,
+						];
+
+						this.PackCompositeVariantV19 =[
+				'token', Utils.getQWordReader(),
+				'boneScaleIndex' , 'uint32',
+				'components', Utils.getArrayReader(this.PackCompositeVariantComponentV19),
+				'eyeColor', this.PackCompositeColorV19,
+				'hairColor', this.PackCompositeColorV19,
+				'hairColor2', this.PackCompositeColorV19,
+				'patternColor', this.PackCompositeColorV19,
+				'skinColor', this.PackCompositeColorV19,
+				'skinIndex' , 'uint32',
+				'skinStyle' , 'uint32',
+						];
+
+						this.PackCompositeAnimOverrideV19 =[
+				'animRole', Utils.getQWordReader(),
+				'filepath', Utils.getFileNameReader(),
+						];
+
+						this.PackCompositeRaceDataV19 =[
+				'name', Utils.getString16Reader(),
+				'nameToken', Utils.getQWordReader(),
+				'baseHeadToken', Utils.getQWordReader(),
+				'beard', Utils.getArrayReader(Utils.getQWordReader()),
+				'bodyBoneScales', Utils.getArrayReader(this.PackCompositeBoneScaleV19),
+				'bodyBoneScaleFiles', Utils.getArrayReader(this.PackCompositeBoneScaleFileV19),
+				'ears', Utils.getArrayReader(Utils.getQWordReader()),
+				'eyeColorPalette', Utils.getString16Reader(),
+				'faceBoneScales', Utils.getArrayReader(this.PackCompositeBoneScaleV19),
+				'faces', Utils.getArrayReader(Utils.getQWordReader()),
+				'fileData', Utils.getArrayReader(this.PackCompositeFileDataV19),
+				'flags' , 'uint32',
+				'hairStyles', Utils.getArrayReader(Utils.getQWordReader()),
+				'hairColorPalette', Utils.getString16Reader(),
+				'skeletonFile', Utils.getFileNameReader(),
+				'skinPatterns', Utils.getArrayReader(this.PackCompositeSkinPatternV19),
+				'skinColorPalette', Utils.getString16Reader(),
+				'skinPatternPalette', Utils.getString16Reader(),
+				'skinStyles', Utils.getArrayReader(this.PackCompositeSkinStyleV19),
+				'type' , 'uint32',
+				'variantRefRace', Utils.getQWordReader(),
+				'variants', Utils.getArrayReader(this.PackCompositeVariantV19),
+				'animOverrides', Utils.getArrayReader(this.PackCompositeAnimOverrideV19),
+						];
+
+						this.__root=this.PackCompositeV19 =[
+				'armorColorIds', Utils.getArrayReader('uint32'),
+				'blitRects', Utils.getArrayReader(this.PackCompositeBlitRectSetV19),
+				'boneScales', Utils.getArrayReader(this.PackCompositeBoneScaleV19),
+				'raceSexData', Utils.getArrayReader(this.PackCompositeRaceDataV19),
+				'configVersion', 'uint16',
+						];
+
+			},
 
 			// => Version: 18
 			18:function(){
@@ -59900,7 +60324,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 17, ReferencedFunction: 0x1228AB0
+			// => Version: 17, ReferencedFunction: 0x1103270
 			17:function(){
 						this.PackCompositeBlitRectSetV17 =[
 				'name', Utils.getString16Reader(),
@@ -60043,7 +60467,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 16, ReferencedFunction: 0x1228710
+			// => Version: 16, ReferencedFunction: 0x1102ED0
 			16:function(){
 						this.PackCompositeBlitRectSetV16 =[
 				'name', Utils.getString16Reader(),
@@ -60700,7 +61124,7 @@ window.T3D.Formats = [
 
 			},
 
-			// => Version: 11, ReferencedFunction: 0x12286D0
+			// => Version: 11, ReferencedFunction: 0x1102E90
 			11:function(){
 						this.PackCompositeBlitRectSetV11 =[
 				'name', Utils.getString16Reader(),
@@ -61748,7 +62172,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: Main, versions: 1, strucTab: 0x16E8FE8 
+	/// Chunk: Main, versions: 1, strucTab: 0x18841DC 
 	///==================================================
 	{
 		name:'Main',
@@ -61821,7 +62245,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: Main, versions: 1, strucTab: 0x16E900C 
+	/// Chunk: Main, versions: 1, strucTab: 0x1884314 
 	///==================================================
 	{
 		name:'Main',
@@ -61844,14 +62268,37 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: anim, versions: 3, strucTab: 0x16E9280 
+	/// Chunk: anim, versions: 4, strucTab: 0x18843B0 
 	///==================================================
 	{
 		name:'anim',
 		versions:{
 
 
-			// => Version: 2, ReferencedFunction: 0x1228B70
+			// => Version: 3
+			3:function(){
+						this.PackEmoteTimingV3 =[
+				'ModelFile', Utils.getFileNameReader(),
+				'BlendIn' , 'float32',
+				'BlendOut' , 'float32',
+				'IntroDuration' , 'uint32',
+				'LoopDuration' , 'uint32',
+				'OutroDuration' , 'uint32',
+				'StartOffset' , 'uint32',
+						];
+
+						this.PackEmoteAnimationV3 =[
+				'Token', Utils.getQWordReader(),
+				'Timing', Utils.getArrayReader(this.PackEmoteTimingV3),
+						];
+
+						this.__root=this.PackEmoteAnimationsV3 =[
+				'Animation', Utils.getArrayReader(this.PackEmoteAnimationV3),
+						];
+
+			},
+
+			// => Version: 2, ReferencedFunction: 0x1103330
 			2:function(){
 						this.PackEmoteTimingV2 =[
 				'ModelFile', Utils.getFileNameReader(),
@@ -61917,12 +62364,100 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: mach, versions: 1, strucTab: 0x16E9174 
+	/// Chunk: eula, versions: 1, strucTab: 0x18843EC 
+	///==================================================
+	{
+		name:'eula',
+		versions:{
+
+
+			// => Version: 0
+			0:function(){
+						this.PackEulaLanguageV0 =[
+				'Language' , 'uint8',
+				'Text', Utils.getString16Reader(),
+						];
+
+						this.__root=this.PackEulaV0 =[
+				'Language', Utils.getArrayReader(this.PackEulaLanguageV0),
+				'Version' , 'uint8',
+						];
+
+			},
+		}
+	},
+
+	///==================================================
+	/// Chunk: mach, versions: 2, strucTab: 0x1884620 
 	///==================================================
 	{
 		name:'mach',
 		versions:{
 
+
+			// => Version: 1
+			1:function(){
+						this.PackAnimMachineActionV1 =[
+				'actionData', Unknown0x1C,
+						];
+
+						this.PackAnimMachineActionBlockV1 =[
+				'actions', Utils.getArrayReader(this.PackAnimMachineActionV1),
+						];
+
+						this.PackAnimMachineActionVariantV1 =[
+				'token', Utils.getQWordReader(),
+				'actionBlock', Utils.getPointerReader(this.PackAnimMachineActionBlockV1),
+						];
+
+						this.PackAnimMachineActionVariantBlockV1 =[
+				'actionVariants', Utils.getArrayReader(this.PackAnimMachineActionVariantV1),
+						];
+
+						this.PackAnimMachineTransitionVariantV1 =[
+				'token', Utils.getQWordReader(),
+				'actionBlock', Utils.getPointerReader(this.PackAnimMachineActionBlockV1),
+						];
+
+						this.PackAnimMachineTransitionV1 =[
+				'name', Utils.getString16Reader(),
+				'targetStateName', Utils.getString16Reader(),
+				'actionBlock', Utils.getPointerReader(this.PackAnimMachineActionBlockV1),
+				'variants', Utils.getArrayReader(this.PackAnimMachineTransitionVariantV1),
+						];
+
+						this.PackAnimMachineStateVariantV1 =[
+				'token', Utils.getQWordReader(),
+				'actionBlock', Utils.getPointerReader(this.PackAnimMachineActionBlockV1),
+				'actionVariantBlock', Utils.getPointerReader(this.PackAnimMachineActionVariantBlockV1),
+				'transitions', Utils.getArrayReader(this.PackAnimMachineTransitionV1),
+						];
+
+						this.PackAnimMachineStateV1 =[
+				'name', Utils.getString16Reader(),
+				'actionBlock', Utils.getPointerReader(this.PackAnimMachineActionBlockV1),
+				'actionVariantBlock', Utils.getPointerReader(this.PackAnimMachineActionVariantBlockV1),
+				'transitions', Utils.getArrayReader(this.PackAnimMachineTransitionV1),
+				'variants', Utils.getArrayReader(this.PackAnimMachineStateVariantV1),
+						];
+
+						this.PackAnimMachineV1 =[
+				'states', Utils.getArrayReader(this.PackAnimMachineStateV1),
+						];
+
+						this.PackAnimModelV1 =[
+				'modelFileId', Utils.getFileNameReader(),
+				'modelFileRaw', Utils.getString16Reader(),
+				'machineIndex' , 'uint32',
+				'listeners', ['[]', 'uint8', 16],
+						];
+
+						this.__root=this.PackAnimMachinesV1 =[
+				'machines', Utils.getArrayReader(this.PackAnimMachineV1),
+				'models', Utils.getArrayReader(this.PackAnimModelV1),
+						];
+
+			},
 
 			// => Version: 0
 			0:function(){
@@ -61990,7 +62525,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: fall, versions: 1, strucTab: 0x16E9000 
+	/// Chunk: fall, versions: 1, strucTab: 0x1884460 
 	///==================================================
 	{
 		name:'fall',
@@ -62013,7 +62548,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: seqn, versions: 1, strucTab: 0x16E8E1C 
+	/// Chunk: seqn, versions: 1, strucTab: 0x1884454 
 	///==================================================
 	{
 		name:'seqn',
@@ -62076,7 +62611,7 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: cnfg, versions: 1, strucTab: 0x16E9370 
+	/// Chunk: cnfg, versions: 1, strucTab: 0x1884668 
 	///==================================================
 	{
 		name:'cnfg',
@@ -62137,38 +62672,14 @@ window.T3D.Formats = [
 	},
 
 	///==================================================
-	/// Chunk: eula, versions: 1, strucTab: 0x16E93AC 
-	///==================================================
-	{
-		name:'eula',
-		versions:{
-
-
-			// => Version: 0
-			0:function(){
-						this.PackEulaLanguageV0 =[
-				'Language' , 'uint8',
-				'Text', Utils.getString16Reader(),
-						];
-
-						this.__root=this.PackEulaV0 =[
-				'Language', Utils.getArrayReader(this.PackEulaLanguageV0),
-				'Version' , 'uint8',
-						];
-
-			},
-		}
-	},
-
-	///==================================================
-	/// Chunk: mfst, versions: 3, strucTab: 0x1743B8C 
+	/// Chunk: mfst, versions: 3, strucTab: 0x18FBDC4 
 	///==================================================
 	{
 		name:'mfst',
 		versions:{
 
 
-			// => Version: 2, ReferencedFunction: 0x13458C0
+			// => Version: 2, ReferencedFunction: 0x1408880
 			2:function(){
 						this.ContentMapRedirector =[
 				'mapGUID', ['[]', 'uint8', 16],

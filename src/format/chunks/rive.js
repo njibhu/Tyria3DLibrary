@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: rive, versions: 6, strucTab: 0x157EED8 
+    ///Chunk: rive, versions: 6, strucTab: 0x1722A90 
     ///==================================================
 
 
@@ -11,7 +11,7 @@ module.exports = [
         versions: {
 
 
-            // => Version: 5, ReferencedFunction: 0xFFCFE0
+            // => Version: 5, ReferencedFunction: 0xEB50C0
             5: function() {
                 this.PackMapRiverProperty = [
                     'type', 'uint32',

@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: prp2, versions: 22, strucTab: 0x157E208 
+    ///Chunk: prp2, versions: 22, strucTab: 0x1721F10 
     ///==================================================
 
 
@@ -548,7 +548,7 @@ module.exports = [
 
             },
 
-            // => Version: 17, ReferencedFunction: 0xFFA800
+            // => Version: 17, ReferencedFunction: 0xEB6AF0
             17: function() {
                 this.PackMapPropObjV17 = [
                     'filename', Utils.getFileNameReader(),
@@ -910,7 +910,7 @@ module.exports = [
 
             },
 
-            // => Version: 14, ReferencedFunction: 0xFFA790
+            // => Version: 14, ReferencedFunction: 0xEB6A80
             14: function() {
                 this.PackMapPropObjV14 = [
                     'filename', Utils.getFileNameReader(),
@@ -1085,7 +1085,7 @@ module.exports = [
 
             },
 
-            // => Version: 12, ReferencedFunction: 0xFF95A0
+            // => Version: 12, ReferencedFunction: 0xEB5900
             12: function() {
                 this.PackMapPropObjV12 = [
                     'filename', Utils.getFileNameReader(),
@@ -1169,7 +1169,7 @@ module.exports = [
 
             },
 
-            // => Version: 11, ReferencedFunction: 0xFF93A0
+            // => Version: 11, ReferencedFunction: 0xEB5740
             11: function() {
                 this.PackMapPropObjV11 = [
                     'filename', Utils.getFileNameReader(),
@@ -1225,7 +1225,7 @@ module.exports = [
 
             },
 
-            // => Version: 10, ReferencedFunction: 0xFFACB0
+            // => Version: 10, ReferencedFunction: 0xEB6F90
             10: function() {
                 this.PackMapPropObjV10 = [
                     'filename', Utils.getFileNameReader(),
@@ -1273,7 +1273,7 @@ module.exports = [
 
             },
 
-            // => Version: 9, ReferencedFunction: 0xFFAB60
+            // => Version: 9, ReferencedFunction: 0xEB6E40
             9: function() {
                 this.PackMapPropObjV9 = [
                     'filename', Utils.getFileNameReader(),
@@ -1369,7 +1369,7 @@ module.exports = [
 
             },
 
-            // => Version: 7, ReferencedFunction: 0xFFAB10
+            // => Version: 7, ReferencedFunction: 0xEB6DF0
             7: function() {
                 this.PackMapPropObjV7 = [
                     'filename', Utils.getFileNameReader(),
@@ -1415,7 +1415,7 @@ module.exports = [
 
             },
 
-            // => Version: 6, ReferencedFunction: 0xFFA960
+            // => Version: 6, ReferencedFunction: 0xEB6C50
             6: function() {
                 this.PackMapPropObjV6 = [
                     'filename', Utils.getFileNameReader(),

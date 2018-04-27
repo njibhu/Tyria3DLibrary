@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: ASND, versions: 3, strucTab: 0x1526FF0 
+    ///Chunk: ASND, versions: 3, strucTab: 0x16CF998 
     ///==================================================
 
 
@@ -45,7 +45,7 @@ module.exports = [
 
             },
 
-            // => Version: 1, ReferencedFunction: 0xF5DC10
+            // => Version: 1, ReferencedFunction: 0xE21150
             1: function() {
                 this.__root = this.WaveformDataV1 = [
                     'length', 'float32',

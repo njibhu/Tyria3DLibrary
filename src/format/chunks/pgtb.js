@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: PGTB, versions: 4, strucTab: 0x13C7628 
+    ///Chunk: PGTB, versions: 4, strucTab: 0x153BDD8 
     ///==================================================
 
 
@@ -11,7 +11,7 @@ module.exports = [
         versions: {
 
 
-            // => Version: 3, ReferencedFunction: 0x816360
+            // => Version: 3, ReferencedFunction: 0x6127C0
             3: function() {
                 this.PagedImageLayerDataV3 = [
                     'rawDims', ['[]', 'uint32', 2],

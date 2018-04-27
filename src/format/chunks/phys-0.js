@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: phys, versions: 11, strucTab: 0x157DE58 
+    ///Chunk: phys, versions: 11, strucTab: 0x17219F0 
     ///==================================================
 
 
@@ -75,7 +75,7 @@ module.exports = [
 
             },
 
-            // => Version: 9, ReferencedFunction: 0xFFB230
+            // => Version: 9, ReferencedFunction: 0xEBA150
             9: function() {
                 this.PackMapPhysicsMeshV9 = [
                     'indexArray', Utils.getArrayReader('uint16'),
@@ -403,7 +403,7 @@ module.exports = [
 
             },
 
-            // => Version: 6, ReferencedFunction: 0xFFB210
+            // => Version: 6, ReferencedFunction: 0xEBA130
             6: function() {
                 this.PackMapPhysicsMeshV6 = [
                     'indexArray', Utils.getArrayReader('uint16'),
@@ -529,7 +529,7 @@ module.exports = [
 
             },
 
-            // => Version: 5, ReferencedFunction: 0xFFB210
+            // => Version: 5, ReferencedFunction: 0xEBA130
             5: function() {
                 this.PackMapPhysicsMeshV5 = [
                     'indexArray', Utils.getArrayReader('uint16'),
@@ -651,7 +651,7 @@ module.exports = [
 
             },
 
-            // => Version: 4, ReferencedFunction: 0xFFB210
+            // => Version: 4, ReferencedFunction: 0xEBA130
             4: function() {
                 this.PackMapPhysicsMeshV4 = [
                     'indexArray', Utils.getArrayReader('uint16'),
@@ -817,7 +817,7 @@ module.exports = [
 
             },
 
-            // => Version: 2, ReferencedFunction: 0xFFB1F0
+            // => Version: 2, ReferencedFunction: 0xEBA110
             2: function() {
                 this.PackMapPhysicsShapeDataV2 = [
                     'scale', 'float32',
@@ -854,7 +854,7 @@ module.exports = [
 
             },
 
-            // => Version: 1, ReferencedFunction: 0xFFB1D0
+            // => Version: 1, ReferencedFunction: 0xEBA0F0
             1: function() {
                 this.PackMapPhysicsShapeDataV1 = [
                     'scale', 'float32',

@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: pnvm, versions: 3, strucTab: 0x157DFC4 
+    ///Chunk: pnvm, versions: 3, strucTab: 0x172158C 
     ///==================================================
 
 
@@ -29,7 +29,7 @@ module.exports = [
 
             },
 
-            // => Version: 1, ReferencedFunction: 0xFFD110
+            // => Version: 1, ReferencedFunction: 0xEBB290
             1: function() {
                 this.PackMapPhysicsNavMeshChunkV1 = [
                     'boundsMin', ['[]', 'float32', 3],

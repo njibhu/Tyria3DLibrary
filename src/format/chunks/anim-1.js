@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: anim, versions: 3, strucTab: 0x16E9280 
+    ///Chunk: anim, versions: 4, strucTab: 0x18843B0 
     ///==================================================
 
 
@@ -11,7 +11,30 @@ module.exports = [
         versions: {
 
 
-            // => Version: 2, ReferencedFunction: 0x1228B70
+            // => Version: 3
+            3: function() {
+                this.PackEmoteTimingV3 = [
+                    'ModelFile', Utils.getFileNameReader(),
+                    'BlendIn', 'float32',
+                    'BlendOut', 'float32',
+                    'IntroDuration', 'uint32',
+                    'LoopDuration', 'uint32',
+                    'OutroDuration', 'uint32',
+                    'StartOffset', 'uint32',
+                ];
+
+                this.PackEmoteAnimationV3 = [
+                    'Token', Utils.getQWordReader(),
+                    'Timing', Utils.getArrayReader(this.PackEmoteTimingV3),
+                ];
+
+                this.__root = this.PackEmoteAnimationsV3 = [
+                    'Animation', Utils.getArrayReader(this.PackEmoteAnimationV3),
+                ];
+
+            },
+
+            // => Version: 2, ReferencedFunction: 0x1103330
             2: function() {
                 this.PackEmoteTimingV2 = [
                     'ModelFile', Utils.getFileNameReader(),

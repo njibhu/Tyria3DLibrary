@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: TOOL, versions: 4, strucTab: 0x13B55B0 
+    ///Chunk: TOOL, versions: 4, strucTab: 0x1528B70 
     ///==================================================
 
 
@@ -11,7 +11,7 @@ module.exports = [
         versions: {
 
 
-            // => Version: 3, ReferencedFunction: 0x7B10F0
+            // => Version: 3, ReferencedFunction: 0x5AEBF0
             3: function() {
                 this.AmatToolConstant = [
                     'token', 'uint32',
@@ -42,7 +42,7 @@ module.exports = [
 
             },
 
-            // => Version: 2, ReferencedFunction: 0x7B1050
+            // => Version: 2, ReferencedFunction: 0x5AEB70
             2: function() {
                 this.AmatToolConstant = [
                     'token', 'uint32',
@@ -73,7 +73,7 @@ module.exports = [
 
             },
 
-            // => Version: 1, ReferencedFunction: 0x7B0FF0
+            // => Version: 1, ReferencedFunction: 0x5AEB10
             1: function() {
                 this.AmatToolConstantV1 = [
                     'token', 'uint32',
@@ -139,7 +139,7 @@ module.exports = [
 
 
     ///==================================================
-    ///Chunk: TOOL, versions: 17, strucTab: 0x15D0520 
+    ///Chunk: TOOL, versions: 17, strucTab: 0x17730D8 
     ///==================================================
 
 
@@ -148,7 +148,7 @@ module.exports = [
         versions: {
 
 
-            // => Version: 16, ReferencedFunction: 0x106A400
+            // => Version: 16, ReferencedFunction: 0xF29440
             16: function() {
                 this.ModelToolCloudV16 = [
                     'cloudNames', Utils.getArrayReader(Utils.getStringReader()),
@@ -407,7 +407,7 @@ module.exports = [
 
             },
 
-            // => Version: 11, ReferencedFunction: 0x106A3E0
+            // => Version: 11, ReferencedFunction: 0xF29420
             11: function() {
                 this.ModelToolCloudV11 = [
                     'cloudNames', Utils.getArrayReader(Utils.getStringReader()),
@@ -443,7 +443,7 @@ module.exports = [
 
             },
 
-            // => Version: 10, ReferencedFunction: 0x106A5A0
+            // => Version: 10, ReferencedFunction: 0xF29590
             10: function() {
                 this.ModelToolCloudV10 = [
                     'cloudNames', Utils.getArrayReader(Utils.getStringReader()),
@@ -596,7 +596,7 @@ module.exports = [
 
             },
 
-            // => Version: 6, ReferencedFunction: 0x106A560
+            // => Version: 6, ReferencedFunction: 0xF29550
             6: function() {
                 this.ModelToolCloudV6 = [
                     'cloudNames', Utils.getArrayReader(Utils.getStringReader()),
@@ -624,7 +624,7 @@ module.exports = [
 
             },
 
-            // => Version: 5, ReferencedFunction: 0x106A530
+            // => Version: 5, ReferencedFunction: 0xF29520
             5: function() {
                 this.ModelToolCloudV5 = [
                     'cloudNames', Utils.getArrayReader(Utils.getStringReader()),

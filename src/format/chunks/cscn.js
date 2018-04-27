@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: CSCN, versions: 37, strucTab: 0x1540030 
+    ///Chunk: CSCN, versions: 37, strucTab: 0x16E8BC8 
     ///==================================================
 
 
@@ -11,7 +11,7 @@ module.exports = [
         versions: {
 
 
-            // => Version: 36, ReferencedFunction: 0xF73C40
+            // => Version: 36, ReferencedFunction: 0xE37660
             36: function() {
                 this.PropertyDataV36 = [
                     'value', Utils.getQWordReader(),
@@ -253,7 +253,7 @@ module.exports = [
 
             },
 
-            // => Version: 34, ReferencedFunction: 0xF73BA0
+            // => Version: 34, ReferencedFunction: 0xE375C0
             34: function() {
                 this.PropertyDataV34 = [
                     'value', Utils.getQWordReader(),
@@ -373,7 +373,7 @@ module.exports = [
 
             },
 
-            // => Version: 33, ReferencedFunction: 0xF73B00
+            // => Version: 33, ReferencedFunction: 0xE37520
             33: function() {
                 this.PropertyDataV33 = [
                     'value', Utils.getQWordReader(),
@@ -487,7 +487,7 @@ module.exports = [
 
             },
 
-            // => Version: 32, ReferencedFunction: 0xF73A60
+            // => Version: 32, ReferencedFunction: 0xE37480
             32: function() {
                 this.PropertyDataV32 = [
                     'value', Utils.getQWordReader(),
@@ -601,7 +601,7 @@ module.exports = [
 
             },
 
-            // => Version: 31, ReferencedFunction: 0xF739C0
+            // => Version: 31, ReferencedFunction: 0xE373E0
             31: function() {
                 this.PropertyDataV31 = [
                     'value', Utils.getQWordReader(),
@@ -715,7 +715,7 @@ module.exports = [
 
             },
 
-            // => Version: 30, ReferencedFunction: 0xF73970
+            // => Version: 30, ReferencedFunction: 0xE37390
             30: function() {
                 this.PropertyDataV30 = [
                     'value', Utils.getQWordReader(),
@@ -944,7 +944,7 @@ module.exports = [
 
             },
 
-            // => Version: 28, ReferencedFunction: 0xF738D0
+            // => Version: 28, ReferencedFunction: 0xE372F0
             28: function() {
                 this.PropertyDataV28 = [
                     'value', Utils.getQWordReader(),
@@ -1058,7 +1058,7 @@ module.exports = [
 
             },
 
-            // => Version: 27, ReferencedFunction: 0xF73830
+            // => Version: 27, ReferencedFunction: 0xE37250
             27: function() {
                 this.PropertyDataV27 = [
                     'value', Utils.getQWordReader(),
@@ -1172,7 +1172,7 @@ module.exports = [
 
             },
 
-            // => Version: 26, ReferencedFunction: 0xF73790
+            // => Version: 26, ReferencedFunction: 0xE371B0
             26: function() {
                 this.PropertyDataV26 = [
                     'value', Utils.getQWordReader(),
@@ -1286,7 +1286,7 @@ module.exports = [
 
             },
 
-            // => Version: 25, ReferencedFunction: 0xF736F0
+            // => Version: 25, ReferencedFunction: 0xE37110
             25: function() {
                 this.PropertyDataV25 = [
                     'value', Utils.getQWordReader(),
@@ -1400,7 +1400,7 @@ module.exports = [
 
             },
 
-            // => Version: 24, ReferencedFunction: 0xF73650
+            // => Version: 24, ReferencedFunction: 0xE37070
             24: function() {
                 this.PropertyDataV24 = [
                     'value', Utils.getQWordReader(),
@@ -1627,7 +1627,7 @@ module.exports = [
 
             },
 
-            // => Version: 22, ReferencedFunction: 0xF735B0
+            // => Version: 22, ReferencedFunction: 0xE36FD0
             22: function() {
                 this.PropertyDataV22 = [
                     'value', Utils.getQWordReader(),
@@ -1851,7 +1851,7 @@ module.exports = [
 
             },
 
-            // => Version: 20, ReferencedFunction: 0xF73510
+            // => Version: 20, ReferencedFunction: 0xE36F30
             20: function() {
                 this.PropertyDataV20 = [
                     'value', Utils.getQWordReader(),
@@ -1962,7 +1962,7 @@ module.exports = [
 
             },
 
-            // => Version: 19, ReferencedFunction: 0xF73470
+            // => Version: 19, ReferencedFunction: 0xE36E90
             19: function() {
                 this.PropertyDataV19 = [
                     'value', Utils.getQWordReader(),
@@ -2073,7 +2073,7 @@ module.exports = [
 
             },
 
-            // => Version: 18, ReferencedFunction: 0xF73470
+            // => Version: 18, ReferencedFunction: 0xE36E90
             18: function() {
                 this.PropertyDataV18 = [
                     'value', Utils.getQWordReader(),
@@ -2184,7 +2184,7 @@ module.exports = [
 
             },
 
-            // => Version: 17, ReferencedFunction: 0xF733D0
+            // => Version: 17, ReferencedFunction: 0xE36DF0
             17: function() {
                 this.PropertyDataV17 = [
                     'value', Utils.getQWordReader(),
@@ -2295,7 +2295,7 @@ module.exports = [
 
             },
 
-            // => Version: 16, ReferencedFunction: 0xF73330
+            // => Version: 16, ReferencedFunction: 0xE36D50
             16: function() {
                 this.PropertyDataV16 = [
                     'value', Utils.getQWordReader(),
@@ -2627,7 +2627,7 @@ module.exports = [
 
             },
 
-            // => Version: 13, ReferencedFunction: 0xF732B0
+            // => Version: 13, ReferencedFunction: 0xE36CD0
             13: function() {
                 this.PropertyDataV13 = [
                     'value', Utils.getQWordReader(),
@@ -2736,7 +2736,7 @@ module.exports = [
 
             },
 
-            // => Version: 12, ReferencedFunction: 0xF731C0
+            // => Version: 12, ReferencedFunction: 0xE36BE0
             12: function() {
                 this.PropertyDataV12 = [
                     'value', Utils.getQWordReader(),
@@ -2845,7 +2845,7 @@ module.exports = [
 
             },
 
-            // => Version: 11, ReferencedFunction: 0xF73120
+            // => Version: 11, ReferencedFunction: 0xE36B40
             11: function() {
                 this.PropertyDataV11 = [
                     'type', 'uint8',
@@ -2954,7 +2954,7 @@ module.exports = [
 
             },
 
-            // => Version: 10, ReferencedFunction: 0xF730C0
+            // => Version: 10, ReferencedFunction: 0xE36AE0
             10: function() {
                 this.PropertyDataV10 = [
                     'type', 'uint8',
@@ -3063,7 +3063,7 @@ module.exports = [
 
             },
 
-            // => Version: 9, ReferencedFunction: 0xF73010
+            // => Version: 9, ReferencedFunction: 0xE36A30
             9: function() {
                 this.PropertyDataV9 = [
                     'type', 'uint8',
@@ -3280,7 +3280,7 @@ module.exports = [
 
             },
 
-            // => Version: 7, ReferencedFunction: 0xF72F30
+            // => Version: 7, ReferencedFunction: 0xE36950
             7: function() {
                 this.PropertyDataV7 = [
                     'type', 'uint8',
@@ -3382,7 +3382,7 @@ module.exports = [
 
             },
 
-            // => Version: 6, ReferencedFunction: 0xF72E60
+            // => Version: 6, ReferencedFunction: 0xE36880
             6: function() {
                 this.PropertyDataV6 = [
                     'type', 'uint8',
@@ -3484,7 +3484,7 @@ module.exports = [
 
             },
 
-            // => Version: 5, ReferencedFunction: 0xF72DC0
+            // => Version: 5, ReferencedFunction: 0xE367E0
             5: function() {
                 this.PropertyDataV5 = [
                     'type', 'uint8',
@@ -3586,7 +3586,7 @@ module.exports = [
 
             },
 
-            // => Version: 4, ReferencedFunction: 0xF72D20
+            // => Version: 4, ReferencedFunction: 0xE36740
             4: function() {
                 this.PropertyDataV4 = [
                     'type', 'uint8',
@@ -3688,7 +3688,7 @@ module.exports = [
 
             },
 
-            // => Version: 3, ReferencedFunction: 0xF72C80
+            // => Version: 3, ReferencedFunction: 0xE366A0
             3: function() {
                 this.PropertyDataV3 = [
                     'type', 'uint8',
@@ -3890,7 +3890,7 @@ module.exports = [
 
             },
 
-            // => Version: 1, ReferencedFunction: 0xF72B70
+            // => Version: 1, ReferencedFunction: 0xE36590
             1: function() {
                 this.PropertyDataV1 = [
                     'type', 'uint8',

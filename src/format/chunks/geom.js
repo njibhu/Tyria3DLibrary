@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: GEOM, versions: 2, strucTab: 0x15D06D0 
+    ///Chunk: GEOM, versions: 2, strucTab: 0x1773278 
     ///==================================================
 
 
@@ -11,7 +11,7 @@ module.exports = [
         versions: {
 
 
-            // => Version: 1, ReferencedFunction: 0x1069000
+            // => Version: 1, ReferencedFunction: 0xF28010
             1: function() {
                 this.ModelMeshMorphVertV66 = [
                     'index', 'uint16',

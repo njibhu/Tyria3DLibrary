@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: PRPS, versions: 1, strucTab: 0x15D06C4 
+    ///Chunk: PRPS, versions: 1, strucTab: 0x177326C 
     ///==================================================
 
 

@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: area, versions: 5, strucTab: 0x157FEB0 
+    ///Chunk: area, versions: 5, strucTab: 0x1722F9C 
     ///==================================================
 
 
@@ -11,7 +11,7 @@ module.exports = [
         versions: {
 
 
-            // => Version: 4, ReferencedFunction: 0xFFCBA0
+            // => Version: 4, ReferencedFunction: 0xEBB040
             4: function() {
                 this.PackMapAreaPolygonV4 = [
                     'points', Utils.getArrayReader(['[]', 'float32', 3]),
@@ -136,7 +136,7 @@ module.exports = [
 
             },
 
-            // => Version: 1, ReferencedFunction: 0xF6B280
+            // => Version: 1, ReferencedFunction: 0xE2EE00
             1: function() {
                 this.PackMapAreaPolygonV1 = [
                     'points', Utils.getArrayReader(['[]', 'float32', 3]),

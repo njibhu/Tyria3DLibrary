@@ -2,12 +2,12 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: cng, versions: 1, strucTab: 0x1580D9C 
+    ///Chunk: cg15, versions: 1, strucTab: 0x17242C8 
     ///==================================================
 
 
     {
-        name: 'cng',
+        name: 'cg15',
         versions: {
 
 

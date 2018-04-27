@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>New Archive API test file</title>
+    <title>New LocalReader V2 API demo</title>
     <meta content="">
     <style></style>
 </head>
@@ -13,6 +13,8 @@
     <script src="lib/T3D-1.1.0.js"></script>
     <script src="lib/T3D-1.1.0.Formats.js"></script>
     <script>
+        //TODO: make a verbose example of how to use the new LocalReader API.
+
         var lr;
         $("#filePicker").change(function(evt){
             var file = evt.target.files[0];
@@ -26,18 +28,12 @@
                         lr.readFile(elt.mftId).then((r) => {
                             let file = new T3D.GW2File(new DataStream(r.buffer), 0);
                             let mainChunk = file.getChunk('Main').data;
-                            // let found = false;
-                            // for(let i of mainChunk.fileIndices){
-                            //     if(lr._persistantData[i.relocOffset]){
-                            //         break;
-                            //     }
-                            // }
                             console.log(elt.baseIdList[0], mainChunk.typeInfos.length, mainChunk.content.length, res.buffer.byteLength);
                         })
                         
                     }
                 })
-            }, 'lib/t3dworker.js') 
+            }, 'lib/t3dworker.js'); 
         });
     </script>
 </body>

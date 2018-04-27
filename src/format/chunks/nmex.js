@@ -2,7 +2,7 @@ var Utils = T3D.ParserUtils;
 
 module.exports = [
     ///==================================================
-    ///Chunk: nmex, versions: 3, strucTab: 0x1580D18 
+    ///Chunk: nmex, versions: 4, strucTab: 0x1723E40 
     ///==================================================
 
 
@@ -10,6 +10,32 @@ module.exports = [
         name: 'nmex',
         versions: {
 
+
+            // => Version: 3
+            3: function() {
+                this.PackMapNavMeshChunkExternalV3 = [
+                    'boundsMin', ['[]', 'float32', 3],
+                    'boundsMax', ['[]', 'float32', 3],
+                    'filename', Utils.getFileNameReader(),
+                ];
+
+                this.PackMapNavMeshMoverV3 = [
+                    'chunkIndex', 'uint32',
+                    'mapPropId', Utils.getQWordReader(),
+                    'navMeshData', Utils.getArrayReader('uint8'),
+                    'coarseGraphData', Utils.getArrayReader('uint8'),
+                    'mediatorData', Utils.getArrayReader('uint8'),
+                ];
+
+                this.__root = this.PackMapNavMeshExternalV3 = [
+                    'boundsMin', ['[]', 'float32', 3],
+                    'boundsMax', ['[]', 'float32', 3],
+                    'chunkDims', ['[]', 'uint32', 2],
+                    'chunkArray', Utils.getArrayReader(this.PackMapNavMeshChunkExternalV3),
+                    'dynamicArray', Utils.getArrayReader(this.PackMapNavMeshMoverV3),
+                ];
+
+            },
 
             // => Version: 2
             2: function() {
