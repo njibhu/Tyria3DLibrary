@@ -38,7 +38,7 @@ gulp.task('T3D', function(){
 		.pipe(gulp.dest('./examples/Tyria2D/lib'))
 		.pipe(gulp.dest('./examples/ModelRenderer/lib'))
 		.pipe(gulp.dest('./examples/MapRenderer/lib'))
-        .pipe(gulp.dest('./examples/Archive/lib'));
+        .pipe(gulp.dest('./examples/LocalReaderV2/lib'));
 });
 
 gulp.task('formats', function(){
@@ -58,7 +58,7 @@ gulp.task('formats', function(){
 		.pipe(gulp.dest('./examples/Tyria2D/lib'))
 		.pipe(gulp.dest('./examples/ModelRenderer/lib'))
 		.pipe(gulp.dest('./examples/MapRenderer/lib'))
-        .pipe(gulp.dest('./examples/Archive/lib'));
+        .pipe(gulp.dest('./examples/LocalReaderV2/lib'));
 })
 
 gulp.task('watch', function() {
