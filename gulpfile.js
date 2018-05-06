@@ -23,9 +23,6 @@ gulp.task('T3D', function(){
 		standalone: 'T3D'
 	});
 
-	//Copy the t3dtools.js worker file
-	gulp.src('tools/t3dtools.js/t3dworker.js').pipe(gulp.dest('build'));
-
 	return b.bundle()
 		.pipe(source(`T3D-${version}.js`))
 		.pipe(buffer())
