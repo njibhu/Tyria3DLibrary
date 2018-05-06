@@ -122,11 +122,15 @@ function generate(){
             // And close the Array
             chunk += "]";
             
-            let unknownTypeMatch = chunk.match(/Unknown0x[0-9A-F]*/);
-            if(unknownTypeMatch){
-                console.log("Warning, found one unknown type: '", unknownTypeMatch[0], "' in chunk: ", chunkName);
-                chunk = chunk.replace(/Unknown0x[0-9A-F]*,/, "'uint32', //" + unknownTypeMatch[0]);
-            }
+            let unknownTypeMatch;
+            do {
+                unknownTypeMatch = chunk.match(/Unknown(0x[0-9A-F]*)/);
+                if(unknownTypeMatch){
+                    console.log("Warning, found one unknown type: '", unknownTypeMatch[0], "' in chunk: ", chunkName);
+                    chunk = chunk.replace(`${unknownTypeMatch[0]},`, `'uint32', //Replaced unknown type: ${unknownTypeMatch[1]}`);
+                }
+            } while(unknownTypeMatch)
+
 
             //Write out to the outputFolder
 			fs.writeFile(`${outputFolder}/${filename}.js`, 
