@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2015 RequestTimeout <https://github.com/RequestTimeout408>
+Copyright © Tyria3DLibrary project contributors
 
 This file is part of the Tyria 3D Library.
 
@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var Utils = require("../util/RenderUtils");
-var DataRenderer = require('./DataRenderer');
+const RenderUtils = require("../util/RenderUtils");
+const DataRenderer = require('./DataRenderer');
 
 /**
  *
@@ -58,7 +58,7 @@ function EnvironmentRenderer(localReader, settings, context, logger){
 
 		function loadFallback(){
 			var mat = self.getMat(
-				THREE.ImageUtils.loadTexture(fallbackFilename)
+				new THREE.TextureLoader().load(fallbackFilename)
 			);
 
 			writeMat(mat);
@@ -69,7 +69,7 @@ function EnvironmentRenderer(localReader, settings, context, logger){
 		}
 
 		var mat = self.getMat(
-			Utils.loadLocalTexture(
+			RenderUtils.loadLocalTexture(
 				localReader,
 				filename,
 				null, hazeColorAsInt,
@@ -265,8 +265,7 @@ function EnvironmentRenderer(localReader, settings, context, logger){
 		skyGeometry.uvsNeedUpdate = true;
 		
 		/// Generate final skybox
-		var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
-		var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+		var skyBox = new THREE.Mesh( skyGeometry, materialArray );
 
 		/// Put horizon in camera center
 		skyBox.translateY(boxSize/4);
@@ -290,8 +289,6 @@ EnvironmentRenderer.prototype.constructor = EnvironmentRenderer;
  * - *hasLight* Boolean is false if no directional lights were added to "lights".
  * - *skyElements* A textured THREE.Mesh skybox.
  * 
- * 
- * @method  renderAsync
  * @async
  * @param  {Function} callback Fires when renderer is finished, does not take arguments.
  */

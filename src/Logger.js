@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2015 RequestTimeout <https://github.com/RequestTimeout408>
+Copyright © Tyria3DLibrary project contributors
 
 This file is part of the Tyria 3D Library.
 
@@ -22,33 +22,39 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
  *
  * This satic class defines severity levels of messages and provides
  * basic logging functionality. Replacing the reference to
- * @class Logger
+ * 
+ * @namespace
  * @static 
  */
 var Logger = {};
 
 /**
- * @property {[Number]} TYPE_ERROR
+ * @readonly
+ * @property {number} TYPE_ERROR
  */
 Logger.TYPE_ERROR = 4;
 
 /**
- * @property {[Number]} TYPE_WARNING
+ * @readonly
+ * @property {number} TYPE_WARNING
  */
 Logger.TYPE_WARNING = 3;
 
 /**
- * @property {[Number]} TYPE_MESSAGE
+ * @readonly
+ * @property {number} TYPE_MESSAGE
  */
 Logger.TYPE_MESSAGE = 2;
 
 /**
- * @property {[Number]} TYPE_PROGRESS
+ * @readonly
+ * @property {number} TYPE_PROGRESS
  */
 Logger.TYPE_PROGRESS = 1;
 
 /**
- * @property {[Number]} TYPE_DEBUG
+ * @readonly
+ * @property {number} TYPE_DEBUG
  */
 Logger.TYPE_DEBUG = 0;
 
@@ -73,7 +79,6 @@ Logger.logFunctions = new Array(5);
  * 
  
  * 
- * @method  log
  */
 Logger.log = function(){
 

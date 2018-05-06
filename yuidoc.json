@@ -1,8 +1,7 @@
 {
     "name": "Tyria 3D Library",
     "description": "Tyria 3D Library: a library for exploring Guild Wars 2 data formats.",
-    "version": "1.0.3",
-    "url": "http://www.tyria3d.com/",
+    "url": "https://github.com/njibhu/Tyria3DLibrary",
     "options": {
     	"linkNatives": false,
     	"tabtospace": 4,

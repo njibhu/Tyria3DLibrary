@@ -1,16 +1,28 @@
-/**
- * Collection of methods used for generating THREE meshes from Guild Wars 2 data formats.
- * @Class RenderUtils
- * @static
- */
+/*
+Copyright © Tyria3DLibrary project contributors
 
-var GW2File = require("../format/file/GW2File");
-var MaterialUtils = require("./MaterialUtils");
-var MathUtils = require("./MathUtils");
+This file is part of the Tyria 3D Library.
 
+Tyria 3D Library is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Tyria 3D Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+const GW2File = require("../format/file/GW2File");
+const MaterialUtils = require("./MaterialUtils");
+const MathUtils = require("./MathUtils");
 
 //TODO: Remove this local cache!!
-var matFiles = {};
+let matFiles = {};
 
 /**
  * Object describing the meaning of the bits in fvf integers.
@@ -18,7 +30,7 @@ var matFiles = {};
  * @private
  * @type {Object}
  */
-var fvfFormat = {
+let fvfFormat = {
 	Position              : 0x00000001,   /**< 12 bytes. Position as three 32-bit floats in the order x, y, z. */
 	Weights               : 0x00000002,   /**< 4 bytes. Contains bone weights. */
     Group                 : 0x00000004,   /**< 4 bytes. Related to bone weights. */
@@ -37,19 +49,24 @@ var fvfFormat = {
     Unknown5              : 0x20000000,   /**< 12 bytes. Unknown data. **/
 };
 
-var ME = module.exports = {};
+/**
+ * Collection of methods used for generating THREE meshes from Guild Wars 2 data formats.
+ * @namespace RenderUtils
+ */
+
+
 
 /**
  * Creates a mesh representing a single plane.
  * 
- * @method  renderRect
+ * @memberof RenderUtils
  * @param  {Object} rect     An object with x1,x2,y1 and y2 properties.
  * @param  {Number} yPos     Vertical position of the rectangle.
  * @param  {THREE.Material} material 	Mesh material to apply.
  * @param  {Number} dy       Mesh height.
  * @return {THREE.Mesh}      The generated mesh.
  */
-var renderRect = ME.renderRect = function(rect, yPos, material, dy){
+function renderRect(rect, yPos, material, dy){
 	var dx = rect.x1 - rect.x2;
 	var dz = rect.y1 - rect.y2;
 	if(!dy)
@@ -82,8 +99,8 @@ var renderRect = ME.renderRect = function(rect, yPos, material, dy){
 /**
  * Load image data into a THREE.Texture from a file within the GW2 .dat file using a LocalReader.
  *
- * @method loadLocalTexture
- * 
+ * @deprecated Please use the original function from MaterialUtils
+ * @memberof RenderUtils
  * @param {LocalReader} localReader The LocalReader to load the file contents from.
  * @param {Number} fileId The fileId or baseId of the file to load image data from.
  * @param {Number} mapping What THREE mapping the returned texture will use, not implemented.
@@ -92,25 +109,25 @@ var renderRect = ME.renderRect = function(rect, yPos, material, dy){
  * 
  * @return {THREE.Texture} A texture that will be populated by the file data when it is loaded.
  */
-var loadLocalTexture = ME.loadLocalTexture = function(localReader, fileId, mapping, defaultColor, onerror){
+function loadLocalTexture(localReader, fileId, mapping, defaultColor, onerror){
+	T3D.Logger.log(T3D.Logger.TYPE_WARNING, "RenderUtils.loadLocalTexture is deprecated ! Please use the one from MaterialUtils.");
 	return MaterialUtils.loadLocalTexture(localReader, fileId, mapping, defaultColor, onerror);
 };
 
 /**
-* Returns a THREE representation of the data contained by a GW2 model file.
-* The data is read using a LocalReader reference into the GW2 .dat.
-*
-* @method renderGeomChunk
-* 
-* @param {LocalReader} localReader The LocalReader to load the file contents from.
-* @param {Object} chunk Model GEOM chunk.
-* @param {Object} modelDataChunk Model MODL chunk.
-* @param {Object} sharedTextures  Value Object for keeping the texture cache.
-* @param {boolean} showUnmaterialed If false does not render any models with missing materials.
-* 
-* @return {Array} Each geometry in the model file represented by a textured THREE.Mesh object
-*/
-var renderGeomChunk = ME.renderGeomChunk = function(localReader, chunk, modelDataChunk, sharedTextures, showUnmaterialed){
+ * Returns a THREE representation of the data contained by a GW2 model file.
+ * The data is read using a LocalReader reference into the GW2 .dat.
+ *
+ * @memberof RenderUtils 
+ * @param {LocalReader} localReader The LocalReader to load the file contents from.
+ * @param {Object} chunk Model GEOM chunk.
+ * @param {Object} modelDataChunk Model MODL chunk.
+ * @param {Object} sharedTextures  Value Object for keeping the texture cache.
+ * @param {boolean} showUnmaterialed If false does not render any models with missing materials.
+ * 
+ * @return {Array} Each geometry in the model file represented by a textured THREE.Mesh object
+ */
+function renderGeomChunk(localReader, chunk, modelDataChunk, sharedTextures, showUnmaterialed){
 
 	var rawMeshes = chunk.data.meshes;
 	var meshes = [];
@@ -271,17 +288,17 @@ var renderGeomChunk = ME.renderGeomChunk = function(localReader, chunk, modelDat
 		for(var i=0; i<indices.length; i+=3){
 
 			// This is ONE face
-			faces[i + 0] = indices[i + 0];
+			faces[i + 0] = indices[i + 2];
 			faces[i + 1] = indices[i + 1];
-			faces[i + 2] = indices[i + 2];
+			faces[i + 2] = indices[i + 0];
 
 		}// End each index aka "face"
 
 
-
 		/// Add position, index and uv props to buffered geometry
 		geom.addAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
-		geom.addAttribute( 'index', new THREE.BufferAttribute( faces, 1) );
+		//geom.addAttribute( 'index', new THREE.BufferAttribute( faces, 1) );
+		geom.setIndex(new THREE.BufferAttribute(faces, 1));
 
 		if(normals){
 			console.log("adding normals");
@@ -383,7 +400,9 @@ var renderGeomChunk = ME.renderGeomChunk = function(localReader, chunk, modelDat
 
 /**
  * Loads mesh array from Model file and sends as argument to callback.
- * @method loadMeshFromModelFile
+ * 
+ * @memberof RenderUtils
+ * @async
  * @param  {Number} filename Name of the model file to load data from.
  * @param  {Array} solidColor RGBA array of 4 integers
  * @param {LocalReader} localReader The LocalReader to load the file contents from.
@@ -399,8 +418,7 @@ var renderGeomChunk = ME.renderGeomChunk = function(localReader, chunk, modelDat
  * 
  */
 
-var loadMeshFromModelFile = ME.loadMeshFromModelFile =
-function(filename, solidColor, localReader, sharedTextures, showUnmaterialed, callback){
+function loadMeshFromModelFile(filename, solidColor, localReader, sharedTextures, showUnmaterialed, callback){
 
 	//Short handles prop attributes
 	var finalMeshes = [];
@@ -445,7 +463,7 @@ function(filename, solidColor, localReader, sharedTextures, showUnmaterialed, ca
 		    	if(matFiles[mat.filename]){
 		    		loadMaterialIndex(mIdx+1,matCallback);
 		    		return;
-		    	}
+				}		
 
 				localReader.loadFile(mat.filename,
 					function(inflatedData){
@@ -583,8 +601,9 @@ function(filename, solidColor, localReader, sharedTextures, showUnmaterialed, ca
 /**
  * Gets a mesh array from Model file and sends as argument to callback. Uses a cache of meshes in order
  * to never read the same model file twice.
- * @method getMeshesForFilename
  * 
+ * @memberof RenderUtils
+ * @async
  * @param  {Number} filename The fileId or baseId of the Model file to load
  * @param  {Array} color RGBA array of 4 integers
  * @param  {LocalReader} localReader The LocalReader object used to read data from the GW2 .dat file.
@@ -601,8 +620,7 @@ function(filename, solidColor, localReader, sharedTextures, showUnmaterialed, ca
  * 
  * The third argument is the bounding spehere of this model file.
  */
-var getMeshesForFilename = ME.getMeshesForFilename =
-function(filename, color, localReader, sharedMeshes, sharedTextures, showUnmaterialed, callback){
+function getMeshesForFilename(filename, color, localReader, sharedMeshes, sharedTextures, showUnmaterialed, callback){
 
 	/// If this file has already been loaded, just return a reference to the meshes.
 	/// isCached will be set to true to inform the caller the meshes will probably
@@ -635,12 +653,14 @@ function(filename, color, localReader, sharedMeshes, sharedTextures, showUnmater
 
 /**
  * WIP, Tries to find all fileIds refered by a model file.
- * @method  getFilesUsedByModel
+ * 
+ * @memberof RenderUtils
+ * @async
  * @param  {Number}   filename    Model file Id
  * @param  {LocalReader}   localReader LocalReader instance to read from
  * @param  {Function} callback   First argument is list of used file IDs
  */
-var getFilesUsedByModel = ME.getFilesUsedByModel = function(filename, localReader, callback){
+function getFilesUsedByModel(filename, localReader, callback){
 	var fileIds = [filename];
 
 	///Load model file
@@ -684,3 +704,11 @@ var getFilesUsedByModel = ME.getFilesUsedByModel = function(filename, localReade
 
 }
 
+module.exports = {
+	renderRect: renderRect,
+	loadLocalTexture: loadLocalTexture,
+	renderGeomChunk: renderGeomChunk,
+	loadMeshFromModelFile: loadMeshFromModelFile,
+	getMeshesForFilename: getMeshesForFilename,
+	getFilesUsedByModel: getFilesUsedByModel
+};
