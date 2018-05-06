@@ -14,7 +14,7 @@ module.exports = [
             // => Version: 1
             1: function() {
                 this.PackAnimMachineActionV1 = [
-                    'actionData', Unknown0x1C,
+                    'actionData', 'uint32', //Unknown0x1C
                 ];
 
                 this.PackAnimMachineActionBlockV1 = [

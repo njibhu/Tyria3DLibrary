@@ -12,11 +12,15 @@ ____
         ⋅ RenderUtils []
         ⋅ MaterialUtils []
     ⋅ Use gw2 skydomes + (threejs example sky) []
+    ⋅ Replace all deprecated uses of LocalReader and change it []
+    ⋅ Cleanup the GW2Chunk []
+    ⋅ Move Tyria2D to its own project
+    ⋅ Use Babel to have an ES5 target as well.
 
 ### Minor: 
 
     ⋅  Clean all the todos []
-    ⋅  Rework the LOD in TerrainRenderer:
+    ⋅  Rework the LOD in TerrainRenderer and SingleModelViewer (see id: 229478)
         ⋅  Debug tool: (see threejs example interactive/buffergeometry ): Tells name of a mesh by pointing at it [+] (Done in example)
     ⋅ Make EmissiveMap work []
         ⋅ Fix (if not with emissivemap) the black not transparent textures (backside) []
@@ -30,17 +34,13 @@ ____
     ⋅ Major revamp of the LocalReader:
         ⋅ Only use of t3dtools [+]
         ⋅ Allow spawn of webworkers [+]
-        ⋅ Migrate to IndexedDB; store all Mft data (Type, CRC, size) into it [~]
-        ⋅ Fast rescan with existing data:
-            ⋅ Report of rescan  []
-            ⋅ (indexedDB logs) []
+        ⋅ Migrate to IndexedDB; store all Mft data (Type, CRC, size) into it [+]
+        ⋅ Fast rescan with existing data [+]
         ⋅ Full rewrite of LocalReader (archive) [+]
-        ⋅ Replace all uses of LocalReader and remove it []
-            ⋅ Remove definitions/ANDat + MFT []
-    ⋅ Tyria3DFormats splitup + autoscript [~]
-        ⋅ Multiple use: add a chunk_prefered field []
-        ⋅ Remove Allformats []
-    ⋅ Cleanup the GW2Chunk []
+    ⋅ Tyria3DFormats splitup + autoscript [+]
+    ⋅ GW2Chunk:
+        ⋅ Multiple definitions: __root property name is now defining the use of the chunk [+]
+    ⋅ Migrate Yuidoc to Jsdoc [+]
 
 ### Minor: 
 

@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var DataRenderer = require('./DataRenderer');
+const DataRenderer = require('./DataRenderer');
 
 /**
  *
@@ -49,7 +49,6 @@ StringRenderer.prototype.constructor = StringRenderer;
  *
  * - *language* An integer specifing the language of the loaded file.
  * 
- * @method  renderAsync
  * @async
  * @param  {Function} callback Fires when renderer is finished, does not take arguments.
  */

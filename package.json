@@ -6,7 +6,7 @@
     "DataStream.js": "github:kig/DataStream.js"
   },
   "devDependencies": {
-    "browserify": "^16.1.1",
+    "browserify": "^16.2.0",
     "combined-stream": "0.0.5",
     "gulp": "^4.0.0",
     "gulp-sourcemaps": "^2.6.4",
@@ -14,7 +14,7 @@
     "gulp-uglify": "*",
     "gulp-watch": "~0.6.8",
     "js-beautify": "^1.7.5",
-    "uglify-es": "^3.3.9",
+    "uglify-es": "^3.3.10",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "*",
     "yargs": "^11.1.0"

@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var DataRenderer = require('./DataRenderer');
+const DataRenderer = require('./DataRenderer');
 
 /**
  *
@@ -44,7 +44,7 @@ function HavokRenderer(localReader, settings, context, logger){
 
 	/**
 	 * TODO
-	 * @method renderModels
+	 * 
 	 * @param  {Function} callback         [description]
 	 * @async
 	 */
@@ -63,10 +63,10 @@ function HavokRenderer(localReader, settings, context, logger){
 
 	/**
 	 * TODO
-	 * @method  getCollisionsForAnimation
-	 * @param  {[type]} animation  [description]
-	 * @param  {[type]} collisions [description]
-	 * @return {[type]}            [description]
+	 * 
+	 * @param  {*} animation  [description]
+	 * @param  {*} collisions [description]
+	 * @return {*}            [description]
 	 */
 	this.getCollisionsForAnimation = function(animation, collisions){
 		var ret = [];
@@ -83,13 +83,13 @@ function HavokRenderer(localReader, settings, context, logger){
 
 	/**
 	 * TODO
-	 * @method  parseAllModels description
-	 * @param  {[type]} models       [description]
-	 * @param  {[type]} mat       [description]
-	 * @param  {[type]} title     [description]
-	 * @param  {[type]} chunkSize [description]
-	 * @param  {[type]} offset    [description]
-	 * @return {[type]} callback          [description]
+	 * 
+	 * @param  {*} models       [description]
+	 * @param  {*} mat       [description]
+	 * @param  {*} title     [description]
+	 * @param  {*} chunkSize [description]
+	 * @param  {*} offset    [description]
+	 * @return {*} callback          [description]
 	 * @async
 	 */
 	this.parseAllModels = function(models, mat, title, chunkSize, offset, callback){
@@ -136,11 +136,11 @@ function HavokRenderer(localReader, settings, context, logger){
 
 	/**
 	 * TODO
-	 * @method  animationFromGeomIndex
-	 * @param  {[type]} propGeomIndex [description]
-	 * @param  {[type]} geometries    [description]
-	 * @param  {[type]} animations    [description]
-	 * @return {[type]}               [description]
+	 * 
+	 * @param  {*} propGeomIndex [description]
+	 * @param  {*} geometries    [description]
+	 * @param  {*} animations    [description]
+	 * @return {*}               [description]
 	 */
 	this.animationFromGeomIndex = function(propGeomIndex, geometries, animations){
 		
@@ -153,11 +153,11 @@ function HavokRenderer(localReader, settings, context, logger){
 
 	/**
 	 * TODO
-	 * @method renderMesh
-	 * @param  {[type]} collision [description]
-	 * @param  {[type]} model     [description]
-	 * @param  {[type]} mat       [description]
-	 * @return {[type]}           [description]
+	 * 
+	 * @param  {*} collision [description]
+	 * @param  {*} model     [description]
+	 * @param  {*} mat       [description]
+	 * @return {*}           [description]
 	 */
 	this.renderMesh = function( collision, model, mat ){
 	    
@@ -191,8 +191,8 @@ function HavokRenderer(localReader, settings, context, logger){
 
 	/**
 	 * TODO
-	 * @method  seedRandom
-	 * @return {[type]} [description]
+	 * 
+	 * @return {*} [description]
 	 */
 	this.seedRandom = function(){
 	    var x = Math.sin(this.seed++) * 10000;
@@ -201,10 +201,10 @@ function HavokRenderer(localReader, settings, context, logger){
 
 	/**
 	 * TODO
-	 * @method  parseHavokMesh
-	 * @param  {[type]} collision [description]
-	 * @param  {[type]} mat       [description]
-	 * @return {[type]}           [description]
+	 * 
+	 * @param  {*} collision [description]
+	 * @param  {*} mat       [description]
+	 * @return {*}           [description]
 	 */
 	this.parseHavokMesh = function(collision, mat){
 		
@@ -267,7 +267,6 @@ HavokRenderer.prototype.constructor = HavokRenderer;
  * - *boundingBox* Array of values describing the bounding box of all collision.
  * - *meshes* An array of THREE.Mesh objects visualizing all collision in the map.
  * 
- * @method  renderAsync
  * @async
  * @param  {Function} callback Fires when renderer is finished, does not take arguments.
  */

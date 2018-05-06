@@ -17,21 +17,18 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-/// Includes
-let GW2File = require('../format/file/GW2File.js');
-/// EndIncludes
+const GW2File = require('../format/file/GW2File.js');
 
-// TODO:
-// Delete all this rubish
-// Strings are actually better than emulated enums
-// To consider: Objects {name: 'PF', pfName: 'MAPC'}
-
+/**
+ * @namespace FileTypes
+ */
 
 let FileTypes = {};
 
 /**
  * Parse the beginning of a file to find its type
- * @function getFileType 
+ * 
+ * @memberof FileTypes
  * @param {DataStream} ds 
  * @return {number}
  */

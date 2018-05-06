@@ -23,66 +23,69 @@ const DataReader = require('./DataReader');
 const MapFileList = require('../MapFileList');
 const FileTypes = require('./FileTypes');
 
-
-// TODO: cleanup persistant storage after X rows
-
-/***
- * TODO: UPDATE !! Change have been made
- * API CHANGES: LocalReader (V2)
- * - "connectInflater" have been deleted.
- * - "listener" have been deleted.
- * - "loadFileList" have been deleted.
- * - "loadMapList" have been deleted. 
- * - "readANDatHeader" have been removed. (private)
- * - "readMFTHeader" have been removed. (private)
- * - "readMFTIndexFile" have been removed. (private)
- * - "inflate" have been deleted. (private)
- * - "loadFilePart" have been removed. (private)
- * - "loadTextureFile" have been deleted. (loadFile was already doing that)
- * 
- * ~ LocalReader constructor now takes a parameter.
- * ~ "parseHeaderAsync" is now "openArchive", and returns a Promise.
- * ~ "readFileListAsync" is now "readFileList", and returns a Promise.
- * ~ "readMapListAsync" is now "getMapList", and is now synchronous.
- * ~ "listFiles" is now "getFileList" returns a Promise.
- * ~ "loadFile" returns a Promise.
- */
-
-
-
 /**
  * A statefull class that handles reading and inflating data from a local GW2 dat file.
  * LocalReader have been completely rewritten from scratch, 
  * the API changed quite a lot between 1.0.4 and 1.1.0.
  * 
- * @class LocalReader
+ * API CHANGES: LocalReader (1.1.0 from 1.0.4)
+ * - The constructor have __changed__.
+ * - parseHeaderAsync have been __removed__.
+ * - connectInflated have been __removed__.
+ * - NaClListener have been __removed__.
+ * - readANDatHeader have been __removed__.
+ * - readMFTHeader have been __removed__.
+ * - readMFTIndexFile have been __removed__.
+ * - loadFileList is now __deprecated__.
+ * - loadMapList is now __deprecated__.
+ * - storeFileList have been __removed__.
+ * - storeMapList have been __removed__.
+ * - readFileListAsync is now __deprecated__.
+ * - readMapListAsync is now __deprecated__.
+ * - listFiles have been __removed__.
+ * - getFileIndex have been slightly __changed__.
+ * - loadTextureFile is now __deprecated__.
+ * - loadFile have been __removed__.
+ * - inflate have been __removed__.
+ * - loadFilePart have been __removed__.
+ * 
+ * @param {{workerPath: String, workersNb: number, noIndexedDB: boolean}} settings
+ *   * workerPath: the path to the t3dtools worker script file.
+ *   * workersNb: amount of threads spawned for decompression.
+ *   * noIndexedDB: Do not use indexedDB (persistant storage, default is true)
  */
-
 class LocalReader {
-
-    /**
-     * @constructor
-     * @param {{workerPath: String, workersNb: number, noIndexedDB: boolean}} settings
-     *   * workerPath: the path to the t3dtools worker script file.
-     *   * workersNb: amount of threads spawned for decompression.
-     *   * noIndexedDB: Do not use indexedDB (persistant storage, default is true)
-     */
     constructor(settings) {
         this._settings = settings;
 
-        /** @type {DataReader} */
+        /** 
+         * @private
+         * @type {DataReader} 
+         */
         this._dataReader = new DataReader(settings);
 
-        /** @type {PersistantStore} */
+        /**
+         * @private
+         * @type {PersistantStore}
+         */
         this._persistantStore;
 
-        /** @type {File} */
+        /**
+         * @private
+         * @type {File} 
+         */
         this._file = undefined;
 
-        /** @type {Array.<number>} */
+        /** 
+         * @private
+         * @type {Array<number>} 
+         */
         this._indexTable = [];
 
-        /** @type {Array<{offset: number, size: number, compressed: number, crc: number}>} */
+        /** 
+         * @private
+         * @type {Array<{offset: number, size: number, compressed: number, crc: number}>} 
+         */
         this._fileMetaTable = [];
 
         if (settings.noIndexedDB !== false)
@@ -94,7 +97,6 @@ class LocalReader {
     /**
      *   Asynchronously loads the archive by parsing its file index and header.
      *   
-     * 
      * @param {File} file 
      * @returns {Promise}
      */
@@ -183,8 +185,15 @@ class LocalReader {
         let persistantList = (oldFileList) ? oldFileList : [];
         let persistantId;
 
-        if (this._persistantStore)
-            persistantList = (await this._persistantStore.getLastListing(this._file.name)).array;
+        //Load previously saved data
+        if (this._persistantStore){
+            let lastListing = (await this._persistantStore.getLastListing(this._file.name));
+            persistantList = lastListing.array;
+            //If the last scan was not completed then we will just update it..
+            if(!lastListing.complete){
+                persistantId = lastListing.key;
+            }
+        }
 
         // Create a list of all the baseIds we need to inspect
         let iterateList = Object.keys(self._indexTable).map(i => Number(i));
@@ -236,12 +245,16 @@ class LocalReader {
                 //Update the persistant storage if needed
                 if(self._persistantStore && persistantNeedsUpdate){
                     persistantNeedsUpdate = false;
-                    self._persistantStore.putListing(persistantId, persistantList, self._file.name).then(res => persistantId = res);
+                    self._persistantStore.putListing(persistantId, persistantList, self._file.name, false).then(res => persistantId = res);
                 }
             }
         }
 
-        await Promise.all(taskArray);
+        await Promise.all(taskArray).then(()=>{
+            //Finally update the listing as complete
+            if(self._persistantStore)
+                self._persistantStore.putListing(persistantId, persistantList, self._file.name, true);
+        });
         this._persistantData = persistantList;
         return this.getFileList();
     }
@@ -352,11 +365,11 @@ class LocalReader {
     
     /**
      * Looks up mft indices for all mapc pack files in the dat. Either looks trough all files or
-     * only the list defined in {{#crossLink "T3D/MapFileList:property"}}{{/crossLink}}.
+     * only the list defined in {@link MapFileList}
      *
-     * @deprecated
+     * @deprecated Use now the getFileList method.
      * @param  {boolean}   searchAll if true forces re-indexing of entire dat.
-     * If false only reads indices specified in {{#crossLink "T3D/MapFileList:property"}}{{/crossLink}}.
+     * If false only reads indices specified in "T3D/MapFileList".
      * @param  {Function} callback Fired when the list is generated
      *
      * First argument is the a list of mft indices grouped by file type. For exmample:
@@ -417,7 +430,7 @@ class LocalReader {
      * Reads the file type of each file in the dat and stores the resulting list in 
      * the browser's local storage.
      * 
-     * @deprecated
+     * @deprecated Use now the readFileList or getFileList methods.
      * @param  {Function} callback Fired when the list is generated and stores
      *
      * First argument is the a list of mft indices grouped by file type.
@@ -442,7 +455,7 @@ class LocalReader {
     /**
      * Reads data from a file in the dat.
      * 
-     * @deprecated
+     * @deprecated Use now the Promise-based method readFile.
      * @param  {Number}   baseId   Base or File id of the texture to load
      * @param  {Function} callback Fires when the inflater has read the data.
      *
@@ -454,7 +467,7 @@ class LocalReader {
      *
      * 
      * @param  {boolean}  isImage  
-     * @param  {[type]}   raw      If true, any infation is skipped and raw data is returned.
+     * @param  {boolean}   raw      If true, any infation is skipped and raw data is returned.
      */
     loadFile(baseId, callback, isImage, raw){
         T3D.Logger.log(T3D.Logger.TYPE_WARNING, "LocalReader.loadFile is deprecated !");
@@ -517,10 +530,10 @@ class LocalReader {
 
 
     /**
-     * 
+     * @private
      * @param {number} baseId 
      * @param {Array<{baseId: number, crc: number, size: number, fileType: string}>} persistantData 
-     * @returns {{scan: boolean, change: }}
+     * @returns {{scan: boolean, change: string }}
      */
     _needsScan(baseId, persistantData){
         if(baseId <= 0)
@@ -553,7 +566,6 @@ class LocalReader {
     }
 
     /**
-     * 
      * @private
      * @param {number} baseId 
      * @param {Array<{baseId: number, crc: number, size: number, fileType: string}>} persistantData 

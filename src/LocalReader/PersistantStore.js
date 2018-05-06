@@ -18,10 +18,10 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
 /// T3DLib version
-let version = require('../T3DLib').version;
+const version = require('../T3DLib').version;
 
 /// Indexed DB versioning
-const DB_VERSION = 3;
+const DB_VERSION = 4;
 
 /**
  * This class handles offline storage of the .dat indexes and files metadata
@@ -40,7 +40,7 @@ class PersistantStore{
      *   Initialize the IndexedDB connection and manages version changes.
      * 
      * @async
-     * @method connectDB
+     * @private
      * @returns {Promise<IDBDatabase>} Promise to the Database connection
      */
     _getConnection(){
@@ -74,6 +74,7 @@ class PersistantStore{
                     let storeListing = event.currentTarget.transaction.objectStore("listings");
                     storeListing.createIndex('filename', 'filename', {unique: false});
                 }
+
             }
 
             request.onsuccess = (event) => {
@@ -99,15 +100,16 @@ class PersistantStore{
      * @param {number|undefined} id This ID doesn't really matter, it's just the index of the object in the database, can be undefined
      * @param {Array} listing 
      * @param {string} fileName .dat file name, allows to have multiple listings for different .dat files.
+     * @param {boolean} isComplete Keep back the information if that was the last update on the current scan or not.
      * @returns {Promise<number>} On success, the number is the object key in the database
      */
-    putListing(id, listing, fileName){
+    putListing(id, listing, fileName, isComplete){
         let self = this;
         return new Promise((resolve, reject) => {
             self._getConnection().then((db) => {
                 let store = db.transaction(["listings"], "readwrite").objectStore("listings");
 
-                let request = (id) ? store.put({array: listing, filename: fileName}, id) : store.put({array: listing, name: fileName});
+                let request = (id) ? store.put({array: listing, filename: fileName, complete: isComplete}, id) : store.put({array: listing, name: fileName});
     
                 request.onsuccess = (event) => {
                     resolve(request.result);
@@ -124,7 +126,7 @@ class PersistantStore{
      * 
      * @async
      * @param {string} fileName .dat file name, allows to have multiple listings for different .dat files.
-     * @returns {Promise<{array: Array, key: number}>}
+     * @returns {Promise<{array: Array, key: number, complete: boolean}>}
      *      array: the last listing
      *      key: the index of the last listing in the database
      */
@@ -138,9 +140,9 @@ class PersistantStore{
                 listingsStore.openCursor(IDBKeyRange.only(fileName), "prev").onsuccess = (event) => {
                     let cursor = event.target.result;
                     if(!cursor)
-                        resolve({array: [], key: undefined});
+                        resolve({array: [], key: undefined, complete: true});
                     else {
-                        resolve({array: cursor.value.array, key: cursor.primaryKey});
+                        resolve({array: cursor.value.array, key: cursor.primaryKey, complete: cursor.value.complete});
                     }
                         
                 }

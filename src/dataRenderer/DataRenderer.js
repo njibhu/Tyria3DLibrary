@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var GW2File = require('../format/file/GW2File');
+const GW2File = require('../format/file/GW2File');
 
 /**
  * Base class for data interpretors a.k.a. 'Renderers'
@@ -54,7 +54,7 @@ var GW2File = require('../format/file/GW2File');
  * @param  {Object} context      Shared value object between renderers.
  * @param  {Logger} logger       The logging class to use for progress, warnings, errors et cetera.
  */
-var DataRenderer = module.exports = function(localReader, settings, context, logger) {
+var DataRenderer = function(localReader, settings, context, logger) {
 
 	/// Just storing parameters
 	this.localReader = localReader;
@@ -73,7 +73,7 @@ var DataRenderer = module.exports = function(localReader, settings, context, log
 
 /**
  * Gets the output value object for a specified class within the context.
- * @method  getOutput
+ * 
  * @param  {Class} otherClass The class to fetch the output value object for.
  * If not specified the class of this instance will be used.
  * @return {Object}            The output value object for this class within the context.
@@ -96,7 +96,6 @@ DataRenderer.prototype.getOutput = function(otherClass){
  * 
  * - *file* A GW2File representation of the loaded file. Only set if the loaded file was a Pack File.
  * 
- * @method  renderAsync
  * @async
  * @param  {Function} callback Fires when renderer is finished, does not take arguments.
  */
@@ -172,3 +171,5 @@ DataRenderer.prototype.renderAsync = function(callback){
 
 	});	
 }
+
+module.exports = DataRenderer;

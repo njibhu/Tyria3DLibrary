@@ -35,10 +35,7 @@ gulp.task('T3D', function(){
 			.on('error', log.error)
 		.pipe(sourcemaps.write('./'))
 		.pipe(gulp.dest('build'))
-		.pipe(gulp.dest('./examples/Tyria2D/lib'))
-		.pipe(gulp.dest('./examples/ModelRenderer/lib'))
-		.pipe(gulp.dest('./examples/MapRenderer/lib'))
-        .pipe(gulp.dest('./examples/LocalReaderV2/lib'));
+		.pipe(gulp.dest('./examples/static'));
 });
 
 gulp.task('formats', function(){
@@ -55,10 +52,7 @@ gulp.task('formats', function(){
 			.on('error', log.error)
 		.pipe(sourcemaps.write('./'))
 		.pipe(gulp.dest('build'))
-		.pipe(gulp.dest('./examples/Tyria2D/lib'))
-		.pipe(gulp.dest('./examples/ModelRenderer/lib'))
-		.pipe(gulp.dest('./examples/MapRenderer/lib'))
-        .pipe(gulp.dest('./examples/LocalReaderV2/lib'));
+		.pipe(gulp.dest('./examples/static'));
 })
 
 gulp.task('watch', function() {

@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var RenderUtils = require("../util/RenderUtils");
-var DataRenderer = require('./DataRenderer');
+const RenderUtils = require("../util/RenderUtils");
+const DataRenderer = require('./DataRenderer');
 
 /**
  *
@@ -39,12 +39,12 @@ function ZoneRenderer(localReader, settings, context, logger){
 
 	/**
 	 * TODO
-	 * @method  renderZone
-	 * @param  {[type]} zone               [description]
-	 * @param  {[type]} zoneDefs           [description]
-	 * @param  {[type]} mapRect            [description]
-	 * @param  {[type]} renderZoneCallback [description]
-	 * @return {[type]}                    [description]
+	 * 
+	 * @param  {*} zone               [description]
+	 * @param  {*} zoneDefs           [description]
+	 * @param  {*} mapRect            [description]
+	 * @param  {*} renderZoneCallback [description]
+	 * @return {*}                    [description]
 	 */
 	this.renderZone = function(zone, zoneDefs, mapRect, renderZoneCallback){
 		var self = this;
@@ -243,11 +243,11 @@ function ZoneRenderer(localReader, settings, context, logger){
 
 	/**
 	 * TODO
-	 * @method  getModelGroups
-	 * @param  {[type]} zone    [description]
-	 * @param  {[type]} zoneDef [description]
-	 * @param  {[type]} mapRect [description]
-	 * @return {[type]}         [description]
+	 * 
+	 * @param  {*} zone    [description]
+	 * @param  {*} zoneDef [description]
+	 * @param  {*} mapRect [description]
+	 * @return {*}         [description]
 	 */
 	this.getModelGroups = function(zone, zoneDef, mapRect){
 
@@ -423,7 +423,6 @@ ZoneRenderer.prototype.constructor = ZoneRenderer;
  *
  * - *meshes* An array of THREE.Mesh objects visualizing all zone models refered by this map.
  * 
- * @method  renderAsync
  * @async
  * @param  {Function} callback Fires when renderer is finished, does not take arguments.
  */

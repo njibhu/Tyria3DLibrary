@@ -19,7 +19,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 <html>
 <head>
 	<title>Tyria 2D</title>
-	<link rel="stylesheet" type="text/css" href="lib/w2ui-1.4.3.min.css" />
+	<link rel="stylesheet" type="text/css" href="../static/w2ui-1.4.3.min.css" />
 	 <style type="text/css">
         body,html{
         	margin:0;
@@ -79,21 +79,21 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 <div id="layout" style="width: 100%; height: 100%;"></div>
 
 
-<script type="text/javascript" src="lib/canvas-to-blob.min.js"></script>
+<script type="text/javascript" src="../static/canvas-to-blob.min.js"></script>
 
-<script type="text/javascript" src="lib/three/three.min.js"></script>
-<script type="text/javascript" src="lib/three/OBJExporter.js"></script>
-<script type="text/javascript" src="lib/three/OrbitControls.js"></script>
+<script type="text/javascript" src="../static/three/three.min.js"></script>
+<script type="text/javascript" src="../static/three/OBJExporter.js"></script>
+<script type="text/javascript" src="../static/three/OrbitControls.js"></script>
 
-<script type="text/javascript" src="lib/DataStream.js"></script>
+<script type="text/javascript" src="../static/DataStream.js"></script>
 
-<script type="text/javascript" src="lib/jQuery/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../static/jQuery/jquery-1.11.1.min.js"></script>
 
-<script type="text/javascript" src="lib/w2ui-1.4.3.min.js"></script>
+<script type="text/javascript" src="../static/w2ui-1.4.3.min.js"></script>
 
 
-<script type="text/javascript" src="lib/T3D-1.1.0.js"></script>
-<script type="text/javascript" src="lib/T3D-1.1.0.Formats.js"></script>
+<script type="text/javascript" src="../static/T3D-1.1.0.js"></script>
+<script type="text/javascript" src="../static/T3D-1.1.0.Formats.js"></script>
 
 <script type="text/javascript">
 
@@ -318,7 +318,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 	            		$('.fileTab').hide();
 	            		$('#fileTabsSound').show();
 	            	}
-	            },
+				}
 	        ]
 	    });
 
@@ -366,7 +366,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
                 _lr = T3D.getLocalReader(
                     evt.target.files[0],
                     onReaderCreated,
-					"lib/t3dworker.js");
+					"../static/t3dworker.js");
             }
 	    );
 
@@ -400,8 +400,8 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 					nodes: []
 				}
 				
-				var unclassifiedNode = {
-					id: 'unclassifiedGroup', text: 'Unclassified', img: 'icon-folder', group: false,
+				var unsortedNode = {
+					id: 'unsortedGroup', text: 'Unsorted', img: 'icon-folder', group: false,
 					nodes: []
 				}
 				
@@ -438,7 +438,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 
 						else {
 							node = {id: fileType, img: "icon-folder", group: false, text: fileType};
-							unclassifiedNode.nodes.push(node);
+							unsortedNode.nodes.push(node);
 						}
 						
 					} 
@@ -452,8 +452,8 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 					w2ui.sidebar.add(textureNode);
 				}
 
-				if(unclassifiedNode.nodes.length>0){
-					w2ui.sidebar.add(unclassifiedNode);
+				if(unsortedNode.nodes.length>0){
+					w2ui.sidebar.add(unsortedNode);
 				}
 
 
@@ -1081,16 +1081,5 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
     }
 </script>
 
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-62555746-1', 'auto');
-  ga('send', 'pageview');
-
-</script>
 </body>
 </html>

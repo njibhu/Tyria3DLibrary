@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var RenderUtils = require("../util/RenderUtils");
-var DataRenderer = require('./DataRenderer');
+const RenderUtils = require("../util/RenderUtils");
+const DataRenderer = require('./DataRenderer');
 
 /**
  *
@@ -48,7 +48,6 @@ SingleModelRenderer.prototype.constructor = SingleModelRenderer;
  *
  * - *meshes* An array of THREE.Mesh objects visualizing this model file.
  * 
- * @method  renderAsync
  * @async
  * @param  {Function} callback Fires when renderer is finished, does not take arguments.
  */

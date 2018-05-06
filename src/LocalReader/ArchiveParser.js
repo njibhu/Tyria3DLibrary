@@ -17,17 +17,17 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-/***
- * @file The ArchiveParser module is a set of helper tools to correctly read the Archive.
- **/
-
 const MathUtils = require('../util/MathUtils');
 
-
+/**
+ * @file The ArchiveParser module is a set of helper tools to correctly read the Archive.
+ * @namespace ArchiveParser
+ */
 
 /**
  *    All in one function to read a GW2.dat file and parse all the needed informations to work with it
- * 
+ *
+ * @memberof ArchiveParser
  * @param {File} file
  * @returns {Promise<{archiveHeader: ArchiveHeader, metaTable: MetaTable, indexTable: IndexTable}>}
  */
@@ -61,6 +61,7 @@ async function readArchive(file){
 /**
  *   Parse the main information about the archive like format version, positions of information tables, crc etc...
  * 
+ * @memberof ArchiveParser
  * @param {DataStream} ds
  * @returns {ArchiveIndex} Returns undefined if the header couldn't be parsed
  */
@@ -103,6 +104,7 @@ function parseANDatHeader(ds){
 /**
  *   Parse the main information table that contains the offset, size, compression flags and crc
  * 
+ * @memberof ArchiveParser
  * @param {Datastream}  ds
  * @returns {{header: {magic: String, nbOfEntries: number}, table: MetaTable, mftIndexOffset: number, mftIndexSize: number}|undefined}
  *   Returns undefined if it couldn't parse the table
@@ -163,6 +165,7 @@ function parseMFTTable(ds){
  *   a "fileId" which in the end was just the equivalent of 
  *   MFTbaseIds[mftId].sort().reverse()[0] (aka the bigger baseId found)
  * 
+ * @memberof ArchiveParser
  * @param {DataStream} ds 
  * @param {number} size
  * @returns {IndexTable}
@@ -192,6 +195,7 @@ function parseMFTIndex(ds, size){
 /**
  *   Get a chunk of the specified file. Used mainly to take parts of the Archive before parsing.
  * 
+ * @memberof ArchiveParser
  * @param {File} file 
  * @param {number} offset 
  * @param {number} length 

@@ -35,7 +35,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
  * 
  * @for T3D
  * @property formats
- * @type Array
+ * @type {Array<{name: string, versions: {Object}>}
  */
 
 let definitionArray = [];
@@ -121,7 +121,13 @@ function generate(){
             }
             // And close the Array
             chunk += "]";
-			
+            
+            let unknownTypeMatch = chunk.match(/Unknown0x[0-9A-F]*/);
+            if(unknownTypeMatch){
+                console.log("Warning, found one unknown type: '", unknownTypeMatch[0], "' in chunk: ", chunkName);
+                chunk = chunk.replace(/Unknown0x[0-9A-F]*,/, "'uint32', //" + unknownTypeMatch[0]);
+            }
+
             //Write out to the outputFolder
 			fs.writeFile(`${outputFolder}/${filename}.js`, 
                          //and beautify the chunks before writing them (fixing the ident)

@@ -25,7 +25,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
  * 
  * @for T3D
  * @property formats
- * @type Array
+ * @type {Array<{name: string, versions: {Object}>}
  */
 
 let definitionArray = [];

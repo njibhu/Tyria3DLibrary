@@ -17,11 +17,11 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var RenderUtils = require("../util/RenderUtils");
-var DataRenderer = require('./DataRenderer');
-var GW2File = require("../format/file/GW2File.js"); 
+const RenderUtils = require("../util/RenderUtils");
+const DataRenderer = require('./DataRenderer');
+const GW2File = require("../format/file/GW2File.js"); 
 
-var TerrainShader = require("../util/TerrainShader.js");
+const TerrainShader = require("../util/TerrainShader.js");
 
 /**
  *
@@ -411,7 +411,6 @@ TerrainRenderer.prototype.constructor = TerrainRenderer;
  * 
  * - *bounds* An object wiht x1, x2, y1, and y2 properties specifying the bounds of the map.
  * 
- * @method  renderAsync
  * @async
  * @param  {Function} callback Fires when renderer is finished, does not take arguments.
  */
@@ -424,9 +423,9 @@ TerrainRenderer.prototype.renderAsync = function(callback){
 
 /**
  * TODO: write description. Used for export feature
- * @method getFileIdsAsync
+ * 
  * @param  {Function} callback [description]
- * @return {[type]}            [description]
+ * @return {*}            [description]
  */
 TerrainRenderer.prototype.getFileIdsAsync = function(callback){
 
