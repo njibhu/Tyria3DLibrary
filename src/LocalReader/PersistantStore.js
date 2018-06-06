@@ -27,13 +27,13 @@ const DB_VERSION = 4;
  * This class handles offline storage of the .dat indexes and files metadata
  * @class PersistantStore
  */
-class PersistantStore{
+class PersistantStore {
 
     constructor() {
         //They may be multiple connection request issued at the same time, but it's actually okay since
         //as soon as they are registered, the not-used ones will get garbage collected
         this._dbConnection = undefined;
-        this._getConnection(()=>{});
+        this._getConnection(() => {});
     }
 
     /**
@@ -43,17 +43,16 @@ class PersistantStore{
      * @private
      * @returns {Promise<IDBDatabase>} Promise to the Database connection
      */
-    _getConnection(){
-        let self = this;
+    _getConnection() {
         return new Promise((resolve, reject) => {
-            if(self._dbConnection)
-                resolve(self._dbConnection);
+            if (this._dbConnection)
+                resolve(this._dbConnection);
 
             // Let us open our database
             let request = window.indexedDB.open("Tyria3DLibrary", DB_VERSION);
-            
+
             /// onblocked is fired when the db needs an upgrade but an older version is opened in another tab
-            request.onblocked = (event) =>  {
+            request.onblocked = (event) => {
                 T3D.Logger.log(
                     T3D.Logger.TYPE_ERROR,
                     "The T3D persistant database cannot be upgraded while the app is opened somewhere else."
@@ -66,21 +65,25 @@ class PersistantStore{
                 let db = event.target.result;
                 let currentVersion = event.oldVersion;
 
-                if(currentVersion < 2){
-                    let newstore = db.createObjectStore("listings", {autoIncrement: true});
+                if (currentVersion < 2) {
+                    let newstore = db.createObjectStore("listings", {
+                        autoIncrement: true
+                    });
                 }
 
-                if(currentVersion < 3){
+                if (currentVersion < 3) {
                     let storeListing = event.currentTarget.transaction.objectStore("listings");
-                    storeListing.createIndex('filename', 'filename', {unique: false});
+                    storeListing.createIndex('filename', 'filename', {
+                        unique: false
+                    });
                 }
 
             }
 
             request.onsuccess = (event) => {
-                self._dbConnection = event.target.result;
-                self.isReady = true;
-                resolve(self._dbConnection);
+                this._dbConnection = event.target.result;
+                this.isReady = true;
+                resolve(this._dbConnection);
             }
 
             request.onerror = (event) => {
@@ -103,14 +106,20 @@ class PersistantStore{
      * @param {boolean} isComplete Keep back the information if that was the last update on the current scan or not.
      * @returns {Promise<number>} On success, the number is the object key in the database
      */
-    putListing(id, listing, fileName, isComplete){
-        let self = this;
+    putListing(id, listing, fileName, isComplete) {
         return new Promise((resolve, reject) => {
-            self._getConnection().then((db) => {
+            this._getConnection().then((db) => {
                 let store = db.transaction(["listings"], "readwrite").objectStore("listings");
 
-                let request = (id) ? store.put({array: listing, filename: fileName, complete: isComplete}, id) : store.put({array: listing, name: fileName});
-    
+                let request = (id) ? store.put({
+                    array: listing,
+                    filename: fileName,
+                    complete: isComplete
+                }, id) : store.put({
+                    array: listing,
+                    name: fileName
+                });
+
                 request.onsuccess = (event) => {
                     resolve(request.result);
                 }
@@ -131,20 +140,27 @@ class PersistantStore{
      *      key: the index of the last listing in the database
      */
     getLastListing(fileName) {
-        let self = this;
         return new Promise((resolve, reject) => {
-            self._getConnection().then((db) => {
+            this._getConnection().then((db) => {
                 let listingsStore = db.transaction(["listings"], "readonly")
                     .objectStore("listings").index("filename");
-                
+
                 listingsStore.openCursor(IDBKeyRange.only(fileName), "prev").onsuccess = (event) => {
                     let cursor = event.target.result;
-                    if(!cursor)
-                        resolve({array: [], key: undefined, complete: true});
+                    if (!cursor)
+                        resolve({
+                            array: [],
+                            key: undefined,
+                            complete: true
+                        });
                     else {
-                        resolve({array: cursor.value.array, key: cursor.primaryKey, complete: cursor.value.complete});
+                        resolve({
+                            array: cursor.value.array,
+                            key: cursor.primaryKey,
+                            complete: cursor.value.complete
+                        });
                     }
-                        
+
                 }
             });
         });

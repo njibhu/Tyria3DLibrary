@@ -28,11 +28,11 @@ class DataReader {
      * @param {number} settings.workersNb Amount of concurrent spawned workers
      * @param {string} settings.workerPath Path to the worker script
      */
-    constructor(settings){
+    constructor(settings) {
         this._settings = settings;
         this._workerPool = [];
         this._workerLoad = [];
-        
+
         //Makes individual ids for file extraction
         this._handleCounter = 0;
 
@@ -50,7 +50,7 @@ class DataReader {
          */
         this._handleRegister = {};
 
-        for (let i = 0; i<settings.workersNb; i++){
+        for (let i = 0; i < settings.workersNb; i++) {
             this._startWorker(settings.workerPath);
         }
     }
@@ -63,17 +63,17 @@ class DataReader {
      * @param {number} [capLength] Output size
      * @returns {Promise<{buffer: ArrayBuffer, dxtType: number, imageWidth: number, imageHeight: number}>} 
      */
-    inflate(ds, size, mftId, isImage, capLength){
+    inflate(ds, size, mftId, isImage, capLength) {
         return new Promise((resolve, reject) => {
             let arrayBuffer = ds.buffer;
 
             //If no capLength then inflate the whole file
-            if(!capLength || capLength < 0){
+            if (!capLength || capLength < 0) {
                 capLength = 0;
             }
 
             //Buffer length size check
-            if(arrayBuffer.byteLength < 12){
+            if (arrayBuffer.byteLength < 12) {
                 T3D.Logger.log(
                     T3D.Logger.TYPE_WARNING,
                     `not inflating, length is too short (${arrayBuffer.byteLength})`, mftId
@@ -84,20 +84,20 @@ class DataReader {
 
             //Register the data to work with
             this._workQueue.push({
-                buffer: arrayBuffer, 
-                size: size, 
-                mftId: mftId, 
-                isImage: isImage, 
-                capLength: capLength, 
-                resolve: resolve, 
+                buffer: arrayBuffer,
+                size: size,
+                mftId: mftId,
+                isImage: isImage,
+                capLength: capLength,
+                resolve: resolve,
                 reject: reject
             });
 
             // Check if there is a free worker and ask it to start
             const freeWorkerIndex = this._getFreeWorkerIndex();
-            if(freeWorkerIndex >= 0){
+            if (freeWorkerIndex >= 0) {
                 this._workNext(freeWorkerIndex);
-            } 
+            }
 
         });
     }
@@ -107,10 +107,10 @@ class DataReader {
      * @private
      * @param {number} workerId
      **/
-    _workNext(workerId){
+    _workNext(workerId) {
         const workData = this._workQueue.shift();
 
-        if(workData){
+        if (workData) {
             //Get a handleID
             const handle = this._getNewHandle();
 
@@ -123,7 +123,7 @@ class DataReader {
 
             this._workerLoad[workerId] += 1;
             this._workerPool[workerId].postMessage(
-                [handle, workData.buffer, workData.isImage===true, workData.capLength]
+                [handle, workData.buffer, workData.isImage === true, workData.capLength]
             );
         }
 
@@ -135,17 +135,17 @@ class DataReader {
 
     // Initialization function for creating a new worker (thread)
     // _id should only be used to restart a worker !
-    _startWorker(path, _id){
+    _startWorker(path, _id) {
         let worker = new Worker(path);
         let selfWorkerId;
-        if(_id){
+        if (_id) {
             selfWorkerId = _id;
             this._workerPool[selfWorkerId] = worker;
             this._workerLoad[selfWorkerId] = 0;
 
         } else {
             selfWorkerId = this._workerPool.push(worker) - 1;
-            if(this._workerLoad.push(0) != selfWorkerId + 1) 
+            if (this._workerLoad.push(0) != selfWorkerId + 1)
                 throw new Error("WorkerLoad and WorkerPool don't have the same length");
         }
 
@@ -158,7 +158,7 @@ class DataReader {
             this._workerLoad[selfWorkerId] -= 1;
 
             // If error
-            if( typeof answer === 'string'){
+            if (typeof answer === 'string') {
                 T3D.Logger.log(
                     T3D.Logger.TYPE_WARNING,
                     "Inflater threw an error", answer
@@ -169,25 +169,29 @@ class DataReader {
 
                 //Get handle owner informations and reject then cleanup
                 const handleData = this._handleRegister[handleID];
-                if(handleData){
+                if (handleData) {
                     handleData.reject(`Error: ${answer}`);
                     delete this._handleRegister[handleID];
                 }
-            } 
-            else {
+            } else {
                 //Parse handle
                 handleID = answer[0];
 
                 const handleData = this._handleRegister[handleID];
                 // If handle is recognized: success
-                if(handleData){
+                if (handleData) {
                     // Array buffer, dxtType, imageWidth, imageHeight			
-                    handleData.resolve({buffer: answer[1], dxtType: answer[2], imageWidth: answer[3], imageHeight: answer[4]});	
-                    
+                    handleData.resolve({
+                        buffer: answer[1],
+                        dxtType: answer[2],
+                        imageWidth: answer[3],
+                        imageHeight: answer[4]
+                    });
+
                     //Cleanup
                     delete this._handleRegister[handleID];
                 }
-                
+
                 // Unknown error
                 else {
                     T3D.Logger.log(
@@ -204,8 +208,8 @@ class DataReader {
         //Handle errors, we assume worse case: it crashed and corrupted its memory
         worker.onerror = (error) => {
             //Get all handles sent to this worker and reject them
-            for(let handle in this._handleRegister){
-                if(this._handleRegister[handle].workerId === selfWorkerId){
+            for (let handle in this._handleRegister) {
+                if (this._handleRegister[handle].workerId === selfWorkerId) {
                     this._handleRegister[handle].reject(`Error: Worker crashed while processing ${handleData.mftId}`);
                     delete this._handleRegister[handle];
                 }
@@ -220,7 +224,7 @@ class DataReader {
     }
 
     //Returns -1 if there are no free worker, or the index of a free worker
-    _getFreeWorkerIndex(){
+    _getFreeWorkerIndex() {
         return this._workerLoad.indexOf(0);
     }
 

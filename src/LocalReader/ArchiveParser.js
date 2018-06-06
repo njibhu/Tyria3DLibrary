@@ -31,10 +31,13 @@ const MathUtils = require('../util/MathUtils');
  * @param {File} file
  * @returns {Promise<{archiveHeader: ArchiveHeader, metaTable: MetaTable, indexTable: IndexTable}>}
  */
-async function readArchive(file){
+async function readArchive(file) {
     let archiveHeader = parseANDatHeader((await getFilePart(file, 0, 40)).ds);
     let mftData = parseMFTTable((await getFilePart(file, archiveHeader.mftOffset, archiveHeader.mftSize)).ds);
-    let {ds, len} = await getFilePart(file, mftData.mftIndexOffset, mftData.mftIndexSize);
+    let {
+        ds,
+        len
+    } = await getFilePart(file, mftData.mftIndexOffset, mftData.mftIndexSize);
     let indexTable = parseMFTIndex(ds, len);
 
     return {
@@ -65,7 +68,7 @@ async function readArchive(file){
  * @param {DataStream} ds
  * @returns {ArchiveIndex} Returns undefined if the header couldn't be parsed
  */
-function parseANDatHeader(ds){
+function parseANDatHeader(ds) {
     var header = {};
 
     // Header parsing
@@ -82,7 +85,7 @@ function parseANDatHeader(ds){
     // End header parsing
 
     //Check MAGIC
-    if(header.magic != "AN\u001A"){
+    if (header.magic != "AN\u001A") {
         T3D.Logger.log(
             T3D.Logger.TYPE_ERROR, "ANDat header is not valid", header.magic);
         return undefined;
@@ -109,7 +112,7 @@ function parseANDatHeader(ds){
  * @returns {{header: {magic: String, nbOfEntries: number}, table: MetaTable, mftIndexOffset: number, mftIndexSize: number}|undefined}
  *   Returns undefined if it couldn't parse the table
  */
-function parseMFTTable(ds){
+function parseMFTTable(ds) {
     // Parse the table header
     var header = {};
     header.magic = ds.readString(4);
@@ -118,7 +121,7 @@ function parseMFTTable(ds){
     ds.seek(ds.position + 4 + 4); //Skip uint32 * 2
 
     //check MAGIC
-    if(header.magic != "Mft\u001A"){
+    if (header.magic != "Mft\u001A") {
         T3D.Logger.log(
             T3D.Logger.TYPE_ERROR, "MFTTable header is not valid", header.magic);
         return undefined;
@@ -128,9 +131,9 @@ function parseMFTTable(ds){
     //We don't pre-alloc anymore since not having the data aligned together procs too many
     //cache misses during a fullscan
     let fullTable = [];
-    
+
     // Go through the table
-    for(let i=1; i<header.nbOfEntries; i++){
+    for (let i = 1; i < header.nbOfEntries; i++) {
         let item = {};
         item['offset'] = MathUtils.arr32To64([ds.readUint32(), ds.readUint32()]);
         item['size'] = ds.readUint32();
@@ -141,15 +144,15 @@ function parseMFTTable(ds){
     }
 
     T3D.Logger.log(
-		T3D.Logger.TYPE_DEBUG,
-		"Loaded MFTTable"
-	);
+        T3D.Logger.TYPE_DEBUG,
+        "Loaded MFTTable"
+    );
 
     return {
-        header: header, 
-        table: fullTable, 
+        header: header,
+        table: fullTable,
         //Register the MFTIndex table position and size
-        mftIndexOffset: fullTable[2].offset, 
+        mftIndexOffset: fullTable[2].offset,
         mftIndexSize: fullTable[2].size
     };
 }
@@ -170,12 +173,12 @@ function parseMFTTable(ds){
  * @param {number} size
  * @returns {IndexTable}
  */
-function parseMFTIndex(ds, size){
+function parseMFTIndex(ds, size) {
     let length = size / 8;
 
     let indexTable = [];
 
-    for(let i=0; i<length; i++){
+    for (let i = 0; i < length; i++) {
         //Parse table
         let id = ds.readUint32();
         let mftIndex = ds.readUint32();
@@ -184,9 +187,9 @@ function parseMFTIndex(ds, size){
     }
 
     T3D.Logger.log(
-		T3D.Logger.TYPE_DEBUG,
-		"Finished indexing MFT"
-	);
+        T3D.Logger.TYPE_DEBUG,
+        "Finished indexing MFT"
+    );
 
     return indexTable;
 }
@@ -201,20 +204,23 @@ function parseMFTIndex(ds, size){
  * @param {number} length 
  * @returns {Promise<{ds: DataStream, len: number}>}
  */
-function getFilePart(file, offset, length){
+function getFilePart(file, offset, length) {
     return new Promise((resolve, reject) => {
         let reader = new FileReader();
 
         reader.onerror = reject;
-    
-        reader.onload = function(fileEvent){
+
+        reader.onload = (fileEvent) => {
             var buffer = fileEvent.target.result;
             var ds = new DataStream(buffer);
-                ds.endianness = DataStream.LITTLE_ENDIAN;
+            ds.endianness = DataStream.LITTLE_ENDIAN;
             // Pass data stream and data length to callback function
-            resolve({ds: ds, len: length});
+            resolve({
+                ds: ds,
+                len: length
+            });
         }
-        
+
         // Slicing a File is just reducing the scope of the ArrayBuffer, but doesn't load anything in memory.
         reader.readAsArrayBuffer(file.slice(offset, offset + length));
     })
