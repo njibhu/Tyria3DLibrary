@@ -1,6 +1,6 @@
 {
   "name": "t3d-lib",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "dependencies": {
     "DataStream.js": "github:kig/DataStream.js"
@@ -13,6 +13,7 @@
     "gulp-streamify": "*",
     "gulp-uglify": "*",
     "gulp-watch": "~0.6.8",
+    "gulp-rename": "*",
     "js-beautify": "^1.7.5",
     "uglify-es": "^3.3.10",
     "vinyl-buffer": "^1.0.1",

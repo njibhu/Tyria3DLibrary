@@ -32,8 +32,26 @@ gulp.task('T3D', function(){
 			.on('error', log.error)
 		.pipe(sourcemaps.write('./'))
 		.pipe(gulp.dest('build'))
-		.pipe(gulp.dest('./examples/static'));
 });
+
+gulp.task('examples', function(){
+	// set up the browserify instance on a task basis
+	let b = browserify({
+		entries: './src/T3DLib.js',
+		debug: true,
+		standalone: 'T3D'
+	});
+
+	return b.bundle()
+		.pipe(source(`T3D-latest.js`))
+		.pipe(buffer())
+		.pipe(sourcemaps.init({loadMaps: true}))
+			// Add transformation tasks to the pipeline here.
+			.pipe(uglify())
+			.on('error', log.error)
+		.pipe(sourcemaps.write('./'))
+		.pipe(gulp.dest('./examples/static'));
+})
 
 gulp.task('formats', function(){
 	let b = browserify({
@@ -53,7 +71,7 @@ gulp.task('formats', function(){
 })
 
 gulp.task('watch', function() {
-	gulp.watch(['src/**/*.js'], gulp.series('T3D'));
+	gulp.watch(['src/**/*.js'], gulp.parallel('T3D', 'examples'));
 });
   
-gulp.task('default', gulp.series('T3D'));
+gulp.task('default', gulp.parallel('T3D', 'examples'));
