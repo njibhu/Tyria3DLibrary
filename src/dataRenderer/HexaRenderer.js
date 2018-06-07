@@ -24,7 +24,8 @@ class HexaRenderer extends DataRenderer {
         super();
     }
 
-    renderAsync(){
+    renderAsync(callback){
         var fileId = this.settings.id;
+        
     }
 }

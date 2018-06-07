@@ -238,7 +238,7 @@ class LocalReader {
             let result = this._needsScan(baseId, persistantList);
             if (result.scan == true) {
                 let taskId = (await Promise.race(taskArray)).task;
-                taskArray[taskId] = this._readFileType(baseId).then((scanResult) => {
+                taskArray[taskId] = this.readFileType(baseId).then((scanResult) => {
                     //Put the result into our persistant storage
                     persistantList[baseId] = {
                         baseId: baseId,
@@ -631,12 +631,12 @@ class LocalReader {
     }
 
     /**
-     * @private
+     * Reads the file type and gives back an object with fileType, crc and size informations
      * @param {number} baseId 
      * @param {Array<{baseId: number, crc: number, size: number, fileType: string}>} persistantData 
      * @returns {Promise<{fileType: string, crc: number, size: number}>}
      */
-    async _readFileType(baseId) {
+    async readFileType(baseId) {
         if (!this._fileTypeCache)
             this._fileTypeCache = [];
 
