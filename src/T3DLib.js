@@ -334,20 +334,16 @@ T3D = module.exports = {
 	* {{#crossLink "LocalReader/listFiles:method"}}{{/crossLink}}
 	*/
 	getFileListAsync : function(localReader, callback){
-
-		/// Check local storage for an existing file list
-		var fileList = localReader.loadFileList();
-
-		/// If there is no cached list, look for pre-defined maps.
-		if(!fileList){
-			localReader.readFileListAsync(callback);
-		}
-
-		/// Otherwise, just fire the callback with the cached list
-		else{
-			callback(fileList);
-		}
-		
+		//Because the localreader API changed we reform the data as wanted
+		localReader.readFileList().then((result) => {
+			let returnObj = {};
+			for (let fileEntry of result) {
+				if (returnObj[fileEntry.fileType] === undefined)
+					returnObj[fileEntry.fileType] = [];
+				returnObj[fileEntry.fileType].push(fileEntry.mftId);
+			}
+			callback(returnObj);
+		});
 	},
 
 	/**
@@ -391,25 +387,43 @@ T3D = module.exports = {
 	* @param {boolean} searchAll if true forces re-indexing of entire dat.
 	*/
 	getMapListAsync : function(localReader, callback, searchAll){
+		//Define a function that transforms the localreader output to what we want
+        function restoreOuput(array) {
+            let returnArray = [];
+            for (let elt of array) {
+                let category = returnArray.findIndex(i => i.name == elt.category)
+                if (category == -1)
+                    category = returnArray.push({
+                        name: elt.category,
+                        maps: []
+                    }) - 1;
+                returnArray[category].maps.push({
+                    fileName: elt.baseId,
+                    name: elt.name
+                });
+            }
+            //And resort it in order
+            returnArray.sort((i, j) => {
+                if (i.name < j.name) return -1;
+                if (i.name > j.name) return 1;
+                return 0;
+            })
+            return {
+                maps: returnArray
+            };
+        }
 
 		/// If seachAll flag is true, force a deep search
-		if(searchAll){
-			localReader.readMapListAsync(true, callback);
-			return;
+		if (searchAll) {
+            localReader.readFileList().then(() => {
+                callback(restoreOuput(localReader.getMapList()));
+            })
+		} 
+		/// If not, it's only looking through known maps
+		else {
+            callback(restoreOuput(localReader.getMapList()));
 		}
 
-		/// Check local storage for an existing map list
-		var mapList = localReader.loadMapList();
-
-		/// If there is no cached list, look for pre-defined maps.
-		if(!mapList){
-			localReader.readMapListAsync(false, callback);
-		}
-
-		/// Otherwise, just fire the callback with the cached list
-		else{
-			callback(mapList);
-	}
 		
 	},
 
@@ -437,40 +451,39 @@ T3D = module.exports = {
 		if(parseInt(fileName)){
 
 			/// File name is baseId, load using local reader.
-			localReader.loadFile(
-				fileName,
-				function(arrayBuffer){
+			localReader.readFile(parseInt(fileName), false, false, undefined, undefined, true).then((result) => {
+				let arrayBuffer = result.buffer;
+				
+				/// Set up datastream
+				var ds = new DataStream(arrayBuffer, 0, DataStream.LITTLE_ENDIAN);
 
-					/// Set up datastream
-					var ds = new DataStream(arrayBuffer, 0, DataStream.LITTLE_ENDIAN);
+				/// Initiate Map file object. Connect callback
+				var mapFile = new T3D.GW2File(ds, 0);
 
-					/// Initiate Map file object. Connect callback
-					var mapFile = new T3D.GW2File(ds, 0);
+				/// Populate VO by running the renderers
+				var runAllRenderers = function(i){
+					
+					/// Run each renderer
+					if(i < renderers.length ){
+						T3D.runRenderer(
+							renderers[i].renderClass,
+							localReader,
+							Object.assign(renderers[i].settings,{mapFile:mapFile}),
+							context,
+							runAllRenderers.bind(this,i+1)
+						);
+					}
 
-					/// Populate VO by running the renderers
-					var runAllRenderers = function(i){
-						
-						/// Run each renderer
-						if(i < renderers.length ){
-							T3D.runRenderer(
-								renderers[i].renderClass,
-								localReader,
-								Object.assign(renderers[i].settings,{mapFile:mapFile}),
-								context,
-								runAllRenderers.bind(this,i+1)
-							);
-						}
+					/// Fire callback with VO when done
+					else{
+						callback(context);
+					}
+				};
 
-						/// Fire callback with VO when done
-						else{
-							callback(context);
-						}
-					};
+				/// Starting point for running each renderer
+				runAllRenderers(0);
 
-					/// Starting point for running each renderer
-					runAllRenderers(0);
-				}
-			);
+			});
 		}
 
 		/// Primitive error message...

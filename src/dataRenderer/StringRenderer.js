@@ -64,7 +64,8 @@ StringRenderer.prototype.renderAsync = function(callback){
 	/// Set up output array
 	this.getOutput().strings = [];
 
-	this.localReader.loadFile(this.settings.id, function(inflatedData){
+	this.localReader.readFile(this.settings.id, false, false, undefined, undefined, true).then((result) => {	
+		let inflatedData = result.buffer;
 		var ds = new DataStream(inflatedData);
 		var end = ds.byteLength -2;
 

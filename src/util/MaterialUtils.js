@@ -600,11 +600,11 @@ function loadLocalTexture(localReader, fileId, mapping, defaultColor, onerror){
 	}
 
 	/// Load file using LocalReader.
-	localReader.loadTextureFile(fileId,
-		function(inflatedData, dxtType, imageWidth, imageHeigth){
+	localReader.readFile(fileId, true, false, undefined, undefined, true)
+		.then((result) => {
 
 			/// Require infalted data to be returned.
-			if(!inflatedData){
+			if(!result.buffer){
 				if(onerror)
 					onerror();
 				return;
@@ -612,14 +612,14 @@ function loadLocalTexture(localReader, fileId, mapping, defaultColor, onerror){
 
 			/// Create image using returned data.
 			var image = {
-				data   : new Uint8Array(inflatedData),
-				width  : imageWidth,
-				height : imageHeigth
+				data   : new Uint8Array(result.buffer),
+				width  : result.imageWidth,
+				height : result.imageHeigth
 			};
 
 			/// Use RGBA for all textures for now...
 			/// TODO: don't use alpha for some formats!
-			texture.format = (dxtType==3 || dxtType==5 || true) ? THREE.RGBAFormat : THREE.RGBFormat;
+			texture.format = (result.dxtType==3 || result.dxtType==5 || true) ? THREE.RGBAFormat : THREE.RGBFormat;
 
 			/// Update texture with the loaded image.
 			texture.image = image;

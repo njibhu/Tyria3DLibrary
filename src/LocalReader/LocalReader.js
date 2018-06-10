@@ -45,7 +45,7 @@ const FileTypes = require('./FileTypes');
  * - listFiles have been __removed__.
  * - getFileIndex have been slightly __changed__.
  * - loadTextureFile is now __deprecated__.
- * - loadFile have been __removed__.
+ * - loadFile have been __deprecated__.
  * - inflate have been __removed__.
  * - loadFilePart have been __removed__.
  * 
@@ -152,9 +152,15 @@ class LocalReader {
      * @param {boolean} [raw] Force no decompression.
      * @param {number} [fileLength] Slice the uncompressed file.
      * @param {number} [extractLength] Slice the decompression.
+     * @param {boolean} [isBaseId] If true, the first parameter mftId becomes a baseId
      * @returns {Promise<{buffer: ArrayBuffer, dxtType: number|undefined, imageWidth: number|undefined, imageHeight: number|undefined}>}
      */
-    async readFile(mftId, isImage, raw, fileLength, extractLength) {
+    async readFile(mftId, isImage, raw, fileLength, extractLength, isBaseId) {
+        if(isBaseId)
+            mftId = this.getFileIndex(mftId);
+            if(!(mftId > 0))
+                throw new Error("Unexistant baseId");
+
         let buffer, dxtType, imageWidth, imageHeight;
         let meta = this.getFileMeta(mftId);
         if (!meta)
@@ -519,10 +525,7 @@ class LocalReader {
      */
     loadFile(baseId, callback, isImage, raw) {
         T3D.Logger.log(T3D.Logger.TYPE_WARNING, "LocalReader.loadFile is deprecated !");
-        let mftId = this.getFileIndex(baseId);
-        if (mftId <= 0)
-            return callback(null);
-        this.readFile(mftId, isImage, raw).then((result) => {
+        this.readFile(baseId, isImage, raw, undefined, undefined, true).then((result) => {
             if (result.buffer == undefined)
                 return callback(null);
             callback(result.buffer, result.dxtType, result.imageWidth, result.imageHeight);
@@ -546,7 +549,15 @@ class LocalReader {
     loadTextureFile(baseId, callback) {
         T3D.Logger.log(T3D.Logger.TYPE_WARNING, "LocalReader.loadTextureFile is deprecated !");
 
-        this.loadFile(baseId, callback, true);
+        /// Old way:
+        //this.loadFile(baseId, callback, true);
+
+        /// New way:
+        this.readFile(baseId, isImage, raw, undefined, undefined, true).then((result) => {
+            if (result.buffer == undefined)
+                return callback(null);
+            callback(result.buffer, result.dxtType, result.imageWidth, result.imageHeight);
+        });
     }
 
     /**
