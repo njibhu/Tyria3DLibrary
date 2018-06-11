@@ -53,6 +53,17 @@ gulp.task('examples', function(){
 		.pipe(gulp.dest('./examples/static'));
 })
 
+gulp.task('T2D', function(){
+	return browserify({
+		entries: './examples/Tyria2D/src/main.js',
+		debug: true
+	}).bundle()
+		.pipe(source('Tyria2D-app.js'))
+		.pipe(buffer())
+		.pipe(sourcemaps.write('./'))
+		.pipe(gulp.dest('./examples/Tyria2D/build'));
+});
+
 gulp.task('formats', function(){
 	let b = browserify({
 		entries: './src/format/chunks/AllFormats.js',
@@ -68,6 +79,7 @@ gulp.task('formats', function(){
 		.pipe(sourcemaps.write('./'))
 		.pipe(gulp.dest('build'))
 		.pipe(gulp.dest('./examples/static'));
+<<<<<<< HEAD
 })
 
 gulp.task('watch', function() {
@@ -75,3 +87,12 @@ gulp.task('watch', function() {
 });
   
 gulp.task('default', gulp.parallel('T3D', 'examples'));
+=======
+});
+
+gulp.task('watch', function() {
+	gulp.watch(['src/**/*.js'], gulp.series('T3D'));
+});
+  
+gulp.task('default', gulp.series('T3D'));
+>>>>>>> tyria2d

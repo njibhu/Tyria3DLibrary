@@ -409,7 +409,6 @@ class LocalReader {
 
     //API Compatibility
 
-
     /**
      * Looks up mft indices for all mapc pack files in the dat. Either looks trough all files or
      * only the list defined in {@link MapFileList}
