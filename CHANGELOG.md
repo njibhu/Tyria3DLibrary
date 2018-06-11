@@ -2,6 +2,11 @@
 
 All changes on the project will be documented in this file
 
+## 1.2.0
+ * All DataRenderers have switched to ES5 classes.
+ * All deprecated functions uses from LocalReader have been updated.
+ * Tyria2D is becoming a modular project to allow easier modifications.
+
 ## 1.1.1
  * Fix the LocalReader crashes when loading big files, performance should be impacted a bit
    but we'll come back to it for later optimisations. Current stability should be much better.
