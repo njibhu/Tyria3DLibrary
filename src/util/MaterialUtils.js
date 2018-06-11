@@ -614,7 +614,7 @@ function loadLocalTexture(localReader, fileId, mapping, defaultColor, onerror){
 			var image = {
 				data   : new Uint8Array(result.buffer),
 				width  : result.imageWidth,
-				height : result.imageHeigth
+				height : result.imageHeight
 			};
 
 			/// Use RGBA for all textures for now...

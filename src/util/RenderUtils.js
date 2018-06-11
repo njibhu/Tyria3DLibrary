@@ -469,7 +469,7 @@ function loadMeshFromModelFile(filename, solidColor, localReader, sharedTextures
 
 				localReader.readFile(mat.filename, false, false, undefined, undefined, true)
 					.then((result) => {
-						let inflatedData = result;
+						let inflatedData = result.buffer;
 						if(inflatedData){
 							var ds = new DataStream(inflatedData);
 							var materialFile = new GW2File(ds,0);

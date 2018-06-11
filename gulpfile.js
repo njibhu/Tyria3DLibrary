@@ -79,7 +79,6 @@ gulp.task('formats', function(){
 		.pipe(sourcemaps.write('./'))
 		.pipe(gulp.dest('build'))
 		.pipe(gulp.dest('./examples/static'));
-<<<<<<< HEAD
 })
 
 gulp.task('watch', function() {
@@ -87,12 +86,3 @@ gulp.task('watch', function() {
 });
   
 gulp.task('default', gulp.parallel('T3D', 'examples'));
-=======
-});
-
-gulp.task('watch', function() {
-	gulp.watch(['src/**/*.js'], gulp.series('T3D'));
-});
-  
-gulp.task('default', gulp.series('T3D'));
->>>>>>> tyria2d

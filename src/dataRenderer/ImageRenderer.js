@@ -73,7 +73,7 @@ class ImageRenderer extends DataRenderer {
                 return this.localReader.readFile(fileId).then((result) => {
                     return {
                         type: fileType,
-                        data: result
+                        data: result.buffer
                     };
                 });
             }

@@ -149,7 +149,7 @@ class DataRenderer{
 					var image = {
 						data   : new Uint8Array(result.buffer),
 						width  : result.imageWidth,
-						height : result.imageHeigth
+						height : result.imageHeight
 					};
 
 					self.getOutput().image = image;
