@@ -33,274 +33,274 @@ const DataRenderer = require('./DataRenderer');
  * @param  {Object} context      Shared value object between renderers.
  * @param  {Logger} logger       The logging class to use for progress, warnings, errors et cetera.
  */
-function PropertiesRenderer(localReader, settings, context, logger){
-	DataRenderer.call(this, localReader, settings, context, logger);
-	this.mapFile = this.settings.mapFile;
-}
 
-/// DataRenderer inheritance:
-PropertiesRenderer.prototype = Object.create(DataRenderer.prototype);
-PropertiesRenderer.prototype.constructor = PropertiesRenderer;
-
-/**
- * Renders all property meshes in a GW2 map described by the map's PROP chunk.
- * Output fileds generated:
- *
- * - *meshes* An array of THREE.Mesh objects visualizing all property models refered by this map.
- * 
- * @async
- * @param  {Function} callback Fires when renderer is finished, does not take arguments.
- */
-PropertiesRenderer.prototype.renderAsync = function(callback){
-	var self = this;
-
-	self.getOutput().meshes = [];
-
-	var propertiesChunkData =  this.mapFile.getChunk("prp2").data;
-
-	if(!propertiesChunkData){
-		renderCallback();
-		return;
+class PropertiesRenderer extends DataRenderer {
+    constructor(localReader, settings, context, logger) {
+		super(localReader, settings, context, logger);
+		
+		this.mapFile = this.settings.mapFile;
 	}
 
-	var props = propertiesChunkData.propArray;
-	var animProps =propertiesChunkData.propAnimArray;
-	var instanceProps = propertiesChunkData.propInstanceArray;
-	var metaProps = propertiesChunkData.propMetaArray;
+	/**
+	 * Renders all property meshes in a GW2 map described by the map's PROP chunk.
+	 * Output fileds generated:
+	 *
+	 * - *meshes* An array of THREE.Mesh objects visualizing all property models refered by this map.
+	 * 
+	 * @async
+	 * @param  {Function} callback Fires when renderer is finished, does not take arguments.
+	 */
+	renderAsync(callback){
+		var self = this;
 
-	/// Concat all prop types
-	props = props
-		.concat(animProps)
-		.concat(instanceProps)
-		.concat(metaProps);
+		self.getOutput().meshes = [];
 
-	/// Create mesh cache
-	self.meshCache = {};
-	self.textureCache = {};
+		var propertiesChunkData =  this.mapFile.getChunk("prp2").data;
 
-	// For now, we'll do all load in serial
-	// TODO: load unique meshes and textures in parallell (asynch), then render!
-	var lastPct = -1;
-
-	var renderIndex = function(idx){
-
-		if(idx>= props.length){
-
-			/// Empty mesh cache
-			self.meshCache = {};
-			self.textureCache = {};
-			callback();
+		if(!propertiesChunkData){
+			renderCallback();
 			return;
 		}
 
-		var pct = Math.round(1000.0*idx / props.length);
-		pct/=10.0;
-		
-		/// Log progress
-		if(lastPct!=pct){
-			var pctStr = pct +
-				( pct.toString().indexOf(".")<0 ? ".0":"" );
+		var props = propertiesChunkData.propArray;
+		var animProps =propertiesChunkData.propAnimArray;
+		var instanceProps = propertiesChunkData.propInstanceArray;
+		var metaProps = propertiesChunkData.propMetaArray;
 
-			self.logger.log(
-				T3D.Logger.TYPE_PROGRESS,
-				"Loading 3D Models (Props)", pctStr
-			);
-			lastPct = pct;
-		}
+		/// Concat all prop types
+		props = props
+			.concat(animProps)
+			.concat(instanceProps)
+			.concat(metaProps);
 
-		/// Read prop at index.
-		var prop = props[idx];								
+		/// Create mesh cache
+		self.meshCache = {};
+		self.textureCache = {};
 
-	    /// Adds a single mesh to a group.
-		var addMeshToLOD = function(mesh, groups, lod, prop, needsClone){
+		// For now, we'll do all load in serial
+		// TODO: load unique meshes and textures in parallell (asynch), then render!
+		var lastPct = -1;
 
-			/// Read lod distance before overwriting mesh variable
-		    var lodDist = prop.lod2 != 0 ? prop.lod2 : mesh.lodOverride[1];
+		var renderIndex = function(idx){
 
-		    /// Read flags before overwriting mesh variable
-	    	var flags = mesh.flags;
+			if(idx>= props.length){
 
-	    	/// Mesh flags are 0 1 4
-	    	/// For now, use flag 0 as the default level of detail
-	    	if(flags==0)
-	    		lodDist=0;
-	    	
-	    	/// Create new empty mesh if needed
-	    	if(needsClone){
-	    		mesh = new THREE.Mesh( mesh.geometry, mesh.material );
-	    	}
+				/// Empty mesh cache
+				self.meshCache = {};
+				self.textureCache = {};
+				callback();
+				return;
+			}
 
-	    	mesh.updateMatrix();
-			mesh.matrixAutoUpdate = false;
-
-	    	// Find group for this LOD distance
-	    	if(groups[lodDist]){
-	    		groups[lodDist].add(mesh);
-	    	}
-	    	// Or create LOD group and add to a level of detail
-	    	// WIP, needs some testing!
-	    	else{
-	    		var group = new THREE.Group();
-	    		group.updateMatrix();
-				group.matrixAutoUpdate = false;
-	    		group.add(mesh);
-	    		groups[lodDist] = group;
-	    		lod.addLevel(group,lodDist);
-	    	}
-
-	    	return lodDist;
-	    }
-
-	    /// Adds array of meshes to the scene, also adds transform clones
-		var addMeshesToScene = function(meshArray, needsClone, boundingSphere){
+			var pct = Math.round(1000.0*idx / props.length);
+			pct/=10.0;
 			
-		    ///Add original 
+			/// Log progress
+			if(lastPct!=pct){
+				var pctStr = pct +
+					( pct.toString().indexOf(".")<0 ? ".0":"" );
 
-		    /// Make LOD object and an array of groups for each LOD level
-		    var groups = {};
-		    var lod = new THREE.LOD();
+				self.logger.log(
+					T3D.Logger.TYPE_PROGRESS,
+					"Loading 3D Models (Props)", pctStr
+				);
+				lastPct = pct;
+			}
 
-		    /// Each mesh is added to a group corresponding to its LOD distane
-		    var maxDist = 0;
-		    meshArray.forEach(function(mesh){
-		    	maxDist = Math.max( maxDist, addMeshToLOD(mesh,groups,lod,prop,needsClone) );
-	    	});
+			/// Read prop at index.
+			var prop = props[idx];								
 
-	    	/// Add invisible level (the raycaster crashes on lod without any levels)
-	    	lod.addLevel(new THREE.Group(),100000);
+			/// Adds a single mesh to a group.
+			var addMeshToLOD = function(mesh, groups, lod, prop, needsClone){
 
-		    /// Set position, scale and rotation of the LOD object
-			if(prop.rotation){
-		    	lod.rotation.order = "ZXY";
-		    	//["x","float32","z","float32","y","float32"],
-		    	lod.rotation.set(prop.rotation[0], -prop.rotation[2], -prop.rotation[1]);
-		    }
-		    lod.scale.set( prop.scale, prop.scale, prop.scale );
-		    lod.position.set(prop.position[0], -prop.position[2], -prop.position[1]);
-		   	
+				/// Read lod distance before overwriting mesh variable
+				var lodDist = prop.lod2 != 0 ? prop.lod2 : mesh.lodOverride[1];
 
-		   	lod.boundingSphereRadius = ( boundingSphere && boundingSphere.radius ? boundingSphere.radius : 1.0) * prop.scale;
+				/// Read flags before overwriting mesh variable
+				var flags = mesh.flags;
 
-		    lod.updateMatrix();
-		    lod.matrixAutoUpdate = false;
-
-		    /// Show highest level always
-		    //lod.update(lod);
-
-	    	//Add LOD containing mesh instances to scene
-	    	self.getOutput().meshes.push(lod);
-	    				    
-		    // Add one copy per transform, needs to be within it's own LOD
-		    if(prop.transforms){
-
-		    	prop.transforms.forEach(function(transform){
-		    		
-		    		/// Make LOD object and an array of groups for each LOD level
-		    		var groups = {};
-		    		var lod = new THREE.LOD();
-
-		    		/// Each mesh is added to a group corresponding to its LOD distane
-		    		var maxDist = 0;
-			    	meshArray.forEach(function(mesh){
-			    		maxDist = Math.max( maxDist, addMeshToLOD(mesh,groups,lod,prop,true) );
-			    	});
-
-			    	/// Add invisible level
-	    			//lod.addLevel(new THREE.Group(),10000);
-
-			    	/// Set position, scale and rotation of the LOD object
-					if(transform.rotation){
-				    	lod.rotation.order = "ZXY";
-				    	lod.rotation.set(transform.rotation[0], -transform.rotation[2], -transform.rotation[1]);
-				    }
-				    lod.scale.set( transform.scale, transform.scale, transform.scale );
-				    lod.position.set(transform.position[0], -transform.position[2], -transform.position[1]);
-
-					lod.updateMatrix();
-		    		lod.matrixAutoUpdate = false;
-
-		    		lod.boundingSphereRadius = ( boundingSphere && boundingSphere.radius ? boundingSphere.radius : 1.0) * prop.scale;
-
-					/// Show highest level always
-		    		lod.update(lod);
-
-			    	/// Add LOD containing mesh instances to scenerender: function(propertiesChunkHeader, map, localReader, renderCallback){
-			    	self.getOutput().meshes.push(lod);
-			    });
-		    }
-		}
-
-		/// Get meshes
-		var showUnmaterialed = false;
-		RenderUtils.getMeshesForFilename(prop.filename, prop.color, self.localReader, self.meshCache, self.textureCache, showUnmaterialed,
-			function(meshes, isCached, boundingSphere){
-			
-				if(meshes){
-					addMeshesToScene(meshes, isCached, boundingSphere);
+				/// Mesh flags are 0 1 4
+				/// For now, use flag 0 as the default level of detail
+				if(flags==0)
+					lodDist=0;
+				
+				/// Create new empty mesh if needed
+				if(needsClone){
+					mesh = new THREE.Mesh( mesh.geometry, mesh.material );
 				}
 
-				/// Render next prop
-				renderIndex(idx+1);
+				mesh.updateMatrix();
+				mesh.matrixAutoUpdate = false;
+
+				// Find group for this LOD distance
+				if(groups[lodDist]){
+					groups[lodDist].add(mesh);
+				}
+				// Or create LOD group and add to a level of detail
+				// WIP, needs some testing!
+				else{
+					var group = new THREE.Group();
+					group.updateMatrix();
+					group.matrixAutoUpdate = false;
+					group.add(mesh);
+					groups[lodDist] = group;
+					lod.addLevel(group,lodDist);
+				}
+
+				return lodDist;
 			}
-		);
 
-		
+			/// Adds array of meshes to the scene, also adds transform clones
+			var addMeshesToScene = function(meshArray, needsClone, boundingSphere){
+				
+				///Add original 
 
-	};
+				/// Make LOD object and an array of groups for each LOD level
+				var groups = {};
+				var lod = new THREE.LOD();
 
-	/// Start serial loading and redering. (to allow re-using meshes and textures)
-	renderIndex(0);
-}
+				/// Each mesh is added to a group corresponding to its LOD distane
+				var maxDist = 0;
+				meshArray.forEach(function(mesh){
+					maxDist = Math.max( maxDist, addMeshToLOD(mesh,groups,lod,prop,needsClone) );
+				});
 
+				/// Add invisible level (the raycaster crashes on lod without any levels)
+				lod.addLevel(new THREE.Group(),100000);
 
-/**
- * TODO: write description. Used for export feature
- * @param  {Function} callback [description]
- * @return {*}            [description]
- */
-PropertiesRenderer.prototype.getFileIdsAsync = function(callback){
-	var fileIds = [];
+				/// Set position, scale and rotation of the LOD object
+				if(prop.rotation){
+					lod.rotation.order = "ZXY";
+					//["x","float32","z","float32","y","float32"],
+					lod.rotation.set(prop.rotation[0], -prop.rotation[2], -prop.rotation[1]);
+				}
+				lod.scale.set( prop.scale, prop.scale, prop.scale );
+				lod.position.set(prop.position[0], -prop.position[2], -prop.position[1]);
+				
 
-	var propertiesChunkData =  this.mapFile.getChunk("prp2").data;
+				lod.boundingSphereRadius = ( boundingSphere && boundingSphere.radius ? boundingSphere.radius : 1.0) * prop.scale;
 
-	var props = propertiesChunkData.propArray;
-	var animProps = propertiesChunkData.propAnimArray;
-	var instanceProps = propertiesChunkData.propInstanceArray;
-	var metaProps = propertiesChunkData.propMetaArray;
+				lod.updateMatrix();
+				lod.matrixAutoUpdate = false;
 
-	props = props
-		.concat(animProps)
-		.concat(instanceProps)
-		.concat(metaProps);
+				/// Show highest level always
+				//lod.update(lod);
 
-	var getIdsForProp = function(idx){
+				//Add LOD containing mesh instances to scene
+				self.getOutput().meshes.push(lod);
+								
+				// Add one copy per transform, needs to be within it's own LOD
+				if(prop.transforms){
 
-		if(idx>=props.length){
-			callback(fileIds);
-			return;
-		}
+					prop.transforms.forEach(function(transform){
+						
+						/// Make LOD object and an array of groups for each LOD level
+						var groups = {};
+						var lod = new THREE.LOD();
 
-		if(idx%100==0){
+						/// Each mesh is added to a group corresponding to its LOD distane
+						var maxDist = 0;
+						meshArray.forEach(function(mesh){
+							maxDist = Math.max( maxDist, addMeshToLOD(mesh,groups,lod,prop,true) );
+						});
 
-			this.logger.log(
-				T3D.Logger.TYPE_MESSAGE,
-				"getting ids for entry",idx,"of",props.length
+						/// Add invisible level
+						//lod.addLevel(new THREE.Group(),10000);
+
+						/// Set position, scale and rotation of the LOD object
+						if(transform.rotation){
+							lod.rotation.order = "ZXY";
+							lod.rotation.set(transform.rotation[0], -transform.rotation[2], -transform.rotation[1]);
+						}
+						lod.scale.set( transform.scale, transform.scale, transform.scale );
+						lod.position.set(transform.position[0], -transform.position[2], -transform.position[1]);
+
+						lod.updateMatrix();
+						lod.matrixAutoUpdate = false;
+
+						lod.boundingSphereRadius = ( boundingSphere && boundingSphere.radius ? boundingSphere.radius : 1.0) * prop.scale;
+
+						/// Show highest level always
+						lod.update(lod);
+
+						/// Add LOD containing mesh instances to scenerender: function(propertiesChunkHeader, map, localReader, renderCallback){
+						self.getOutput().meshes.push(lod);
+					});
+				}
+			}
+
+			/// Get meshes
+			var showUnmaterialed = false;
+			RenderUtils.getMeshesForFilename(prop.filename, prop.color, self.localReader, self.meshCache, self.textureCache, showUnmaterialed,
+				function(meshes, isCached, boundingSphere){
+				
+					if(meshes){
+						addMeshesToScene(meshes, isCached, boundingSphere);
+					}
+
+					/// Render next prop
+					renderIndex(idx+1);
+				}
 			);
-		}
 
-		var prop = props[idx];
-		Utils.getFilesUsedByModel(
-			prop.filename,
-			localReader,
-			function(propFileIds){
-				fileIds = fileIds.concat(propFileIds);
-				getIdsForProp(idx+1);
+			
+
+		};
+
+		/// Start serial loading and redering. (to allow re-using meshes and textures)
+		renderIndex(0);
+	}
+
+
+	/**
+	 * TODO: write description. Used for export feature
+	 * @param  {Function} callback [description]
+	 * @return {*}            [description]
+	 */
+	getFileIdsAsync(callback){
+		var fileIds = [];
+
+		var propertiesChunkData =  this.mapFile.getChunk("prp2").data;
+
+		var props = propertiesChunkData.propArray;
+		var animProps = propertiesChunkData.propAnimArray;
+		var instanceProps = propertiesChunkData.propInstanceArray;
+		var metaProps = propertiesChunkData.propMetaArray;
+
+		props = props
+			.concat(animProps)
+			.concat(instanceProps)
+			.concat(metaProps);
+
+		var getIdsForProp = function(idx){
+
+			if(idx>=props.length){
+				callback(fileIds);
+				return;
 			}
-		);
 
-	};
+			if(idx%100==0){
 
-	getIdsForProp(0);
-};
+				this.logger.log(
+					T3D.Logger.TYPE_MESSAGE,
+					"getting ids for entry",idx,"of",props.length
+				);
+			}
+
+			var prop = props[idx];
+			Utils.getFilesUsedByModel(
+				prop.filename,
+				localReader,
+				function(propFileIds){
+					fileIds = fileIds.concat(propFileIds);
+					getIdsForProp(idx+1);
+				}
+			);
+
+		};
+
+		getIdsForProp(0);
+	}
+}
 
 module.exports = PropertiesRenderer;
