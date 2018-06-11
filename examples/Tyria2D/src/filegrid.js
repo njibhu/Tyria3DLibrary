@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
+var Globals = require('./globals');
+
 function onFilterClick(evt) {
     
     /// No filter if clicked group was "All"
@@ -35,9 +37,9 @@ function showFileGroup(fileTypeFilter){
 
     w2ui.grid.records = [];
 
-    let reverseTable = _lr.getReverseIndex();
+    let reverseTable = Globals._lr.getReverseIndex();
 
-    for (var fileType in _fileList) {
+    for (var fileType in Globals._fileList) {
 
         /// Only show types we've asked for
         if(fileTypeFilter && fileTypeFilter.indexOf(fileType) < 0){
@@ -62,13 +64,13 @@ function showFileGroup(fileTypeFilter){
             
         }
 
-        if (_fileList.hasOwnProperty(fileType)) {
+        if (Globals._fileList.hasOwnProperty(fileType)) {
 
-            var fileArr = _fileList[fileType];
+            var fileArr = Globals._fileList[fileType];
             fileArr.forEach(
                 function(mftIndex){
 
-                    let meta = _lr.getFileMeta(mftIndex);
+                    let meta = Globals._lr.getFileMeta(mftIndex);
 
                     var baseIds = reverseTable[mftIndex];
                     var fileSize =  (meta) ? meta.size: "";

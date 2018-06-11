@@ -19,24 +19,30 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 
 // This file is the main entry point for the Tyria2D application
 
+/// Requires:
 const Layout = require('./layout');
+var Globals = require('./globals');
 
 
-//Setting up the global variables for the app
+function onReaderCreated(){
 
-/// T3D
-var _lr;
-var _context;
-var _fileId;
-var _fileList;
-var _audioSource;
-var _audioContext;
+    T3D.getFileListAsync(Globals._lr,
+        function(files){
 
-/// THREE
-var _scene;
-var _camera;
-var _renderer;
-var _models = [];
-var _controls;
+            /// Store fileList globally
+            Globals._fileList = files;
 
-Layout.initLayout();
+            Layout.sidebarNodes();
+
+            /// Close the pop
+            w2popup.close();
+
+            /// Select the "All" category
+            w2ui.sidebar.click("All");
+
+        } /// End readFileListAsync callback
+    );
+    
+}
+
+Layout.initLayout(onReaderCreated);

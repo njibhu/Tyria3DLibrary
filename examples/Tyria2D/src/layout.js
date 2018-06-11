@@ -21,6 +21,8 @@ const FileViewer = require('./fileviewer');
 const FileGrid = require('./filegrid');
 const Utils = require('./utils');
 
+var Globals = require('./globals');
+
 /**
  * Setup main grid
  */
@@ -275,8 +277,8 @@ function sidebarNodes(){
     }
 
     /// Build sidebar nodes
-    for (var fileType in _fileList) {
-        if (_fileList.hasOwnProperty(fileType)) {
+    for (var fileType in Globals._fileList) {
+        if (Globals._fileList.hasOwnProperty(fileType)) {
 
             var node = {id:fileType, img: "icon-folder", group: false };
             var isPack = false;
@@ -330,7 +332,7 @@ function sidebarNodes(){
 /**
  * This function is called by the main app to create the gui layout.
  */
-function initLayout() {
+function initLayout(onReaderCreated) {
 
     mainGrid();
     sidebar();
@@ -362,9 +364,9 @@ function initLayout() {
     $("#filePickerPop")
         .change(
             function (evt) {
-                _lr = T3D.getLocalReader(
+                Globals._lr = T3D.getLocalReader(
                     evt.target.files[0],
-                    Utils.onReaderCreated,
+                    onReaderCreated,
                     "../static/t3dworker.js");
             }
         );

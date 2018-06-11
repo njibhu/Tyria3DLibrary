@@ -17,16 +17,16 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-const Layout = require('./layout');
+var Globals = require('./globals');
 
 /// Exports current model as an .obj file with a .mtl refering .png textures.
 function exportScene(){
 
     /// Get last loaded fileId		
-    var fileId = _fileId;
+    var fileId = Globals._fileId;
 
     /// Run T3D hacked version of OBJExporter
-    var result = new THREE.OBJExporter().parse( _scene, fileId);
+    var result = new THREE.OBJExporter().parse( Globals._scene, fileId);
 
     /// Result lists what file ids are used for textures.
     var texIds = result.textureIds;
@@ -53,7 +53,7 @@ function exportScene(){
 
         /// LocalReader will have to re-load the textures, don't want to fetch
         /// then from the model data..
-        _lr.loadTextureFile(texId,
+        Globals._lr.loadTextureFile(texId,
             function(inflatedData, dxtType, imageWidth, imageHeigth){
                 
                 /// Create js image using returned bitmap data.
@@ -158,36 +158,36 @@ function setupScene(){
     var near = 0.1;
     var far = 500000;
 
-    _camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    Globals._camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 
-    _scene = new THREE.Scene();
+    Globals._scene = new THREE.Scene();
 
     /// This scene has one ambient light source and three directional lights
     var ambientLight = new THREE.AmbientLight( 0x555555 );
-    _scene.add( ambientLight );
+    Globals._scene.add( ambientLight );
 
     var directionalLight1 = new THREE.DirectionalLight( 0xffffff, .8 );
     directionalLight1.position.set( 0, 0, 1 );
-    _scene.add( directionalLight1 );
+    Globals._scene.add( directionalLight1 );
 
     var directionalLight2 = new THREE.DirectionalLight( 0xffffff, .8);
     directionalLight2.position.set( 1, 0, 0 );
-    _scene.add( directionalLight2 );
+    Globals._scene.add( directionalLight2 );
 
     var directionalLight3 = new THREE.DirectionalLight( 0xffffff, .8 );
     directionalLight3.position.set( 0, 1, 0 );
-    _scene.add( directionalLight3 );
+    Globals._scene.add( directionalLight3 );
     
     /// Standard THREE renderer with AA
-    _renderer = new THREE.WebGLRenderer({antialiasing: true});
-    $("#modelOutput")[0].appendChild(_renderer.domElement);
+    Globals._renderer = new THREE.WebGLRenderer({antialiasing: true});
+    $("#modelOutput")[0].appendChild(Globals._renderer.domElement);
     
-    _renderer.setSize( canvasWidth, canvasHeight );
-    _renderer.setClearColor( canvasClearColor );
+    Globals._renderer.setSize( canvasWidth, canvasHeight );
+    Globals._renderer.setClearColor( canvasClearColor );
 
     /// Add THREE orbit controls, for simple orbiting, panning and zooming
-    _controls = new THREE.OrbitControls( _camera, _renderer.domElement );
-    _controls.enableZoom = true;     
+    Globals._controls = new THREE.OrbitControls( Globals._camera, Globals._renderer.domElement );
+    Globals._controls.enableZoom = true;     
 
     /// Sems w2ui delays resizing :/
     $(window).resize(function(){setTimeout(onCanvasResize,10)});
@@ -205,38 +205,17 @@ function onCanvasResize(){
     if(!sceneHeight || !sceneWidth)
         return;
 
-    _camera.aspect = sceneWidth / sceneHeight;
+    Globals._camera.aspect = sceneWidth / sceneHeight;
 
-    _renderer.setSize(sceneWidth, sceneHeight);
+    Globals._renderer.setSize(sceneWidth, sceneHeight);
 
-    _camera.updateProjectionMatrix();
-}
-
-function onReaderCreated(){
-
-    T3D.getFileListAsync(_lr,
-        function(files){
-
-            /// Store fileList globally
-            _fileList = files;
-
-            Layout.sidebarNodes();
-
-            /// Close the pop
-            w2popup.close();
-
-            /// Select the "All" category
-            w2ui.sidebar.click("All");
-
-        } /// End readFileListAsync callback
-    );
-    
+    Globals._camera.updateProjectionMatrix();
 }
 
 /// Render loop, no game logic, just rendering.
 function render(){
     window.requestAnimationFrame( render );
-    _renderer.render(_scene, _camera);
+    Globals._renderer.render(Globals._scene, Globals._camera);
 }
 
 module.exports = {
@@ -244,6 +223,5 @@ module.exports = {
     saveData: saveData,
     setupScene: setupScene,
     onCanvasResize: onCanvasResize,
-    onReaderCreated: onReaderCreated,
     render: render
 }

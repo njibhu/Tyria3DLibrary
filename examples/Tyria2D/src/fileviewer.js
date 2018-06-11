@@ -17,8 +17,11 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
+var Globals = require('./globals');
+var Utils = require('./utils');
+
 function viewFileByMFT(mftIdx){
-    let reverseTable = _lr.getReverseIndex();
+    let reverseTable = Globals._lr.getReverseIndex();
     
     var baseId = (reverseTable[mftIdx]) ? reverseTable[mftIdx][0] : "";
 
@@ -43,21 +46,21 @@ function viewFileByFileId(fileId){
     w2ui.fileTabs.disable('tabSound');
 
     /// Remove old models from the scene
-    if(_models){
-        _models.forEach(function(mdl){
-            _scene.remove(mdl);
+    if(Globals._models){
+        Globals._models.forEach(function(mdl){
+            Globals._scene.remove(mdl);
         });	
     }
 
     /// Make sure _context is clean
-    _context = {};
+    Globals._context = {};
 
     /// Run the basic DataRenderer, handles all sorts of files for us.
     T3D.runRenderer(
         T3D.DataRenderer,
-        _lr,
+        Globals._lr,
         {id:fileId},
-        _context,
+        Globals._context,
         onBasicRendererDone
     );
 }
@@ -65,15 +68,15 @@ function viewFileByFileId(fileId){
 function onBasicRendererDone(){
 
     /// Read render output from _context VO
-    var fileId = _fileId = T3D.getContextValue(_context, T3D.DataRenderer, "fileId");
+    var fileId = Globals._fileId = T3D.getContextValue(Globals._context, T3D.DataRenderer, "fileId");
 
-    var rawData = T3D.getContextValue(_context, T3D.DataRenderer, "rawData");
+    var rawData = T3D.getContextValue(Globals._context, T3D.DataRenderer, "rawData");
 
-    var raw = T3D.getContextValue(_context, T3D.DataRenderer, "rawString");
+    var raw = T3D.getContextValue(Globals._context, T3D.DataRenderer, "rawString");
 
-    var packfile = T3D.getContextValue(_context, T3D.DataRenderer, "file");
+    var packfile = T3D.getContextValue(Globals._context, T3D.DataRenderer, "file");
 
-    var image = T3D.getContextValue(_context, T3D.DataRenderer, "image");
+    var image = T3D.getContextValue(Globals._context, T3D.DataRenderer, "image");
 
 
     var fcc = raw.substring(0,4);
@@ -93,7 +96,7 @@ function onBasicRendererDone(){
         .click(
             function(){
                 var blob = new Blob([rawData], {type: "octet/stream"});
-                saveData(blob,fileName+".raw");
+                Utils.saveData(blob,fileName+".raw");
             }
         )
     )
@@ -165,30 +168,30 @@ function onBasicRendererDone(){
                 $("<button>Download MP3</button>")
                 .click(function(){
                     var blob = new Blob([soundUintArray], {type: "octet/stream"});
-                    saveData(blob,fileName+".mp3");
+                    Utils.saveData(blob,fileName+".mp3");
                 })
             )
             .append(
                 $("<button>Play MP3</button>")
                 .click(function(){
 
-                    if(!_audioContext){
-                        _audioContext = new AudioContext();
+                    if(!Globals._audioContext){
+                        Globals._audioContext = new AudioContext();
                     }
 
                     /// Stop previous sound
                     try{
-                        _audioSource.stop();	
+                        Globals._audioSource.stop();	
                     }catch(e){}
 
                     /// Create new buffer for current sound
-                    _audioSource = _audioContext.createBufferSource();
-                    _audioSource.connect( _audioContext.destination );
+                    Globals._audioSource = Globals._audioContext.createBufferSource();
+                    Globals._audioSource.connect( Globals._audioContext.destination );
 
                     /// Decode and start playing
-                    _audioContext.decodeAudioData( soundUintArray.buffer, function( res ) {
-                        _audioSource.buffer = res;							
-                        _audioSource.start();
+                    Globals._audioContext.decodeAudioData( soundUintArray.buffer, function( res ) {
+                        Globals._audioSource.buffer = res;							
+                        Globals._audioSource.start();
                     } );
                 })
             )
@@ -197,7 +200,7 @@ function onBasicRendererDone(){
                 .click(
                     function(){
                         try{
-                            _audioSource.stop();	
+                            Globals._audioSource.stop();	
                         }catch(e){}
                     }
                 )
@@ -223,8 +226,8 @@ function onBasicRendererDone(){
 
 function displayPackFile(){
 
-    var fileId = T3D.getContextValue(_context, T3D.DataRenderer, "fileId");
-    var packfile = T3D.getContextValue(_context, T3D.DataRenderer, "file");
+    var fileId = T3D.getContextValue(Globals._context, T3D.DataRenderer, "fileId");
+    var packfile = T3D.getContextValue(Globals._context, T3D.DataRenderer, "file");
 
     $("#packOutput").html("");
     $("#packOutput").append($("<h2>Chunks</h2>"));
@@ -253,14 +256,14 @@ function displayPackFile(){
 function showFileString(fileId){
 
     /// Make sure output is clean
-    _context = {};
+    Globals._context = {};
 
     /// Run single renderer
     T3D.runRenderer(
         T3D.StringRenderer,
-        _lr,
+        Globals._lr,
         {id:fileId},
-        _context,
+        Globals._context,
         onRendererDoneString
     );
 }	
@@ -268,7 +271,7 @@ function showFileString(fileId){
 function onRendererDoneString(){
 
     /// Read data from renderer
-    var strings = T3D.getContextValue(_context, T3D.StringRenderer, "strings", []);
+    var strings = T3D.getContextValue(Globals._context, T3D.StringRenderer, "strings", []);
 
     w2ui.stringGrid.records = strings;
 
@@ -288,14 +291,14 @@ function onRendererDoneString(){
 function renderFileModel(fileId){
 
     /// Make sure output is clean
-    _context = {};
+    Globals._context = {};
 
     /// Run single renderer
     T3D.runRenderer(
         T3D.SingleModelRenderer,
-        _lr,
+        Globals._lr,
         {id:fileId},
-        _context,
+        Globals._context,
         onRendererDoneModel
     );
 }	
@@ -308,46 +311,46 @@ function onRendererDoneModel(){
     $("#modelOutput").show();
 
     /// Re-fit canvas
-    onCanvasResize();
+    Utils.onCanvasResize();
 
     /// Add context toolbar export button
     $("#contextToolbar").append(
         $("<button>Export scene</button>")
-        .click(exportScene)
+        .click(Utils.exportScene)
     );
     
     /// Read the new models
-    _models = T3D.getContextValue(_context, T3D.SingleModelRenderer, "meshes", []);
+    Globals._models = T3D.getContextValue(Globals._context, T3D.SingleModelRenderer, "meshes", []);
 
     /// Keeping track of the biggest model for later
     var biggestMdl = null;
 
     /// Add all models to the scene
-    _models.forEach(function(model){
+    Globals._models.forEach(function(model){
 
         /// Find the biggest model for camera focus/fitting
         if(!biggestMdl || biggestMdl.boundingSphere.radius < model.boundingSphere.radius){
             biggestMdl = model;
         }
 
-        _scene.add(model);
+        Globals._scene.add(model);
     });
 
     /// Reset any zoom and transaltion/rotation done when viewing earlier models.
-    _controls.reset();
+    Globals._controls.reset();
 
     /// Focus camera to the bigest model, doesn't work great.
     var dist = (biggestMdl && biggestMdl.boundingSphere) ? biggestMdl.boundingSphere.radius / Math.tan(Math.PI * 60 / 360) : 100;
     dist = 1.2 * Math.max(100,dist);
     dist = Math.min(1000, dist);
-    _camera.position.zoom = 1;
-    _camera.position.x = dist*Math.sqrt(2);
-    _camera.position.y = 50;
-    _camera.position.z = 0;
+    Globals._camera.position.zoom = 1;
+    Globals._camera.position.x = dist*Math.sqrt(2);
+    Globals._camera.position.y = 50;
+    Globals._camera.position.z = 0;
 
 
     if(biggestMdl)
-        _camera.lookAt(biggestMdl.position);
+        Globals._camera.lookAt(biggestMdl.position);
 }
 
 module.exports = {
