@@ -103,7 +103,8 @@ class DataRenderer{
 	renderAsync(callback){
 		var self = this;
 		
-		this.localReader.loadFile(this.settings.id, function(inflatedData){
+		this.localReader.readFile(this.settings.id, false, false, undefined, undefined, true).then((result) => {
+			let inflatedData = result.buffer;
 
 			/// Set fileId so callers can identify this VO		
 			self.getOutput().fileId = self.settings.id;
@@ -143,22 +144,17 @@ class DataRenderer{
 				first4 == "ATEP" || first4 == "ATET" || 
 				first4 == "ATEU" || first4 == "ATTX" ){
 
-				/// TODO: MOVE TO GW2 texture file!!
-				/// Load file using LocalReader.
-				self.localReader.loadTextureFile(self.settings.id,
-					function(inflatedData, dxtType, imageWidth, imageHeigth){
-						
-						/// Create image using returned data.
-						var image = {
-							data   : new Uint8Array(inflatedData),
-							width  : imageWidth,
-							height : imageHeigth
-						};
+				self.localReader.readFile(self.settings.id, true, false, undefined, undefined, true).then((result) => {	
+					/// Create image using returned data.
+					var image = {
+						data   : new Uint8Array(result.buffer),
+						width  : result.imageWidth,
+						height : result.imageHeigth
+					};
 
-						self.getOutput().image = image;
-						callback();
-					}
-				);
+					self.getOutput().image = image;
+					callback();
+				});
 
 			}
 			else if(first4.indexOf("PF") == 0){

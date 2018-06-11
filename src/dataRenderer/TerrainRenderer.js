@@ -416,7 +416,8 @@ class TerrainRenderer extends DataRenderer{
 		
 		/// Load all paged Images, requires inflation of other pack files!
 		var pagedImageId =  this.mapFile.getChunk("trn").data.materials.pagedImage;
-		this.localReader.loadFile(pagedImageId, this.loadPagedImageCallback.bind(this, callback));
+		this.localReader.readFile(pagedImageId, false, false, undefined, undefined, true)
+			.then(this.loadPagedImageCallback.bind(this, callback));
 	}
 
 	/**
@@ -455,8 +456,6 @@ class TerrainRenderer extends DataRenderer{
 				fileIds.push(texture.filename);
 		})
 		/// ------------ END TILED IMAGES ------------
-
-
 
 		return fileIds;
 	}

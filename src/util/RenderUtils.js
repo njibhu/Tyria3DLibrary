@@ -424,7 +424,9 @@ function loadMeshFromModelFile(filename, solidColor, localReader, sharedTextures
 	var finalMeshes = [];
 
 	///Load file
-	localReader.loadFile(filename,function(inflatedData){
+	localReader.readFile(filename, false, false, undefined, undefined, true).then((result) => {
+		let inflatedData = result.buffer;
+	
 		try{
 			if(!inflatedData){
 				throw "Could not find MFT entry for "+filename;
@@ -465,8 +467,9 @@ function loadMeshFromModelFile(filename, solidColor, localReader, sharedTextures
 		    		return;
 				}		
 
-				localReader.loadFile(mat.filename,
-					function(inflatedData){
+				localReader.readFile(mat.filename, false, false, undefined, undefined, true)
+					.then((result) => {
+						let inflatedData = result;
 						if(inflatedData){
 							var ds = new DataStream(inflatedData);
 							var materialFile = new GW2File(ds,0);
@@ -664,7 +667,8 @@ function getFilesUsedByModel(filename, localReader, callback){
 	var fileIds = [filename];
 
 	///Load model file
-	localReader.loadFile(filename,function(inflatedData){
+	localReader.readFile(filename, false, false, undefined, undefined, true).then((result) => {
+		let inflatedData = result.buffer;
 		
 		try{
 			if(!inflatedData){
