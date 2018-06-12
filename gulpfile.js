@@ -15,7 +15,7 @@ const composer = require('gulp-uglify/composer');
 const uglify = composer(uglifyjs, console);
 const watch = require('gulp-watch');
 
-gulp.task('T3D', function(){
+gulp.task('T3D', function () {
 	// set up the browserify instance on a task basis
 	let b = browserify({
 		entries: './src/T3DLib.js',
@@ -26,15 +26,20 @@ gulp.task('T3D', function(){
 	return b.bundle()
 		.pipe(source(`T3D-${version}.js`))
 		.pipe(buffer())
-		.pipe(sourcemaps.init({loadMaps: true}))
-			// Add transformation tasks to the pipeline here.
-			.pipe(uglify({keep_classnames: true, /*keep_fnames: true*/}))
-			.on('error', log.error)
+		.pipe(sourcemaps.init({
+			loadMaps: true
+		}))
+		// Add transformation tasks to the pipeline here.
+		.pipe(uglify({
+			keep_classnames: true,
+			/*keep_fnames: true*/
+		}))
+		.on('error', log.error)
 		.pipe(sourcemaps.write('./'))
 		.pipe(gulp.dest('build'))
 });
 
-gulp.task('examples', function(){
+gulp.task('examples', function () {
 	// set up the browserify instance on a task basis
 	let b = browserify({
 		entries: './src/T3DLib.js',
@@ -45,26 +50,31 @@ gulp.task('examples', function(){
 	return b.bundle()
 		.pipe(source(`T3D-latest.js`))
 		.pipe(buffer())
-		.pipe(sourcemaps.init({loadMaps: true}))
-			// Add transformation tasks to the pipeline here.
-			.pipe(uglify({keep_classnames: true, /*keep_fnames: true*/}))
-			.on('error', log.error)
+		.pipe(sourcemaps.init({
+			loadMaps: true
+		}))
+		// Add transformation tasks to the pipeline here.
+		.pipe(uglify({
+			keep_classnames: true,
+			/*keep_fnames: true*/
+		}))
+		.on('error', log.error)
 		.pipe(sourcemaps.write('./'))
 		.pipe(gulp.dest('./examples/static'));
 })
 
-gulp.task('T2D', function(){
+gulp.task('T2D', function () {
 	return browserify({
-		entries: './examples/Tyria2D/src/main.js',
-		debug: true
-	}).bundle()
+			entries: './examples/Tyria2D/src/main.js',
+			debug: true
+		}).bundle()
 		.pipe(source('Tyria2D-app.js'))
 		.pipe(buffer())
 		.pipe(sourcemaps.write('./'))
 		.pipe(gulp.dest('./examples/Tyria2D/build'));
 });
 
-gulp.task('formats', function(){
+gulp.task('formats', function () {
 	let b = browserify({
 		entries: './src/format/chunks/AllFormats.js',
 		debug: true,
@@ -73,16 +83,18 @@ gulp.task('formats', function(){
 	return b.bundle()
 		.pipe(source(`T3D-${version}.Formats.js`))
 		.pipe(buffer())
-		.pipe(sourcemaps.init({loadMaps: true}))
-			.pipe(uglify())
-			.on('error', log.error)
+		.pipe(sourcemaps.init({
+			loadMaps: true
+		}))
+		.pipe(uglify())
+		.on('error', log.error)
 		.pipe(sourcemaps.write('./'))
 		.pipe(gulp.dest('build'))
 		.pipe(gulp.dest('./examples/static'));
 })
 
-gulp.task('watch', function() {
+gulp.task('watch', function () {
 	gulp.watch(['src/**/*.js'], gulp.parallel('T3D', 'examples'));
 });
-  
+
 gulp.task('default', gulp.parallel('T3D', 'examples'));

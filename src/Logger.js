@@ -80,58 +80,58 @@ Logger.logFunctions = new Array(5);
  
  * 
  */
-Logger.log = function(){
+Logger.log = function () {
 
 	/// Require at least 1 argument
-	if(arguments.length == 0){
+	if (arguments.length == 0) {
 		return;
 	}
-	
+
 	/// Parse arguments to an actual array
 	var argArr = Logger.argsToArr(arguments);
 
 	/// Default to message if just one argument was passed
-	if(argArr.length == 1){
+	if (argArr.length == 1) {
 		argArr.unshift(Logger.TYPE_MESSAGE);
 	}
 
 	/// Otherwise 1st arg is severity, log/warn/error
-	var severity = Math.max(0,Math.min(Logger.logFunctions.length, argArr.shift()));
-	var logFunc  = Logger.logFunctions[severity];
+	var severity = Math.max(0, Math.min(Logger.logFunctions.length, argArr.shift()));
+	var logFunc = Logger.logFunctions[severity];
 
 	/// Ouput the rest of the arguments
 	logFunc.apply(this, argArr);
 }
 
-Logger.argsToArr = function(args){
+Logger.argsToArr = function (args) {
 	var argArr = new Array(args.length);
-    for(var i = 0; i < argArr.length; ++i) {
-        argArr[i] = args[i];
-    }
-    return argArr;
+	for (var i = 0; i < argArr.length; ++i) {
+		argArr[i] = args[i];
+	}
+	return argArr;
 }
 
-Logger.logFunctions[Logger.TYPE_ERROR] = function(){
-	console.error.apply(console,arguments);
+Logger.logFunctions[Logger.TYPE_ERROR] = function () {
+	console.error.apply(console, arguments);
 }
 
-Logger.logFunctions[Logger.TYPE_WARNING] = function(){
-	console.warn.apply(console,arguments);
+Logger.logFunctions[Logger.TYPE_WARNING] = function () {
+	console.warn.apply(console, arguments);
 }
 
-Logger.logFunctions[Logger.TYPE_MESSAGE] = function(){
-	console.log.apply(console,arguments);
+Logger.logFunctions[Logger.TYPE_MESSAGE] = function () {
+	console.log.apply(console, arguments);
 }
 
-Logger.logFunctions[Logger.TYPE_PROGRESS] = function(){
+Logger.logFunctions[Logger.TYPE_PROGRESS] = function () {
 	var argArr = Logger.argsToArr(arguments);
 	argArr.unshift("Progress: ");
-	console.log.apply(console,argArr);
+	console.log.apply(console, argArr);
 }
 
-Logger.logFunctions[Logger.TYPE_DEBUG] = function(){
+Logger.logFunctions[Logger.TYPE_DEBUG] = function () {
 	var argArr = Logger.argsToArr(arguments);
-	console.debug.apply(console,argArr);
+	console.debug.apply(console, argArr);
 }
 
 

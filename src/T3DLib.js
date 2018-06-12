@@ -51,7 +51,7 @@ T3D = module.exports = {
 	 * @property version
 	 * @type String
 	 */
-	version : _version,
+	version: _version,
 
 
 	/* FILES */
@@ -64,7 +64,7 @@ T3D = module.exports = {
 	 * @property GW2File
 	 * @type Class
 	 */
-	GW2File  : require("./format/file/GW2File"),
+	GW2File: require("./format/file/GW2File"),
 
 	/**
 	 * A static reference to the GW2Chunk class, the preferred way of
@@ -74,7 +74,7 @@ T3D = module.exports = {
 	 * @property GW2Chunk
 	 * @type Class
 	 */
-	GW2Chunk  : require("./format/file/GW2Chunk"),
+	GW2Chunk: require("./format/file/GW2Chunk"),
 
 
 	/* RENDERERS */
@@ -87,7 +87,7 @@ T3D = module.exports = {
 	 * @property DataRenderer
 	 * @type Class
 	 */
-	DataRenderer  : require("./dataRenderer/DataRenderer"),
+	DataRenderer: require("./dataRenderer/DataRenderer"),
 
 	/**
 	 * A static reference to the EnvironmentRenderer class, the preferred way of
@@ -97,7 +97,7 @@ T3D = module.exports = {
 	 * @property EnvironmentRenderer
 	 * @type Class
 	 */
-	EnvironmentRenderer  : require("./dataRenderer/EnvironmentRenderer"),
+	EnvironmentRenderer: require("./dataRenderer/EnvironmentRenderer"),
 
 	/**
 	 * A static reference to the HavokRenderer class, the preferred way of
@@ -107,7 +107,7 @@ T3D = module.exports = {
 	 * @property HavokRenderer
 	 * @type Class
 	 */
-	HavokRenderer  : require("./dataRenderer/HavokRenderer"),
+	HavokRenderer: require("./dataRenderer/HavokRenderer"),
 
 	/**
 	 * A static reference to the PropertiesRenderer class, the preferred way of
@@ -117,7 +117,7 @@ T3D = module.exports = {
 	 * @property PropertiesRenderer
 	 * @type Class
 	 */
-	PropertiesRenderer  : require("./dataRenderer/PropertiesRenderer"),
+	PropertiesRenderer: require("./dataRenderer/PropertiesRenderer"),
 
 	/**
 	 * A static reference to the SingleModelRenderer class, the preferred way of
@@ -127,7 +127,7 @@ T3D = module.exports = {
 	 * @property SingleModelRenderer
 	 * @type Class
 	 */
-	SingleModelRenderer  : require("./dataRenderer/SingleModelRenderer"),
+	SingleModelRenderer: require("./dataRenderer/SingleModelRenderer"),
 
 	/**
 	 * A static reference to the TerrainRenderer class, the preferred way of
@@ -137,7 +137,7 @@ T3D = module.exports = {
 	 * @property TerrainRenderer
 	 * @type Class
 	 */
-	TerrainRenderer  : require("./dataRenderer/TerrainRenderer"),
+	TerrainRenderer: require("./dataRenderer/TerrainRenderer"),
 
 	/**
 	 * A static reference to the ZoneRenderer class, the preferred way of
@@ -147,7 +147,7 @@ T3D = module.exports = {
 	 * @property ZoneRenderer
 	 * @type Class
 	 */
-	ZoneRenderer  : require("./dataRenderer/ZoneRenderer"),
+	ZoneRenderer: require("./dataRenderer/ZoneRenderer"),
 
 	/**
 	 * A static reference to the StringRenderer class, the preferred way of
@@ -157,7 +157,7 @@ T3D = module.exports = {
 	 * @property StringRenderer
 	 * @type Class
 	 */
-	StringRenderer  : require("./dataRenderer/StringRenderer"),
+	StringRenderer: require("./dataRenderer/StringRenderer"),
 
 
 
@@ -173,7 +173,7 @@ T3D = module.exports = {
 	 * @property Logger
 	 * @type Object
 	 */
-	Logger  : require("./Logger"),
+	Logger: require("./Logger"),
 
 
 	/* SETTINGS */
@@ -193,24 +193,24 @@ T3D = module.exports = {
 	 *     			name:"World Area Name",
 	 *	       		maps:[
 	 *	         		{ fileName :"[numeric fileId].data", name:"Map Name One" },
-	*	           		{ fileName :"[numeric fileId].data", name:"Map Name Two" },		
-	*	             	{ fileName :"[numeric fileId].data", name:"Map Name Three" }
-	*	              ]
-	*           },
-	*	         {
-	*			    name:"Another World Area Name",
-	*		 	   	maps:[
-	*		 		   	{ fileName :"[numeric fileId].data", name:"Map Name 408" }
-	*			    ]
-	*		     }
-	* 		]
-	*   }
-	*
-	* @readonly
-	* @property MapFileList
-	* @type Object
-	*/
-	MapFileList  : require("./MapFileList"),
+	 *	           		{ fileName :"[numeric fileId].data", name:"Map Name Two" },		
+	 *	             	{ fileName :"[numeric fileId].data", name:"Map Name Three" }
+	 *	              ]
+	 *           },
+	 *	         {
+	 *			    name:"Another World Area Name",
+	 *		 	   	maps:[
+	 *		 		   	{ fileName :"[numeric fileId].data", name:"Map Name 408" }
+	 *			    ]
+	 *		     }
+	 * 		]
+	 *   }
+	 *
+	 * @readonly
+	 * @property MapFileList
+	 * @type Object
+	 */
+	MapFileList: require("./MapFileList"),
 
 	/* UTILS */
 
@@ -221,7 +221,7 @@ T3D = module.exports = {
 	 * @property MaterialUtils
 	 * @type Object
 	 */
-	MaterialUtils  : require('./util/MaterialUtils.js'),
+	MaterialUtils: require('./util/MaterialUtils.js'),
 
 	/**
 	 * A static reference to the MathUtils class.
@@ -230,7 +230,7 @@ T3D = module.exports = {
 	 * @property MathUtils
 	 * @type Object
 	 */
-	MathUtils  : require('./util/MathUtils.js'),
+	MathUtils: require('./util/MathUtils.js'),
 
 	/**
 	 * A static reference to the ParserUtils class.
@@ -239,7 +239,7 @@ T3D = module.exports = {
 	 * @property ParserUtils
 	 * @type Object
 	 */
-	ParserUtils  : require('./util/ParserUtils.js'),
+	ParserUtils: require('./util/ParserUtils.js'),
 
 
 	/**
@@ -249,7 +249,7 @@ T3D = module.exports = {
 	 * @property RenderUtils
 	 * @type Object
 	 */
-	RenderUtils  : require('./util/RenderUtils.js'),
+	RenderUtils: require('./util/RenderUtils.js'),
 
 	/**
 	 * A static reference to the PersistantStore class.
@@ -258,7 +258,7 @@ T3D = module.exports = {
 	 * @property PersistantStore
 	 * @type Class
 	 */
-	PersistantStore  : require('./LocalReader/PersistantStore'),
+	PersistantStore: require('./LocalReader/PersistantStore'),
 
 	/**
 	 * A static reference to the FileTypes tools and list.
@@ -267,7 +267,7 @@ T3D = module.exports = {
 	 * @property FileTypes
 	 * @type Object
 	 */
-	FileTypes  : require('./LocalReader/FileTypes'),
+	FileTypes: require('./LocalReader/FileTypes'),
 
 	/* PUBLIC METHODS */
 
@@ -287,12 +287,15 @@ T3D = module.exports = {
 	 *                             		will not be fully initialized until the callback
 	 *                             		is fired.
 	 */
-	getLocalReader : function(file, callback, t3dtoolsWorker){
+	getLocalReader: function (file, callback, t3dtoolsWorker) {
 
 		let path = (t3dtoolsWorker) ? t3dtoolsWorker : _settings.t3dtoolsWorker;
-		
+
 		//Create the instance and init the threads
-		var lrInstance = new LocalReader({workerPath: path, workersNb: _settings.concurrentTasks });
+		var lrInstance = new LocalReader({
+			workerPath: path,
+			workersNb: _settings.concurrentTasks
+		});
 
 		/// Callback with the lrInstance
 		lrInstance.openArchive(file).then(() => {
@@ -326,14 +329,14 @@ T3D = module.exports = {
 	 * 
 	 * 	{
 	 *	  	"Unknown"	: [444, 555, 333],
-	*	  	"MODL"		: [444, 555, 333],
-	* 	  	"String"	: [666, 777, 888]
-	* 	}
-	* 
-	* For more details see
-	* {{#crossLink "LocalReader/listFiles:method"}}{{/crossLink}}
-	*/
-	getFileListAsync : function(localReader, callback){
+	 *	  	"MODL"		: [444, 555, 333],
+	 * 	  	"String"	: [666, 777, 888]
+	 * 	}
+	 * 
+	 * For more details see
+	 * {{#crossLink "LocalReader/listFiles:method"}}{{/crossLink}}
+	 */
+	getFileListAsync: function (localReader, callback) {
 		//Because the localreader API changed we reform the data as wanted
 		localReader.readFileList().then((result) => {
 			let returnObj = {};
@@ -386,45 +389,45 @@ T3D = module.exports = {
 	*	    };
 	* @param {boolean} searchAll if true forces re-indexing of entire dat.
 	*/
-	getMapListAsync : function(localReader, callback, searchAll){
+	getMapListAsync: function (localReader, callback, searchAll) {
 		//Define a function that transforms the localreader output to what we want
-        function restoreOuput(array) {
-            let returnArray = [];
-            for (let elt of array) {
-                let category = returnArray.findIndex(i => i.name == elt.category)
-                if (category == -1)
-                    category = returnArray.push({
-                        name: elt.category,
-                        maps: []
-                    }) - 1;
-                returnArray[category].maps.push({
-                    fileName: elt.baseId,
-                    name: elt.name
-                });
-            }
-            //And resort it in order
-            returnArray.sort((i, j) => {
-                if (i.name < j.name) return -1;
-                if (i.name > j.name) return 1;
-                return 0;
-            })
-            return {
-                maps: returnArray
-            };
-        }
+		function restoreOuput(array) {
+			let returnArray = [];
+			for (let elt of array) {
+				let category = returnArray.findIndex(i => i.name == elt.category)
+				if (category == -1)
+					category = returnArray.push({
+						name: elt.category,
+						maps: []
+					}) - 1;
+				returnArray[category].maps.push({
+					fileName: elt.baseId,
+					name: elt.name
+				});
+			}
+			//And resort it in order
+			returnArray.sort((i, j) => {
+				if (i.name < j.name) return -1;
+				if (i.name > j.name) return 1;
+				return 0;
+			})
+			return {
+				maps: returnArray
+			};
+		}
 
 		/// If seachAll flag is true, force a deep search
 		if (searchAll) {
-            localReader.readFileList().then(() => {
-                callback(restoreOuput(localReader.getMapList()));
-            })
-		} 
+			localReader.readFileList().then(() => {
+				callback(restoreOuput(localReader.getMapList()));
+			})
+		}
 		/// If not, it's only looking through known maps
 		else {
-            callback(restoreOuput(localReader.getMapList()));
+			callback(restoreOuput(localReader.getMapList()));
 		}
 
-		
+
 	},
 
 	/**
@@ -442,18 +445,18 @@ T3D = module.exports = {
 	 * @param  {Class}			logger      A logger class of the same type as
 	 *                               		{{#crossLink "Logger"}}{{/crossLink}}
 	 */
-	renderMapContentsAsync : function(localReader, fileName, renderers, callback, logger){
+	renderMapContentsAsync: function (localReader, fileName, renderers, callback, logger) {
 
 		/// VO for storing result from renderers
 		var context = {};
 
 		/// Make sure we got an actuall ID number		
-		if(parseInt(fileName)){
+		if (parseInt(fileName)) {
 
 			/// File name is baseId, load using local reader.
 			localReader.readFile(parseInt(fileName), false, false, undefined, undefined, true).then((result) => {
 				let arrayBuffer = result.buffer;
-				
+
 				/// Set up datastream
 				var ds = new DataStream(arrayBuffer, 0, DataStream.LITTLE_ENDIAN);
 
@@ -461,21 +464,23 @@ T3D = module.exports = {
 				var mapFile = new T3D.GW2File(ds, 0);
 
 				/// Populate VO by running the renderers
-				var runAllRenderers = function(i){
-					
+				var runAllRenderers = function (i) {
+
 					/// Run each renderer
-					if(i < renderers.length ){
+					if (i < renderers.length) {
 						T3D.runRenderer(
 							renderers[i].renderClass,
 							localReader,
-							Object.assign(renderers[i].settings,{mapFile:mapFile}),
+							Object.assign(renderers[i].settings, {
+								mapFile: mapFile
+							}),
 							context,
-							runAllRenderers.bind(this,i+1)
+							runAllRenderers.bind(this, i + 1)
 						);
 					}
 
 					/// Fire callback with VO when done
-					else{
+					else {
 						callback(context);
 					}
 				};
@@ -487,13 +492,13 @@ T3D = module.exports = {
 		}
 
 		/// Primitive error message...
-		else{
+		else {
 			var outputLogger = logger ? logger : T3D.Logger;
 			outputLogger.log(
 				T3D.Logger.TYPE_ERROR,
-				"Map id must be an integer!, was:",fileName
+				"Map id must be an integer!, was:", fileName
 			);
-		}	
+		}
 	},
 
 	/**
@@ -511,7 +516,7 @@ T3D = module.exports = {
 	 * @param  {Function} 	cb          Callback method passed to the renderAsync
 	 *                                 	method of the renderer.
 	 */
-	runRenderer : function(renderClass, localReader , settings, context, cb){
+	runRenderer: function (renderClass, localReader, settings, context, cb) {
 		var r = new renderClass(
 			localReader,
 			settings,
@@ -535,9 +540,9 @@ T3D = module.exports = {
 	 * @return {any}    				The specified value from the conext if any,
 	 *                          		otherwise defaultValue.
 	 */
-	getContextValue : function(context, clazz , propName, defaultValue){
+	getContextValue: function (context, clazz, propName, defaultValue) {
 		var output = context[clazz.name];
-		if(output){
+		if (output) {
 			return output[propName] ? output[propName] : defaultValue;
 		}
 		return defaultValue;
@@ -550,32 +555,34 @@ T3D = module.exports = {
 	 * @param  {boolean} return_context flag making this method return the canvas object instead of true
 	 * @return {boolean} true if the client is WebGL enabled, false otherwise
 	 */
-	hasWebGL : function(return_context)
-	{
+	hasWebGL: function (return_context) {
 		if (!!window.WebGLRenderingContext) {
 			var canvas = document.createElement("canvas"),
 				names = ["webgl", "experimental-webgl", "moz-webgl", "webkit-3d"],
-			context = false;
-	
-			for(var i=0;i<4;i++) {
+				context = false;
+
+			for (var i = 0; i < 4; i++) {
 				try {
 					context = canvas.getContext(names[i]);
 					if (context && typeof context.getParameter == "function") {
 						// WebGL is enabled
 						if (return_context) {
 							// return WebGL object if the function's argument is present
-							return {name:names[i], gl:context};
+							return {
+								name: names[i],
+								gl: context
+							};
 						}
 						// else, return just true
 						return true;
 					}
-				} catch(e) {}
+				} catch (e) {}
 			}
-	
+
 			// WebGL is supported, but disabled
 			return false;
 		}
-	
+
 		// WebGL not supported
 		return false;
 	}
@@ -591,10 +598,10 @@ T3D = module.exports = {
  * @private
  * @return {Number} The ammount of errors and warnings generated.
  */
-function checkRequirements(){
+function checkRequirements() {
 	var numErrors = 0;
 
-	if(!global.window || !window.indexedDB){
+	if (!global.window || !window.indexedDB) {
 		T3D.Logger.log(
 			T3D.Logger.TYPE_ERROR,
 			"T3D persistant storing and loading requires indexedDB support."
@@ -602,7 +609,7 @@ function checkRequirements(){
 		numErrors++;
 	}
 
-	if(typeof DataStream === "undefined"){
+	if (typeof DataStream === "undefined") {
 		T3D.Logger.log(
 			T3D.Logger.TYPE_ERROR,
 			"T3D core functionality requires DataStream library."
@@ -610,7 +617,7 @@ function checkRequirements(){
 		numErrors++;
 	}
 
-	if(typeof THREE === "undefined"){
+	if (typeof THREE === "undefined") {
 		T3D.Logger.log(
 			T3D.Logger.TYPE_WARNING,
 			"T3D mesh generation requires three.js library."
@@ -618,10 +625,10 @@ function checkRequirements(){
 		numErrors++;
 	}
 
-	if(numErrors<1){
+	if (numErrors < 1) {
 		T3D.Logger.log(
 			T3D.Logger.TYPE_MESSAGE,
-			"Tyria 3D API v"+T3D.version+" initialized."
+			"Tyria 3D API v" + T3D.version + " initialized."
 		);
 	}
 
@@ -638,19 +645,18 @@ function checkRequirements(){
  * @return {Object} An object mapping duplicate chunk definition names.
  * to the number of apperances.
  */
-function findDuplicateChunkDefs(){
+function findDuplicateChunkDefs() {
 	var dups = {};
 	T3D.formats.forEach(
-		function(f1){
+		function (f1) {
 
 			T3D.formats.forEach(
-				function(f2){
-					if(f2.name == f1.name && f2 !== f1){
-						if(dups[f1.name]){
+				function (f2) {
+					if (f2.name == f1.name && f2 !== f1) {
+						if (dups[f1.name]) {
 							dups[f1.name]++;
-						}
-						else{
-							dups[f1.name]=1;
+						} else {
+							dups[f1.name] = 1;
 						}
 					}
 				}

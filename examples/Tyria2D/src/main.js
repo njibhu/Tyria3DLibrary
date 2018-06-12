@@ -24,10 +24,10 @@ const Layout = require('./layout');
 var Globals = require('./globals');
 
 
-function onReaderCreated(){
+function onReaderCreated() {
 
     T3D.getFileListAsync(Globals._lr,
-        function(files){
+        function (files) {
 
             /// Store fileList globally
             Globals._fileList = files;
@@ -42,7 +42,7 @@ function onReaderCreated(){
 
         } /// End readFileListAsync callback
     );
-    
+
 }
 
 Layout.initLayout(onReaderCreated);

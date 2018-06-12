@@ -40,29 +40,29 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
  * @param  {Number} numUv Number of UV channels used by this shader
  * @return {String}       Genereted vertex shader source
  */
-function buildVS(numUv){
+function buildVS(numUv) {
 
 	var vdefs = "";
 	var adefs = "";
 	var reads = "";
-	for(var i=0; i< numUv; i++){
-		vdefs += "varying vec2 vUv_"+(i+1)+";\n";
-		
+	for (var i = 0; i < numUv; i++) {
+		vdefs += "varying vec2 vUv_" + (i + 1) + ";\n";
+
 		/// uv and uv2 are defined by THREE
-		if(i>1)
-			adefs += "attribute vec2 uv"+(i+1)+";\n";
+		if (i > 1)
+			adefs += "attribute vec2 uv" + (i + 1) + ";\n";
 
 
-		reads += "vUv_" + (i+1) + " = uv"+(i>0?(i+1):"")+";\n";
+		reads += "vUv_" + (i + 1) + " = uv" + (i > 0 ? (i + 1) : "") + ";\n";
 	}
 
 	return adefs + vdefs +
-	    "void main()\n"+
-	    "{\n"+
-	        reads+
-	        "vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );\n"+
-	        "gl_Position = projectionMatrix * mvPosition;\n"+
-	    "}";
+		"void main()\n" +
+		"{\n" +
+		reads +
+		"vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );\n" +
+		"gl_Position = projectionMatrix * mvPosition;\n" +
+		"}";
 }
 
 
@@ -75,25 +75,25 @@ function buildVS(numUv){
  * @param {THREE.Color} color 
  * @returns {THREE.DataTexture}
  */
-function generateDataTexture(width, height, color){
+function generateDataTexture(width, height, color) {
 	// create a buffer with color data
 	var size = width * height;
-	var data = new Uint8Array( 4 * size );
-	var r = Math.floor( color.r * 255 );
-	var g = Math.floor( color.g * 255 );
-	var b = Math.floor( color.b * 255 );
+	var data = new Uint8Array(4 * size);
+	var r = Math.floor(color.r * 255);
+	var g = Math.floor(color.g * 255);
+	var b = Math.floor(color.b * 255);
 	var a = 255;
 
-	for ( var i = 0; i < size; i ++ ) {
+	for (var i = 0; i < size; i++) {
 		var stride = i * 4;
 
-		data[ stride ] = r;
-		data[ stride + 1 ] = g;
-		data[ stride + 2 ] = b;
-		data[ stride + 3 ] = a;
+		data[stride] = r;
+		data[stride + 1] = g;
+		data[stride + 2] = b;
+		data[stride + 3] = a;
 	}
 	// used the buffer to create a DataTexture
-	return new THREE.DataTexture( data, width, height, THREE.RGBAFormat );
+	return new THREE.DataTexture(data, width, height, THREE.RGBAFormat);
 }
 
 /**
@@ -107,52 +107,52 @@ function generateDataTexture(width, height, color){
  * @param  {any} lightMap  TODO
  * @returns {string}
  */
-function buildPS(textures, numUv, alphaTest, lightMap){
-	var t1uv = "vUv_"+(textures[0].uvIdx+1);
-	
+function buildPS(textures, numUv, alphaTest, lightMap) {
+	var t1uv = "vUv_" + (textures[0].uvIdx + 1);
+
 
 	var discard = "";
 
-	if(alphaTest){
-		discard = "    if (c1.a < 0.5) \n"+
-    	"       discard;\n";	
+	if (alphaTest) {
+		discard = "    if (c1.a < 0.5) \n" +
+			"       discard;\n";
 	}
 
-    /// Color from 1st text or lighted by 2nd?
-    var writeColor = "gl_FragColor = c1;\n";
+	/// Color from 1st text or lighted by 2nd?
+	var writeColor = "gl_FragColor = c1;\n";
 
-    if(lightMap){
-    	var texIdx = 0;
-    	//var t2uv = "vUv_4";//+(3-textures[texIdx].uvIdx+1);
-    	var t2uv = "vUv_1";// + (textures[texIdx].uvIdx+1);
-    	//console.log("t2uv",t2uv);
+	if (lightMap) {
+		var texIdx = 0;
+		//var t2uv = "vUv_4";//+(3-textures[texIdx].uvIdx+1);
+		var t2uv = "vUv_1"; // + (textures[texIdx].uvIdx+1);
+		//console.log("t2uv",t2uv);
 
-    	writeColor = "   vec4 c2 = texture2D( texture"+(texIdx+1)+", "+t2uv+" );\n"+
-	    "     gl_FragColor = c2;\n";
-	    //"     gl_FragColor = vec4(c2.rgb * c1.r/.5, c2.a);\n";
-    }
+		writeColor = "   vec4 c2 = texture2D( texture" + (texIdx + 1) + ", " + t2uv + " );\n" +
+			"     gl_FragColor = c2;\n";
+		//"     gl_FragColor = vec4(c2.rgb * c1.r/.5, c2.a);\n";
+	}
 
 
-    var uniforms = ""
-    textures.forEach(function(t,idx){
-    	uniforms += "uniform sampler2D texture"+(idx+1)+";\n";
-    });
+	var uniforms = ""
+	textures.forEach(function (t, idx) {
+		uniforms += "uniform sampler2D texture" + (idx + 1) + ";\n";
+	});
 	/*uniforms += "uniform sampler2D texture1;\n";
 	if(lightMap)
 		uniforms += "uniform sampler2D texture2;\n";*/
 
-	var varyings = "";	
-	for(var i=0; i< numUv; i++){
-		varyings += "varying vec2 vUv_"+(i+1)+";\n";
+	var varyings = "";
+	for (var i = 0; i < numUv; i++) {
+		varyings += "varying vec2 vUv_" + (i + 1) + ";\n";
 
 	}
 
 	return uniforms + varyings +
-    "void main( void ) {\n"+
-    "    vec4 c1 = texture2D( texture1, "+t1uv+" );\n"+
-    discard +
-    writeColor +
-    "}";
+		"void main( void ) {\n" +
+		"    vec4 c1 = texture2D( texture1, " + t1uv + " );\n" +
+		discard +
+		writeColor +
+		"}";
 }
 
 /**
@@ -164,39 +164,45 @@ function buildPS(textures, numUv, alphaTest, lightMap){
  * @param  {Number} alphaTest Texture see-trough alpha treshold
  * @return {THREE.ShaderMaterial} Generated shader
  */
-function getUVMat(textures, numUV, alphaTest){
+function getUVMat(textures, numUV, alphaTest) {
 
 	var lightMap = false;
 	var uniforms = {};
 
-	textures.forEach(function(t,idx){
-		uniforms["texture"+idx] = { type: "t", value: t };
+	textures.forEach(function (t, idx) {
+		uniforms["texture" + idx] = {
+			type: "t",
+			value: t
+		};
 	});
 
-	if(textures.length>1){
-		lightMap = true;		
+	if (textures.length > 1) {
+		lightMap = true;
 	}
 
 	var attributes = {};
 
-	for(var i=2; i<numUV; i++){
-		attributes["uv"+(i+1)] =  { type: 'v2', value: [] };
+	for (var i = 2; i < numUV; i++) {
+		attributes["uv" + (i + 1)] = {
+			type: 'v2',
+			value: []
+		};
 	}
 
 	var vs = buildVS(numUV);
 
-	return new THREE.ShaderMaterial( {
+	return new THREE.ShaderMaterial({
 		uniforms: uniforms,
 		vertexShader: vs,
 		fragmentShader: buildPS(
-				textures,
-				numUV,
-				alphaTest,
-				lightMap
-			), 
+			textures,
+			numUV,
+			alphaTest,
+			lightMap
+		),
 		attributes: attributes,
 		side: THREE.FrontSide,
-	} );
+	});
 
 }
 
@@ -222,19 +228,19 @@ function getUVMat(textures, numUV, alphaTest){
  * @param  {Object} sharedTextures  Value Object for keeping the texture cache
  * @return {THREE.Material}         A THREE Material with the generated contents and settings.
  */
-function getMaterial(material, materialFile, localReader, sharedTextures){
+function getMaterial(material, materialFile, localReader, sharedTextures) {
 
-	if(!materialFile)
+	if (!materialFile)
 		return;
-	
-	var dxChunk =  materialFile.getChunk("dx9s");
+
+	var dxChunk = materialFile.getChunk("dx9s");
 	var grChunk = materialFile.getChunk("grmt");
 
 	/// Append all textures to the custom material
 	var finalTextures = [];
-	
+
 	//Some materials don't use textures..
-	if(material && material.textures.length/* && material.textures[texIndex]*/){
+	if (material && material.textures.length /* && material.textures[texIndex]*/ ) {
 
 		/// TODO: check for flags!			
 		/// 
@@ -249,13 +255,13 @@ function getMaterial(material, materialFile, localReader, sharedTextures){
 		/// 1 passes												DON'T CARE
 		/// 15 effects			Each effect has a pixel shader 		HOW??
 		/// 1 or 2 sampler indices 									USE ALL! (Multi material)
-		
+
 		var effects = dxChunk.data.techniques[0].passes[0].effects;
 		//var effect = effects[10];
 		var effect = effects[0];
 
 		var shader = dxChunk.data.shaders[effect.pixelShader];
-		
+
 		/*effects.forEach(function (eff) {
 			if(eff.samplerIndex.length > effect.samplerIndex.length)
 				effect = eff;
@@ -263,18 +269,17 @@ function getMaterial(material, materialFile, localReader, sharedTextures){
 		//var samplerIdx = effect.samplerIndex[0];
 
 		var samplerTextures = [];
-		for(var i=0; i<effect.samplerIndex.length; i++)
-		{
+		for (var i = 0; i < effect.samplerIndex.length; i++) {
 
 			var samplerIdx = effect.samplerIndex[i];
 			var sampler = dxChunk.data.samplers[samplerIdx];
 
 			/// SHOULD NEVER HAPPEN, hide mesh!
-			if(!sampler)
-				continue;//return;
+			if (!sampler)
+				continue; //return;
 
 			var textureToken = sampler && grChunk.data.texTokens[sampler.textureIndex];
-			if(!textureToken)
+			if (!textureToken)
 				textureToken = "0-0";
 			/*else
 				textureToken =textureToken.val;*/
@@ -282,169 +287,169 @@ function getMaterial(material, materialFile, localReader, sharedTextures){
 			/// Find the texture reffered by this sampler
 			var samplerTex = null;
 
-			material.textures.forEach(function(tex, index){
+			material.textures.forEach(function (tex, index) {
 
 				///Seems like only 1st part of token is used...
-				if(!samplerTex && tex.token.split("-")[0] == textureToken.split("-")[0]){
+				if (!samplerTex && tex.token.split("-")[0] == textureToken.split("-")[0]) {
 					//console.log("TEX match",tex.token, textureToken)
 					samplerTex = tex;
 				}
 			});
 
 			/// Add this sampler's texture to the collection of all textures
-			if(samplerTex){
+			if (samplerTex) {
 				samplerTextures.push(samplerTex);
-			}
-			else{
+			} else {
 				///FALLBACK, just guess what texture we should use
-				if(sampler)
+				if (sampler)
 					samplerTextures.push(material.textures[sampler.textureIndex]);
-				else if(material.textures.length>0)
+				else if (material.textures.length > 0)
 					samplerTextures.push(material.textures[0]);
 				else return;
 			}
 
 
-		}/// END for each sampler index in effect
+		} /// END for each sampler index in effect
 
 		/// We now have all textures
 		//console.log("textures from sampler", samplerTextures);
-				
+
 
 		/// Fallback to using whatever texture there is.
-		if(samplerTextures.length <= 0){
+		if (samplerTextures.length <= 0) {
 			return;
 			//mainTex =  material.textures[0];			
 		}
 
 
 		//console.log("num samplers ",samplerTextures.length);
-		samplerTextures.forEach(function(texture, idx){
+		samplerTextures.forEach(function (texture, idx) {
 
-			if(!texture)
+			if (!texture)
 				return;
-			
+
 			/// Set texture "URL"
 			var texURL = texture && texture.filename;
 
 			/// Load texture from RAM or local reader:
 			finalTextures[idx] = getTexture(texURL, localReader, sharedTextures)
-			if(finalTextures[idx]){
-				finalTextures[idx].uvIdx = texture.uvPSInputIndex;	
+			if (finalTextures[idx]) {
+				finalTextures[idx].uvIdx = texture.uvPSInputIndex;
 			}
-			
-		});
-		
 
-	}/// End if material and texture			
+		});
+
+
+	} /// End if material and texture			
 
 	var finalMaterial;
 
 
 	/// Create custom shader material if there are textures
-	if(finalTextures){
+	if (finalTextures) {
 
 		// TODO: make this work!
-		if(false && finalTextures.length>0){
-			finalMaterial = getUVMat( finalTextures, material.texCoordCount, grChunk.data.flags!=16460 );	
-		}
-		else{
-			var ft=false;
-			var nt=false;
-			material.textures.forEach(function(t){
+		if (false && finalTextures.length > 0) {
+			finalMaterial = getUVMat(finalTextures, material.texCoordCount, grChunk.data.flags != 16460);
+		} else {
+			var ft = false;
+			var nt = false;
+			material.textures.forEach(function (t) {
 				//Flag for diffuse map
-				if(!ft && t.token.split("-")[0] == "1733499172")
+				if (!ft && t.token.split("-")[0] == "1733499172")
 					ft = t;
 
 				//Flag for normal map
-				if(!nt && t.token.split("-")[0] == "404146670")
+				if (!nt && t.token.split("-")[0] == "404146670")
 					nt = t;
 			});
-			
-			if(!ft || ft.filename<=0)
+
+			if (!ft || ft.filename <= 0)
 				return;
 
 			finalMaterial = new THREE.MeshPhongMaterial({
-				side: THREE.FrontSide, map:getTexture(ft.filename, localReader, sharedTextures)
-			}); 
-			if(nt) {
+				side: THREE.FrontSide,
+				map: getTexture(ft.filename, localReader, sharedTextures)
+			});
+			if (nt) {
 				var normalMap = getTexture(nt.filename, localReader, sharedTextures);
 				normalMap.flipY = true;
 				finalMaterial.normalMap = normalMap;
 			}
 
-				
+
 			finalMaterial.textureFilename = ft.filename;
-			if(grChunk.data.flags!=16460){
+			if (grChunk.data.flags != 16460) {
 				//console.log("Setting alpha flag for ",grChunk.data.flags)
 				finalMaterial.alphaTest = 0.05;
 			}
 		}
-			
+
 	}
 
 	/// Fallback material is monocolored red
-	else{
+	else {
 		finalMaterial = new THREE.MeshBasicMaterial({
 			side: THREE.FrontSide,
-			color:0xff0000,
-			shading: THREE.FlatShading}); 
+			color: 0xff0000,
+			shading: THREE.FlatShading
+		});
 	}
 
-	
+
 	finalMaterial.needsUpdate = true;
 
 
 	/// Set material props
 	/// disable for now in order for custom shaders not to fuck up
-	
-	if(material){
 
-		var alphaMask0 = 0x0001;// + 0x0100 + 0x0200;
-    	var alphaMask1 = 0x0010
-    	var alphaMask2 = 0x0100 + 0x0200;
-    	var alphaMask2b =  0x0200;
+	if (material) {
 
-		
+		var alphaMask0 = 0x0001; // + 0x0100 + 0x0200;
+		var alphaMask1 = 0x0010
+		var alphaMask2 = 0x0100 + 0x0200;
+		var alphaMask2b = 0x0200;
+
+
 		var grChunk = materialFile.getChunk("grmt");
 
 		//Enable alpha test for transparent flags
-    	if( (
-    		 material.materialFlags & alphaMask0 ||
-    		 material.materialFlags & alphaMask1 ||
-    		 material.materialFlags & alphaMask2
-    		) //&& solidColor != null
-		){
-    		//return;
-    		//mesh.material.transparent = true;
-    		//mesh.material.opacity = 2.0;
+		if ((
+				material.materialFlags & alphaMask0 ||
+				material.materialFlags & alphaMask1 ||
+				material.materialFlags & alphaMask2
+			) //&& solidColor != null
+		) {
+			//return;
+			//mesh.material.transparent = true;
+			//mesh.material.opacity = 2.0;
 
-    		//var clr = solidColor;
-    		//var propAlpha = 0;
+			//var clr = solidColor;
+			//var propAlpha = 0;
 
-    		///Backgroud color adds to alpha
-    		//if( mesh.materialFlags == 2569  ){
+			///Backgroud color adds to alpha
+			//if( mesh.materialFlags == 2569  ){
 
-    		/// This is rly just guesswork
-    		/// Check material flag  2568 (as int) and compare material filename 27353 to 20041
-    		/// Same flags but some have alpha and some don't
-    		//if( mesh.materialFlags & alphaMask2b  ){
-    		//	propAlpha =  (clr[3] - 128)/128;
-    		//	//propAlpha = Math.max(0,propAlpha);
-    		//}
+			/// This is rly just guesswork
+			/// Check material flag  2568 (as int) and compare material filename 27353 to 20041
+			/// Same flags but some have alpha and some don't
+			//if( mesh.materialFlags & alphaMask2b  ){
+			//	propAlpha =  (clr[3] - 128)/128;
+			//	//propAlpha = Math.max(0,propAlpha);
+			//}
 
-    		//mesh.material.alphaTest = Math.max(0, 0.1 );//- propAlpha*2);
-    		
-    	}
+			//mesh.material.alphaTest = Math.max(0, 0.1 );//- propAlpha*2);
+
+		}
 
 
 		/// GRCHUNK -> DATA -> FLAGS
 
 		///HAS LIGHT - TEX - ? - EMISSIVE16460
 		///
-		
+
 		/// 56533 LOD FOR TOMBSTONE?
-		
+
 		//	16460			0100 0000 0100 1100			"standard" stuff rendering OK in SAB (no alpha test)
 
 		//	
@@ -474,7 +479,7 @@ function getMaterial(material, materialFile, localReader, sharedTextures){
 
 
 		var lightMask = 8;
-		
+
 		var knownFileFlags = [
 			16460,
 			16452,
@@ -488,32 +493,33 @@ function getMaterial(material, materialFile, localReader, sharedTextures){
 			320,
 			76,
 			68,
-			64];
+			64
+		];
 
-		if(knownFileFlags.indexOf(grChunk.data.flags)<0){
+		if (knownFileFlags.indexOf(grChunk.data.flags) < 0) {
 			T3D.Logger.log(
 				T3D.Logger.TYPE_WARNING,
-				"unknown GR flag",grChunk.data.flags
+				"unknown GR flag", grChunk.data.flags
 			);
 		}
 
-		if( !(grChunk.data.flags & lightMask) ){
+		if (!(grChunk.data.flags & lightMask)) {
 			//debugger;
 			//console.log("no light");
-			finalMaterial =  new THREE.MeshBasicMaterial({
+			finalMaterial = new THREE.MeshBasicMaterial({
 				side: THREE.FrontSide,
 				map: finalMaterial.map
 			});
 
 		}
-		
-		if(grChunk.data.flags!=16460){
+
+		if (grChunk.data.flags != 16460) {
 			finalMaterial.alphaTest = 0.05;
 		}
 
 
-	}/// End if material
-	
+	} /// End if material
+
 
 	return finalMaterial;
 
@@ -530,22 +536,21 @@ function getMaterial(material, materialFile, localReader, sharedTextures){
  * @param  {Object} sharedTextures Value Object for keeping the texture cache
  * @return {THREE.Texture} A texture that will be populated by the file data when it is loaded.
  */
-function getTexture(texURL, localReader, sharedTextures){
+function getTexture(texURL, localReader, sharedTextures) {
 
 	var finalTexture;
 
 	/// Read texture from shared array of loaded textures
 	/// or read it from URL and add to shared ones!			
-	if(texURL && sharedTextures[texURL]){
+	if (texURL && sharedTextures[texURL]) {
 
 		/// Just read from already loaded textures.
 		finalTexture = sharedTextures[texURL];
 
-	}
-	else if(texURL){
+	} else if (texURL) {
 
 		/// Load and add to shared array.
-		finalTexture = loadLocalTexture(localReader,texURL);
+		finalTexture = loadLocalTexture(localReader, texURL);
 
 		/// Set standard texture functionality.
 		finalTexture.wrapT = THREE.RepeatWrapping;
@@ -572,18 +577,18 @@ function getTexture(texURL, localReader, sharedTextures){
  
  * @return {THREE.Texture} A texture that will be populated by the file data when it is loaded.
  */
-function loadLocalTexture(localReader, fileId, mapping, defaultColor, onerror){
-	
-	if(defaultColor === undefined){
-		defaultColor = Math.floor( 0xffffff * Math.random() )
+function loadLocalTexture(localReader, fileId, mapping, defaultColor, onerror) {
+
+	if (defaultColor === undefined) {
+		defaultColor = Math.floor(0xffffff * Math.random())
 	}
 
 	/// Temporary texture that will be returned by the function.
 	/// Color is randomized in order to differentiate different textures during loading.
-	var texture =  generateDataTexture(
+	var texture = generateDataTexture(
 		1, // Width
 		1, // Height
-		new THREE.Color( defaultColor ) // Color
+		new THREE.Color(defaultColor) // Color
 	);
 
 	//Threejs r71 is using these settings by default, r72+ changed it
@@ -593,8 +598,8 @@ function loadLocalTexture(localReader, fileId, mapping, defaultColor, onerror){
 	texture.flipY = true;
 
 	/// Only allow non-zero fileId, otherwise jsut return static texture
-	if( parseInt(fileId) <= 0 ){
-		if(onerror)
+	if (parseInt(fileId) <= 0) {
+		if (onerror)
 			onerror();
 		return texture;
 	}
@@ -604,28 +609,27 @@ function loadLocalTexture(localReader, fileId, mapping, defaultColor, onerror){
 		.then((result) => {
 
 			/// Require infalted data to be returned.
-			if(!result.buffer){
-				if(onerror)
+			if (!result.buffer) {
+				if (onerror)
 					onerror();
 				return;
 			}
 
 			/// Create image using returned data.
 			var image = {
-				data   : new Uint8Array(result.buffer),
-				width  : result.imageWidth,
-				height : result.imageHeight
+				data: new Uint8Array(result.buffer),
+				width: result.imageWidth,
+				height: result.imageHeight
 			};
 
 			/// Use RGBA for all textures for now...
 			/// TODO: don't use alpha for some formats!
-			texture.format = (result.dxtType==3 || result.dxtType==5 || true) ? THREE.RGBAFormat : THREE.RGBFormat;
+			texture.format = (result.dxtType == 3 || result.dxtType == 5 || true) ? THREE.RGBAFormat : THREE.RGBFormat;
 
 			/// Update texture with the loaded image.
 			texture.image = image;
 			texture.needsUpdate = true;
-		}
-	);	
+		});
 
 	/// Return texture with temporary content.
 	return texture;

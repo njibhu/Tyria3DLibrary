@@ -32,8 +32,8 @@ const DataRenderer = require('./DataRenderer');
  * @param  {Object} context      Shared value object between renderers.
  * @param  {Logger} logger       The logging class to use for progress, warnings, errors et cetera.
  */
-class StringRenderer extends DataRenderer{
-	constructor(localReader, settings, context, logger){
+class StringRenderer extends DataRenderer {
+	constructor(localReader, settings, context, logger) {
 		super(localReader, settings, context, logger);
 	}
 
@@ -48,7 +48,7 @@ class StringRenderer extends DataRenderer{
 	 * @async
 	 * @param  {Function} callback Fires when renderer is finished, does not take arguments.
 	 */
-	renderAsync(callback){
+	renderAsync(callback) {
 		var self = this;
 
 		/// Get file id
@@ -63,13 +63,12 @@ class StringRenderer extends DataRenderer{
 		this.localReader.readFile(this.settings.id, false, false, undefined, undefined, true).then((result) => {
 			let inflatedData = result.buffer;
 			var ds = new DataStream(inflatedData);
-			var end = ds.byteLength -2;
+			var end = ds.byteLength - 2;
 
 			/// skip past fcc
 			ds.seek(4);
 
-			var entryHeaderDef =
-			[
+			var entryHeaderDef = [
 				"size", "uint16",
 				"decryptionOffset", "uint16",
 				"bitsPerSymbol", "uint16"
@@ -77,32 +76,32 @@ class StringRenderer extends DataRenderer{
 
 			var entryIndex = 0;
 
-			while ( end - ds.position > 6) {
-							
+			while (end - ds.position > 6) {
+
 				var entry = ds.readStruct(entryHeaderDef);
 				entry.size -= 6;
 
-				if(entry.size > 0){
+				if (entry.size > 0) {
 
 
 					var isEncrypted = entry.decryptionOffset != 0 || entry.bitsPerSymbol != 0x10;
 
 					/// UTF-16
-					if( !isEncrypted ){
-						var value =  ds.readUCS2String(entry.size/2);
+					if (!isEncrypted) {
+						var value = ds.readUCS2String(entry.size / 2);
 						self.getOutput().strings.push({
-							value:value,
-							recid:entryIndex
+							value: value,
+							recid: entryIndex
 						});
 					}
 
 					/// Other... ignored
-					else{
+					else {
 
 					}
 				}
 
-				entryIndex++;        
+				entryIndex++;
 			}
 
 

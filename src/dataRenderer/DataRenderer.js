@@ -54,19 +54,19 @@ const GW2File = require('../format/file/GW2File');
  * @param  {Object} context      Shared value object between renderers.
  * @param  {Logger} logger       The logging class to use for progress, warnings, errors et cetera.
  */
-class DataRenderer{
+class DataRenderer {
 	constructor(localReader, settings, context, logger) {
 
 		/// Just storing parameters
 		this.localReader = localReader;
 		this.settings = settings;
-		if(!settings){
+		if (!settings) {
 			settings = {};
 		}
 		this.context = context;
 		this.context[this.constructor.name] = {};
 
-		if(logger)
+		if (logger)
 			this.logger = logger;
 		else
 			this.logger = T3D.Logger;
@@ -79,7 +79,7 @@ class DataRenderer{
 	 * If not specified the class of this instance will be used.
 	 * @return {Object}            The output value object for this class within the context.
 	 */
-	getOutput(otherClass){
+	getOutput(otherClass) {
 		return this.context[otherClass ? otherClass.name : this.constructor.name];
 	}
 
@@ -100,9 +100,9 @@ class DataRenderer{
 	 * @async
 	 * @param  {Function} callback Fires when renderer is finished, does not take arguments.
 	 */
-	renderAsync(callback){
+	renderAsync(callback) {
 		var self = this;
-		
+
 		this.localReader.readFile(this.settings.id, false, false, undefined, undefined, true).then((result) => {
 			let inflatedData = result.buffer;
 
@@ -114,20 +114,8 @@ class DataRenderer{
 
 			/// Construct raw string
 			var uarr = new Uint8Array(inflatedData);
-			var rawStrings = [], chunksize = 0xffff;
-			var len = Math.min(uarr.length,10000);
-
-			// There is a maximum stack size. We cannot call String.fromCharCode with as many arguments as we want
-			for (var i = 0; i * chunksize < len; i++){
-				rawStrings.push(String.fromCharCode.apply(null, uarr.subarray(i * chunksize, (i + 1) * chunksize)));
-			}
-
-			if(len<uarr.length){
-				rawStrings.push("T3D Ignored the last "+(uarr.length-len)+" bytes when generating this raw output");
-			}
-
-			self.getOutput().rawString = rawStrings.join();
-
+			let textDecoder = new TextDecoder();
+			self.getOutput().rawString = textDecoder.decode(uarr);
 
 
 			/// Check if this is an PF or ATEX file
@@ -140,33 +128,31 @@ class DataRenderer{
 			/// fourcc != fcc::ATEX && fourcc != fcc::ATEC && fourcc != fcc::ATEP &&
 			/// fourcc != fcc::ATET && fourcc != fcc::ATEU && fourcc != fcc::ATTX)
 			/// 
-			if( first4 == "ATEX" || first4 == "ATEC" ||
-				first4 == "ATEP" || first4 == "ATET" || 
-				first4 == "ATEU" || first4 == "ATTX" ){
+			if (first4 == "ATEX" || first4 == "ATEC" ||
+				first4 == "ATEP" || first4 == "ATET" ||
+				first4 == "ATEU" || first4 == "ATTX") {
 
-				self.localReader.readFile(self.settings.id, true, false, undefined, undefined, true).then((result) => {	
+				self.localReader.readFile(self.settings.id, true, false, undefined, undefined, true).then((result) => {
 					/// Create image using returned data.
 					var image = {
-						data   : new Uint8Array(result.buffer),
-						width  : result.imageWidth,
-						height : result.imageHeight
+						data: new Uint8Array(result.buffer),
+						width: result.imageWidth,
+						height: result.imageHeight
 					};
 
 					self.getOutput().image = image;
 					callback();
 				});
 
-			}
-			else if(first4.indexOf("PF") == 0){
-				self.getOutput().file = new GW2File(ds,0);
+			} else if (first4.indexOf("PF") == 0) {
+				self.getOutput().file = new GW2File(ds, 0);
 				callback();
-			}
-			else{
+			} else {
 				self.getOutput().file = null;
 				callback();
 			}
 
-		});	
+		});
 	}
 }
 

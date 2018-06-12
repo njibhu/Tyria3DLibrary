@@ -37,9 +37,9 @@ const HEAD_STRUCT = [
  * @param {boolean} noChunks If true, the file does not parse its
  * chunks on creation.
  */
-class GW2File{
+class GW2File {
 
-	constructor(ds, addr, noChunks){
+	constructor(ds, addr, noChunks) {
 
 		/**
 		 * @property {DataStream} ds The DataStream data source used by this file.
@@ -57,7 +57,7 @@ class GW2File{
 		/**
 		 * @property {Number} headerLength The length in bytes of the file header.
 		 */
-		this.headerLength  = NaN;
+		this.headerLength = NaN;
 
 		/**
 		 * All {{#crossLink "GW2Chunk"}}chunks{{/crossLink}} contained in the file.
@@ -66,14 +66,14 @@ class GW2File{
 		 * @type GW2Chunk[]
 		 */
 		this.chunks = [];
-		
+
 
 		/**
 		 * @property {Object} header Chunk header data.
 		 */
 		this.readHead();
-		
-		if(!noChunks){
+
+		if (!noChunks) {
 			this.readChunks();
 		}
 	}
@@ -82,7 +82,7 @@ class GW2File{
 	/**
 	 * Parses the file header data, populating the header property.
 	 */
-	readHead(){
+	readHead() {
 		this.ds.seek(this.addr);
 		this.header = this.ds.readStruct(HEAD_STRUCT);
 		this.headerLength = this.ds.position - this.addr;
@@ -91,7 +91,7 @@ class GW2File{
 	/**
 	 * Parses the file headers and populates the chunks property.
 	 */
-	readChunks(){
+	readChunks() {
 
 		/// Reset chunks
 		this.chunks = [];
@@ -99,10 +99,10 @@ class GW2File{
 		//var structs = this.getChunkStructs && this.getChunkStructs();
 
 		/// Load basic Chunk in order to read the chunk header.
-		var ch = new Chunk(this.ds, this.headerLength + this.addr);	
+		var ch = new Chunk(this.ds, this.headerLength + this.addr);
 
 		//while(structs && ch!=null && ch.header.type){
-		while(ch!=null && ch.header.type){
+		while (ch != null && ch.header.type) {
 
 			/// Load data and pass file type if we need to determine what chunk entry to use
 			/// (Some chunks in different files share the same chunk name)
@@ -121,10 +121,10 @@ class GW2File{
 	 * @param  {String} type The name, or type of the desired chunk.
 	 * @return {GW2Chunk} The first GW2Chunk in this file matching the type name, or null if no matching GW2Chunk was found.
 	 */
-	getChunk(type){
-		for(var i=0; i<this.chunks.length; i++){
-			if( this.chunks[i].header.type.toLowerCase() == type.toLowerCase() )
-				return this.chunks[i]; 
+	getChunk(type) {
+		for (var i = 0; i < this.chunks.length; i++) {
+			if (this.chunks[i].header.type.toLowerCase() == type.toLowerCase())
+				return this.chunks[i];
 		}
 		return null;
 	}
@@ -134,7 +134,7 @@ class GW2File{
 	 * 
 	 * @return {Object} An object mapping chunk identifiers to DataStream structure descriptors.
 	 */
-	getChunkStructs(){
+	getChunkStructs() {
 		return {}
 	}
 

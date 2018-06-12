@@ -20,20 +20,20 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 var Globals = require('./globals');
 
 function onFilterClick(evt) {
-    
+
     /// No filter if clicked group was "All"
-    if(evt.target=="All"){
+    if (evt.target == "All") {
         showFileGroup();
     }
 
     /// Other events are fine to just pass
-    else{
-        showFileGroup([evt.target]);	
+    else {
+        showFileGroup([evt.target]);
     }
-    
+
 }
 
-function showFileGroup(fileTypeFilter){
+function showFileGroup(fileTypeFilter) {
 
     w2ui.grid.records = [];
 
@@ -42,52 +42,50 @@ function showFileGroup(fileTypeFilter){
     for (var fileType in Globals._fileList) {
 
         /// Only show types we've asked for
-        if(fileTypeFilter && fileTypeFilter.indexOf(fileType) < 0){
+        if (fileTypeFilter && fileTypeFilter.indexOf(fileType) < 0) {
 
             /// Special case for "packGroup"
             /// Should let trough all pack types
             /// Should NOT let trought any non-pack types
             /// i.e. Strings, Binaries etc
-            if(fileTypeFilter.indexOf("packGroup")>=0){
-                if(!fileType.startsWith("PF")){
+            if (fileTypeFilter.indexOf("packGroup") >= 0) {
+                if (!fileType.startsWith("PF")) {
                     continue;
                 }
-            }
-            else if(fileTypeFilter.indexOf("textureGroup")>=0){
-                if(!fileType.startsWith("TEXTURE")){
+            } else if (fileTypeFilter.indexOf("textureGroup") >= 0) {
+                if (!fileType.startsWith("TEXTURE")) {
                     continue;
                 }
+            } else {
+                continue;
             }
-            else{
-                continue;	
-            }
-            
+
         }
 
         if (Globals._fileList.hasOwnProperty(fileType)) {
 
             var fileArr = Globals._fileList[fileType];
             fileArr.forEach(
-                function(mftIndex){
+                function (mftIndex) {
 
                     let meta = Globals._lr.getFileMeta(mftIndex);
 
                     var baseIds = reverseTable[mftIndex];
-                    var fileSize =  (meta) ? meta.size: "";
+                    var fileSize = (meta) ? meta.size : "";
 
-                    if(fileSize>0 && mftIndex > 15){
+                    if (fileSize > 0 && mftIndex > 15) {
 
-                        w2ui['grid'].records.push({ 
-                            recid : mftIndex, /// MFT index
+                        w2ui['grid'].records.push({
+                            recid: mftIndex, /// MFT index
                             baseIds: baseIds,
-                            type : fileType,
-                            fileSize : fileSize
-                        });	
+                            type: fileType,
+                            fileSize: fileSize
+                        });
 
                     }
 
                     mftIndex++;
-                }/// End for each mft in this file type
+                } /// End for each mft in this file type
             );
 
         } /// End if _fileList[filetype]

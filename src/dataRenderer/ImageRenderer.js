@@ -56,7 +56,7 @@ class ImageRenderer extends DataRenderer {
         this.localReader.readFileType(fileId).then((fileType) => {
 
             //If it's a DXT texture then decompress it
-            if(fileType.startsWith("TEXTURE_AT")){
+            if (fileType.startsWith("TEXTURE_AT")) {
                 return this.localReader.readFile(fileId, true).then((buffer, dxtType, imageWidth, imageHeight) => {
                     return {
                         type: fileType,
@@ -69,7 +69,7 @@ class ImageRenderer extends DataRenderer {
             }
 
             //If it's not a DXT just extract it (can be DDS/PNG/GIF...)
-            else if(fileType.startsWith("TEXTURE_")) {
+            else if (fileType.startsWith("TEXTURE_")) {
                 return this.localReader.readFile(fileId).then((result) => {
                     return {
                         type: fileType,
@@ -79,7 +79,7 @@ class ImageRenderer extends DataRenderer {
             }
         }).then((image) => {
             //Then with the result we give the informations and send the callback
-            if(image) {
+            if (image) {
                 this.getOutput().fileId = this.settings.id;
                 this.getOutput().image = {
                     data: new Uint8Array(image.data),

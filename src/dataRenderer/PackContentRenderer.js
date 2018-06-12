@@ -19,7 +19,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 
 const DataRenderer = require('./DataRenderer');
 
-class HexaRenderer extends DataRenderer {
+class PackContentRenderer extends DataRenderer {
     constructor(localReader, settings, context, logger) {
         super(localReader, settings, context, logger);
     }

@@ -33,8 +33,8 @@ const DataRenderer = require('./DataRenderer');
  * @param  {Object} context      Shared value object between renderers.
  * @param  {Logger} logger       The logging class to use for progress, warnings, errors et cetera.
  */
-class SingleModelRenderer extends DataRenderer{
-	constructor(localReader, settings, context, logger){
+class SingleModelRenderer extends DataRenderer {
+	constructor(localReader, settings, context, logger) {
 		super(localReader, settings, context, logger);
 	}
 
@@ -46,7 +46,7 @@ class SingleModelRenderer extends DataRenderer{
 	 * @async
 	 * @param  {Function} callback Fires when renderer is finished, does not take arguments.
 	 */
-	renderAsync(callback){
+	renderAsync(callback) {
 		var self = this;
 
 		/// Get file id
@@ -61,10 +61,10 @@ class SingleModelRenderer extends DataRenderer{
 		self.getOutput().meshes = [];
 
 		RenderUtils.getMeshesForFilename(fileId, 0x00ff00, self.localReader, meshCache, textureCache, showUnmaterialed,
-			function(meshes, isCached, boundingSphere){
-			
-				if(meshes){
-					meshes.forEach(function(mesh){
+			function (meshes, isCached, boundingSphere) {
+
+				if (meshes) {
+					meshes.forEach(function (mesh) {
 						mesh.boundingSphere = boundingSphere;
 						self.getOutput().meshes.push(mesh);
 					});

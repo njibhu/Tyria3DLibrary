@@ -9,16 +9,24 @@ ____
 
     ⋅ Cleanup of the Utils + DataRenderers:
         ⋅ Move all the chunk handling stuff into utils and make the DataRenderers pretty interfaces []
+        ⋅ DataRenderer doesn't preview anymore but just loads file and show metadata
         ⋅ RenderUtils []
         ⋅ MaterialUtils []
+    ⋅ Add caches to the DataRenderer
+        ⋅ File caches for maps
+        ⋅ Check if the context already have rawData before loading file
     ⋅ Use gw2 skydomes + (threejs example sky) []
-    ⋅ Replace all deprecated uses of LocalReader and change it []
+    ⋅ Replace all deprecated uses of LocalReader and change it [+]
     ⋅ Cleanup the GW2Chunk []
-    ⋅ Move Tyria2D to its own project
+    ⋅ Make Tyria2D its own real project [+]
     ⋅ Use Babel to have an ES5 target as well.
 
 ### Minor: 
 
+    ⋅ Update THREEjs to latest release []
+        ⋅ Fix all the render issues from latest upgrade:
+            ⋅ LOD []
+            ⋅ Lights []
     ⋅  Clean all the todos []
     ⋅  Rework the LOD in TerrainRenderer and SingleModelViewer (see id: 229478)
         ⋅  Debug tool: (see threejs example interactive/buffergeometry ): Tells name of a mesh by pointing at it [+] (Done in example)

@@ -160,13 +160,13 @@ class LocalReader {
             const baseId = mftId;
             mftId = this.getFileIndex(baseId);
             if(!(mftId > 0))
-                throw new Error(`Unexistant file with baseId: ${baseId}`);
+                throw new Error(`Unexistant file: ${baseId} (baseId)`);
         }
 
         let buffer, dxtType, imageWidth, imageHeight;
         let meta = this.getFileMeta(mftId);
         if (!meta)
-            throw new Error(`Unexistant file with mftId: ${mftId}`);
+            throw new Error(`Unexistant file: ${mftId} (mftId)`);
 
         //Slice up the data
         let {
