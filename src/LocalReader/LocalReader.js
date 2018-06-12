@@ -156,15 +156,17 @@ class LocalReader {
      * @returns {Promise<{buffer: ArrayBuffer, dxtType: number|undefined, imageWidth: number|undefined, imageHeight: number|undefined}>}
      */
     async readFile(mftId, isImage, raw, fileLength, extractLength, isBaseId) {
-        if(isBaseId)
-            mftId = this.getFileIndex(mftId);
+        if(isBaseId){
+            const baseId = mftId;
+            mftId = this.getFileIndex(baseId);
             if(!(mftId > 0))
-                throw new Error("Unexistant baseId");
+                throw new Error(`Unexistant file with baseId: ${baseId}`);
+        }
 
         let buffer, dxtType, imageWidth, imageHeight;
         let meta = this.getFileMeta(mftId);
         if (!meta)
-            throw new Error("Unexistant file");
+            throw new Error(`Unexistant file with mftId: ${mftId}`);
 
         //Slice up the data
         let {

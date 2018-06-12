@@ -219,7 +219,7 @@ class ZoneRenderer extends DataRenderer{
 
 							mergedGeom.buffersNeedUpdate = true;
 
-							mesh = new THREE.Mesh( mergedGeom, meshGroup.material );
+							let mesh = new THREE.Mesh( mergedGeom, meshGroup.material );
 							mesh.position.set(meshGroup.position.x, meshGroup.position.z, meshGroup.position.y);
 
 							self.getOutput().meshes.push(mesh);
@@ -413,7 +413,7 @@ class ZoneRenderer extends DataRenderer{
 		var zoneDefs = zoneChunkData.zoneDefArray;
 
 		/// Render each zone
-		lastPct = -1;		
+		let lastPct = -1;		
 
 		/// Main render loop, render each zone
 		function stepZone(i){

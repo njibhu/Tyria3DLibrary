@@ -36,6 +36,7 @@ const DataRenderer = require('./DataRenderer');
 
 class HavokRenderer extends DataRenderer {
 	constructor(localReader, settings, context, logger){
+		super(localReader, settings, context, logger);
 
 		this.mapFile = this.settings.mapFile;
 

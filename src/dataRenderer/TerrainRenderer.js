@@ -18,6 +18,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
 const RenderUtils = require("../util/RenderUtils");
+const MaterialUtils = require("../util/MaterialUtils");
 const DataRenderer = require('./DataRenderer');
 const GW2File = require("../format/file/GW2File.js"); 
 
@@ -41,8 +42,8 @@ const TerrainShader = require("../util/TerrainShader.js");
  * @param  {Logger} logger       The logging class to use for progress, warnings, errors et cetera.
  */
 class TerrainRenderer extends DataRenderer{
-	constructor(localReader, mapFile, settings, context, logger){
-		super(localReader, mapFile, settings, context, logger);
+	constructor(localReader, settings, context, logger){
+		super(localReader, settings, context, logger);
 
 		this.mapFile = this.settings.mapFile;
 
@@ -71,13 +72,13 @@ class TerrainRenderer extends DataRenderer{
 				terrainData.chunkArray.length / terrainData.numChunksD_1;
 		}
 
-		this.loadPagedImageCallback = function(callback, infaltedBuffer){
+		this.loadPagedImageCallback = function(callback, inflatedBuffer){
 			var self = this;
 
 			// Prep output array
 			self.getOutput().terrainTiles = [];
 
-			var pimgDS = new DataStream(infaltedBuffer);
+			var pimgDS = new DataStream(inflatedBuffer);
 			var pimgFile = new GW2File(pimgDS,0);
 			var pimgTableDataChunk = pimgFile.getChunk("pgtb");
 			var pimgData = pimgTableDataChunk && pimgTableDataChunk.data;
@@ -149,7 +150,7 @@ class TerrainRenderer extends DataRenderer{
 						if(!chunkTextures[matName]){
 
 							/// Load local texture, here we use file name!
-							var chunkTex = RenderUtils.loadLocalTexture(self.localReader, filename);
+							var chunkTex = MaterialUtils.loadLocalTexture(self.localReader, filename);
 
 							if(chunkTex){
 								/// Set repeat, antistropy and repeat Y
@@ -210,7 +211,7 @@ class TerrainRenderer extends DataRenderer{
 					if(!chunkTextures[textureFileName]){
 
 						/// Load local texture
-						var chunkTex = RenderUtils.loadLocalTexture(self.localReader, textureFileName);
+						var chunkTex = MaterialUtils.loadLocalTexture(self.localReader, textureFileName);
 
 						if(chunkTex){
 							/// Set repeat, antistropy and repeat Y
