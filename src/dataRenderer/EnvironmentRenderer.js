@@ -17,7 +17,6 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-const RenderUtils = require("../util/RenderUtils");
 const MaterialUtils = require("../util/MaterialUtils");
 const DataRenderer = require('./DataRenderer');
 

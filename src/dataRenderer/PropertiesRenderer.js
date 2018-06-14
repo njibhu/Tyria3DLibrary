@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-const RenderUtils = require("../util/RenderUtils");
+const ModelUtils = require("../util/ModelUtils");
 const DataRenderer = require('./DataRenderer');
 
 /**
@@ -231,7 +231,7 @@ class PropertiesRenderer extends DataRenderer {
 
 			/// Get meshes
 			var showUnmaterialed = false;
-			RenderUtils.getMeshesForFilename(prop.filename, prop.color, self.localReader, self.meshCache, self.textureCache, showUnmaterialed,
+			ModelUtils.getMeshesForFilename(prop.filename, prop.color, self.localReader, self.meshCache, self.textureCache, showUnmaterialed, false,
 				function (meshes, isCached, boundingSphere) {
 
 					if (meshes) {

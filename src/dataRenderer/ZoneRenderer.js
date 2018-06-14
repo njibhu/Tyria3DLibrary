@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-const RenderUtils = require("../util/RenderUtils");
+const ModelUtils = require("../util/ModelUtils");
 const DataRenderer = require('./DataRenderer');
 
 /**
@@ -102,7 +102,7 @@ class ZoneRenderer extends DataRenderer {
 
 				/// Get model just once for this group
 				var showUnmaterialed = false;
-				RenderUtils.getMeshesForFilename(key, null, self.localReader, self.meshCache, self.textureCache, showUnmaterialed,
+				ModelUtils.getMeshesForFilename(key, null, self.localReader, self.meshCache, self.textureCache, showUnmaterialed, false,
 
 					function (meshes, isCached) {
 
@@ -286,10 +286,6 @@ class ZoneRenderer extends DataRenderer {
 			if (zone.encodeData.length == 0) {
 				return {};
 			}
-
-			//console.log("Get mdl groups", zone);
-			/// Testing: Render Zone Vert Rect
-			//RenderUtils.renderRect(zoneRect, -zPos);
 
 			var zdx = zone.vertRect[0] - zone.vertRect[2];
 			var zdy = zone.vertRect[1] - zone.vertRect[3];

@@ -103,15 +103,6 @@ class TerrainRenderer extends DataRenderer {
 			var allTextures = terrainData.materials.texFileArray;
 
 			//Total map dx and dy
-			/*
-			old parameter data definition:
-			"x1", "float32",
-			"y1", "float32",
-			"x2", "float32",
-			"y2", "float32"
-			*/
-			//var dx = parameterData.rect.x2 - parameterData.rect.x1;
-			//var dy = parameterData.rect.y2 - parameterData.rect.y1;
 			var dx = parameterData.rect[2] - parameterData.rect[0];
 			var dy = parameterData.rect[3] - parameterData.rect[1];
 
@@ -231,7 +222,6 @@ class TerrainRenderer extends DataRenderer {
 				var pageTexName2 = pageX + "," + pageY + "-2";
 
 
-				/// TODO USe mapData (Chunk: env -> haze)
 				//var fog = SceneUtils.getScene().fog;
 				var fog = {
 					color: {

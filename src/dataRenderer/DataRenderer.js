@@ -101,21 +101,19 @@ class DataRenderer {
 	 * @param  {Function} callback Fires when renderer is finished, does not take arguments.
 	 */
 	renderAsync(callback) {
-		var self = this;
-
 		this.localReader.readFile(this.settings.id, false, false, undefined, undefined, true).then((result) => {
 			let inflatedData = result.buffer;
 
 			/// Set fileId so callers can identify this VO		
-			self.getOutput().fileId = self.settings.id;
+			this.getOutput().fileId = this.settings.id;
 
 			/// Share inflated data
-			self.getOutput().rawData = inflatedData;
+			this.getOutput().rawData = inflatedData;
 
 			/// Construct raw string
 			var uarr = new Uint8Array(inflatedData);
 			let textDecoder = new TextDecoder();
-			self.getOutput().rawString = textDecoder.decode(uarr);
+			this.getOutput().rawString = textDecoder.decode(uarr);
 
 
 			/// Check if this is an PF or ATEX file
@@ -132,7 +130,7 @@ class DataRenderer {
 				first4 == "ATEP" || first4 == "ATET" ||
 				first4 == "ATEU" || first4 == "ATTX") {
 
-				self.localReader.readFile(self.settings.id, true, false, undefined, undefined, true).then((result) => {
+				this.localReader.readFile(this.settings.id, true, false, undefined, undefined, true).then((result) => {
 					/// Create image using returned data.
 					var image = {
 						data: new Uint8Array(result.buffer),
@@ -140,15 +138,15 @@ class DataRenderer {
 						height: result.imageHeight
 					};
 
-					self.getOutput().image = image;
+					this.getOutput().image = image;
 					callback();
 				});
 
 			} else if (first4.indexOf("PF") == 0) {
-				self.getOutput().file = new GW2File(ds, 0);
+				this.getOutput().file = new GW2File(ds, 0);
 				callback();
 			} else {
-				self.getOutput().file = null;
+				this.getOutput().file = null;
 				callback();
 			}
 
