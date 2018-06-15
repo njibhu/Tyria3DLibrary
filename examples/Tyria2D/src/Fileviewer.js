@@ -55,12 +55,15 @@ function viewFileByFileId(fileId) {
     /// Make sure _context is clean
     Globals._context = {};
 
+    let rendererSettings = {
+        id: fileId
+    };
+
     /// Run the basic DataRenderer, handles all sorts of files for us.
     T3D.runRenderer(
         T3D.DataRenderer,
-        Globals._lr, {
-            id: fileId
-        },
+        Globals._lr,
+        rendererSettings,
         Globals._context,
         onBasicRendererDone
     );
@@ -79,7 +82,6 @@ function onBasicRendererDone() {
 
     var image = T3D.getContextValue(Globals._context, T3D.DataRenderer, "image");
 
-
     var fcc = raw.substring(0, 4);
 
     /// Update main header to show filename
@@ -89,6 +91,10 @@ function onBasicRendererDone() {
 
     /// Update raw view and enable tab
     w2ui.fileTabs.enable('tabRaw');
+
+    //Generate hex and enable tab
+    renderHexView();
+    w2ui.fileTabs.enable('tabHexView');
 
 
     $("#contextToolbar")
@@ -288,8 +294,6 @@ function onRendererDoneString() {
     w2ui.fileTabs.click('tabString');
 }
 
-
-
 function renderFileModel(fileId) {
 
     /// Make sure output is clean
@@ -354,6 +358,75 @@ function onRendererDoneModel() {
 
     if (biggestMdl)
         Globals._camera.lookAt(biggestMdl.position);
+}
+
+function generateHex(rawData, callback) {
+    let byteArray = new Uint8Array(rawData);
+    let hexOutput = [];
+    let asciiOutput = [];
+
+    //Breakup the work into slices of 100kB for performance
+    let byteArraySlice = [];
+    for (let pos = 0; pos < byteArray.length; pos += 100000) {
+        byteArraySlice.push(byteArray.slice(pos, pos + 100000));
+    }
+
+    let loopCount = 0;
+    let loopFunc = setInterval(() => {
+        let byteArrayItem = byteArraySlice[loopCount];
+        //If there is no more work we clear the loop and callback
+        if (byteArrayItem == undefined) {
+            clearInterval(loopFunc);
+            callback({
+                hexa: hexOutput,
+                ascii: asciiOutput
+            });
+            return;
+        }
+
+        //Work with lines of 16 bytes
+        for (let pos = 0; pos < byteArrayItem.length; pos += 16) {
+            let workSlice = byteArrayItem.slice(pos, pos + 16);
+            let hexLine = "";
+            let asciiLine = "";
+            let wordCount = 0; //Used to separate words (4bytes)
+
+            //Iterate through each byte of the 16bytes line
+            for (let byte of workSlice) {
+                let byteHexCode = byte.toString(16).toUpperCase();
+                byteHexCode = byteHexCode.length == 1 ? "0" + byteHexCode : byteHexCode;
+                hexLine += byteHexCode + " ";
+                asciiLine += String.fromCharCode(byte);
+
+                //Split words with double space in hex view
+                if (wordCount = 3) {
+                    hexLine += " ";
+                    wordCount = 0;
+                } else {
+                    wordCount += 1;
+                }
+            }
+
+            hexOutput.push(hexLine);
+            asciiOutput.push(asciiLine);
+        }
+
+        loopCount += 1;
+    }, 1);
+}
+
+function renderHexView() {
+    let rawData = T3D.getContextValue(Globals._context, T3D.DataRenderer, "rawData");
+
+    generateHex(rawData, (hexData) => {
+        console.log(hexData);
+        $('#hexView')
+        $("#hexView").html("");
+        for (let idx in hexData.hexa) {
+            $("#hexView").append("<p>" + hexData.hexa[idx] + "    " + hexData.ascii[idx] + "</p>");
+        }
+        $("#hexView").show();
+    });
 }
 
 module.exports = {

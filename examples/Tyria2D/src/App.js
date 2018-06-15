@@ -60,7 +60,7 @@ Layout.initLayout(onReaderCreated);
 /// Overwrite progress logger
 T3D.Logger.logFunctions[T3D.Logger.TYPE_PROGRESS] = function () {
     $("#fileLoadProgress").html(
-        "Indexing .dat file (first visit only)<br/>" +
+        "Indexing .dat file<br/>" +
         arguments[1] + "%<br/><br/>"
     );
 }

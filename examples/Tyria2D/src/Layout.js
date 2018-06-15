@@ -270,6 +270,13 @@ function fileView() {
                 "<div class='tabOutput' id='packOutput' />" +
                 "</div>"
             )
+        )
+        .append(
+            $(
+                "<div class='fileTab' id='fileTabsHexView'>" +
+                "<div class='tabOutput' id='hexView' />" +
+                "</div>"
+            )
             .hide()
         )
         .append(
@@ -325,6 +332,15 @@ function fileView() {
                 onClick: function () {
                     $('.fileTab').hide();
                     $('#fileTabsPack').show();
+                }
+            },
+            {
+                id: 'tabHexView',
+                caption: 'HexView',
+                disabled: true,
+                onClick: function () {
+                    $('.fileTab').hide();
+                    $('#fileTabsHexView').show();
                 }
             },
             {
