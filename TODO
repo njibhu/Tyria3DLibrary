@@ -8,17 +8,14 @@ Clear up the utils and DataRenderers.
 In details:
  > Move Model loading specific logic from 'RenderUtils' to 'Models'
  > Clean DataRenderers in order:
-   Maps:
-   1. TerrainRenderer
-   2. EnvironmentRenderer
+   1. TerrainRenderer +
+   2. EnvironmentRenderer +
    3. PropertiesRenderer
    4. HavokRenderer
    5. ZoneRenderer
-   Others:
-    * DataRenderer
-    * ImageRenderer
-    * RawRenderer
-    * StringRenderer
-    * SingleModelRenderer
  > Add support for a fileCache object into all loading functions
  > Fix OBJExporter
+ > Transform the DataRenders into real async functions
+
+ > LocalReader, preload the next task in worker instead of waiting.
+    And signalize an in-between state

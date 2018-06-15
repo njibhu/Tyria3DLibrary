@@ -19,13 +19,21 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 
 const DataRenderer = require('./DataRenderer');
 
-class HexaRenderer extends DataRenderer {
+class RawTextRenderer extends DataRenderer {
     constructor(localReader, settings, context, logger) {
         super(localReader, settings, context, logger);
     }
 
     renderAsync(callback) {
-        var fileId = this.settings.id;
+        let fileId = this.settings.id;
+        let output = this.settings.outputObject || "";
+        let progressCallback = this.settings.progressCallback
+
+        let cache = this.getOutput(T3D.DataRenderer);
+        if (cache.rawData) {
+
+        }
+
 
     }
 }

@@ -17,20 +17,29 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-const FileViewer = require('./fileviewer');
-const FileGrid = require('./filegrid');
-const Utils = require('./utils');
+const FileViewer = require('./Fileviewer');
+const FileGrid = require('./Filegrid');
+const Utils = require('./Utils');
 
-var Globals = require('./globals');
+var Globals = require('./Globals');
+
+
+var onReaderCallback;
 
 /**
  * Setup main grid
  */
 function mainGrid() {
     const pstyle = 'border: 1px solid #dfdfdf; padding: 0;';
+
     $('#layout').w2layout({
         name: 'layout',
         panels: [{
+                type: 'top',
+                size: 28,
+                resizable: false,
+                style: pstyle + ' padding-top: 1px;'
+            }, {
                 type: 'left',
                 size: 570,
                 resizable: true,
@@ -42,21 +51,10 @@ function mainGrid() {
                 toolbar: {
                     style: 'background-color:#eaeaea; height:40px',
                     items: [{
-                            type: 'html',
-                            id: 'fileIdToolbar',
-                            html: '<div class="toolbarEntry">' +
-                                ' File ID:' +
-                                '    <input id="fileIdInput"/>' +
-                                '    <button id="fileIdInputBtn">' +
-                                '    Load </button>' +
-                                '</div>'
-                        },
-                        {
-                            type: 'html',
-                            id: 'contextToolbar',
-                            html: '<div class="toolbarEntry" id="contextToolbar"></div>'
-                        }
-                    ],
+                        type: 'html',
+                        id: 'contextToolbar',
+                        html: '<div class="toolbarEntry" id="contextToolbar"></div>'
+                    }],
                     onClick: function (event) {
                         this.owner.content('main', event);
                     }
@@ -96,6 +94,94 @@ function mainGrid() {
 }
 
 /**
+ * Setup toolbar
+ */
+function toolbar() {
+    $().w2toolbar({
+        name: 'toolbar',
+        items: [{
+                type: 'button',
+                id: 'loadFile',
+                caption: 'Open file',
+                img: 'icon-folder'
+            },
+            {
+                type: 'break'
+            },
+            {
+                type: 'menu',
+                id: 'view',
+                caption: 'View',
+                img: 'icon-page',
+                items: [{
+                        text: 'Hide file list',
+                        img: 'icon-page',
+                    },
+                    {
+                        text: 'Hide file categories',
+                        img: 'icon-page',
+                    },
+                    {
+                        text: 'Hide file preview',
+                        img: 'icon-page',
+                    }
+                ]
+            },
+            {
+                type: 'break'
+            },
+            {
+                type: 'menu',
+                id: 'tools',
+                caption: 'Tools',
+                img: 'icon-page',
+                items: [{
+                    text: 'View cntc summary',
+                    img: 'icon-page',
+                }]
+
+            },
+            {
+                type: 'break'
+            },
+            {
+                type: 'menu',
+                id: 'openentry',
+                img: 'icon-search',
+                caption: 'Open entry',
+                items: [{
+                        text: 'BaseID',
+                        img: 'icon-search',
+                    },
+                    {
+                        text: 'MFT ID',
+                        img: 'icon-search',
+                    }
+                ]
+            },
+            {
+                type: 'spacer'
+            },
+            {
+                type: 'button',
+                id: 'mentions',
+                caption: 'Tyria2D',
+                img: 'icon-page'
+            }
+        ],
+        onClick: function (event) {
+            switch (event.target) {
+                case 'loadFile':
+                    openFilePopup();
+                    break;
+            }
+        }
+    });
+
+    w2ui['layout'].content('top', w2ui['toolbar']);
+}
+
+/**
  * Setup sidebar
  */
 function sidebar() {
@@ -123,37 +209,39 @@ function fileBrowser() {
         name: 'grid',
         show: {
             toolbar: true,
+            toolbarSearch: false,
+            toolbarReload: false,
             footer: true,
         },
         columns: [{
                 field: 'recid',
                 caption: 'MFT index',
                 size: '80px',
-                sortable: true,
+                sortable: false,
                 resizable: true,
-                searchable: 'int'
+                //searchable: 'int'
             },
             {
                 field: 'baseIds',
                 caption: 'BaseId list',
                 size: '100%',
-                sortable: true,
+                sortable: false,
                 resizable: true,
-                searchable: true
+                //searchable: true
             },
             {
                 field: 'type',
                 caption: 'Type',
                 size: '100px',
                 resizable: true,
-                sortable: true
+                sortable: false
             },
             {
                 field: 'fileSize',
                 caption: 'Pack Size',
                 size: '85px',
                 resizable: true,
-                sortable: true
+                sortable: false
             }
         ],
         onClick: function (event) {
@@ -308,7 +396,20 @@ function stringGrid() {
  */
 function sidebarNodes() {
 
-    var packNode = {
+    //Clear sidebar if already set up
+    for (let element of w2ui['sidebar'].nodes) {
+        if (element.id != 'All') {
+            w2ui['sidebar'].nodes.splice(
+                w2ui['sidebar'].nodes.indexOf(element.id),
+                1
+            );
+        }
+    }
+    w2ui['sidebar'].refresh();
+
+    //Regenerate    
+
+    let packNode = {
         id: 'packGroup',
         text: 'Pack Files',
         img: 'icon-folder',
@@ -316,7 +417,7 @@ function sidebarNodes() {
         nodes: []
     };
 
-    var textureNode = {
+    let textureNode = {
         id: 'textureGroup',
         text: 'Texture files',
         img: 'icon-folder',
@@ -324,7 +425,7 @@ function sidebarNodes() {
         nodes: []
     }
 
-    var unsortedNode = {
+    let unsortedNode = {
         id: 'unsortedGroup',
         text: 'Unsorted',
         img: 'icon-folder',
@@ -333,15 +434,15 @@ function sidebarNodes() {
     }
 
     /// Build sidebar nodes
-    for (var fileType in Globals._fileList) {
+    for (let fileType in Globals._fileList) {
         if (Globals._fileList.hasOwnProperty(fileType)) {
 
-            var node = {
+            let node = {
                 id: fileType,
                 img: "icon-folder",
                 group: false
             };
-            var isPack = false;
+            let isPack = false;
             if (fileType.startsWith("TEXTURE")) {
                 node = {
                     id: fileType,
@@ -394,23 +495,7 @@ function sidebarNodes() {
 
 }
 
-/**
- * This function is called by the main app to create the gui layout.
- */
-function initLayout(onReaderCreated) {
-
-    mainGrid();
-    sidebar();
-    fileBrowser();
-    fileView();
-    stringGrid();
-
-    /*
-        SET UP TREE 3D SCENE
-    */
-    Utils.setupScene();
-
-
+function openFilePopup() {
     /// Ask for file
     w2popup.open({
         speed: 0,
@@ -429,23 +514,36 @@ function initLayout(onReaderCreated) {
             function (evt) {
                 Globals._lr = T3D.getLocalReader(
                     evt.target.files[0],
-                    onReaderCreated,
+                    onReaderCallback,
                     "../static/t3dworker.js");
             }
         );
+}
 
+/**
+ * This function is called by the main app to create the gui layout.
+ */
+function initLayout(onReaderCreated) {
 
-    /// Overwrite progress logger
-    T3D.Logger.logFunctions[T3D.Logger.TYPE_PROGRESS] = function () {
-        $("#filePickerPop").prop('disabled', true);
-        $("#fileLoadProgress").html(
-            "Indexing .dat file (first visit only)<br/>" +
-            arguments[1] + "%<br/><br/>"
-        );
-    }
+    onReaderCallback = onReaderCreated;
+
+    mainGrid();
+    toolbar();
+    sidebar();
+    fileBrowser();
+    fileView();
+    stringGrid();
+
+    /*
+        SET UP TREE 3D SCENE
+    */
+    Utils.setupScene();
+
+    openFilePopup();
+
 }
 
 module.exports = {
     initLayout: initLayout,
-    sidebarNodes: sidebarNodes
+    sidebarNodes: sidebarNodes,
 }

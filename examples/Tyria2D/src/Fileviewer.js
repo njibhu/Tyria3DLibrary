@@ -17,8 +17,8 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var Globals = require('./globals');
-var Utils = require('./utils');
+var Globals = require('./Globals');
+var Utils = require('./Utils');
 
 function viewFileByMFT(mftIdx) {
     let reverseTable = Globals._lr.getReverseIndex();

@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var Globals = require('./globals');
+var Globals = require('./Globals');
 
 /// Exports current model as an .obj file with a .mtl refering .png textures.
 function exportScene() {

@@ -65,7 +65,7 @@ gulp.task('examples', function () {
 
 gulp.task('T2D', function () {
 	return browserify({
-			entries: './examples/Tyria2D/src/main.js',
+			entries: './examples/Tyria2D/src/App.js',
 			debug: true
 		}).bundle()
 		.pipe(source('Tyria2D-app.js'))

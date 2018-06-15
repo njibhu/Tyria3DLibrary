@@ -112,7 +112,7 @@ class DataRenderer {
 
 			/// Construct raw string
 			var uarr = new Uint8Array(inflatedData);
-			let textDecoder = new TextDecoder();
+			let textDecoder = new TextDecoder('latin2');
 			this.getOutput().rawString = textDecoder.decode(uarr);
 
 

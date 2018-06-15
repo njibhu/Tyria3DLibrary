@@ -88,37 +88,7 @@ class TerrainRenderer extends DataRenderer {
 	 * @return {*}            [description]
 	 */
 	getFileIdsAsync(callback) {
-
-		var terrainChunk = this.mapFile.getChunk("trn");
-		var pimgTableDataChunk = this.mapFile.getChunk("pimg");
-		var fileIds = [];
-
-		/// ------------ SPLASH TEXTURES ------------
-		var pimgData = pimgTableDataChunk && pimgTableDataChunk.data;
-		var strippedPages = pimgData.strippedPages;
-
-		///Only use layer 0
-		strippedPages.forEach(function (page) {
-
-			/// Only load layer 0 and 1
-			if (page.layer <= 1 && page.filename > 0) {
-				fileIds.push(page.filename);
-			}
-		});
-		/// ------------ END SPLASH TEXTURES ------------
-
-
-
-		/// ------------ TILED IMAGES ------------
-		var terrainData = terrainChunk.data;
-		var allTextures = terrainData.materials.texFileArray;
-		allTextures.forEach(function (texture) {
-			if (texture.filename > 0)
-				fileIds.push(texture.filename);
-		})
-		/// ------------ END TILED IMAGES ------------
-
-		return fileIds;
+		callback(MapTerrainUtils.getTerrainFilesId(this.mapFile));
 	}
 }
 

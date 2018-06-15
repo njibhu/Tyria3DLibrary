@@ -159,8 +159,9 @@ async function loadPagedImageCallback(inflatedBuffer, mapFile, anisotropy, envOu
         //TODO: Terrain texture LOD ?
         var chunkTextureIndices = allMaterials[chunkIndex].loResMaterial.texIndexArray;
         var matFileName = allMaterials[chunkIndex].loResMaterial.materialFile;
-        //var chunkTextureIndices = allMaterials[chunkIndex].hiResMaterial.texIndexArray;
-        //var matFileName = allMaterials[chunkIndex].hiResMaterial.materialFile;
+
+        // var chunkTextureIndices = allMaterials[chunkIndex].hiResMaterial.texIndexArray;
+        // var matFileName = allMaterials[chunkIndex].hiResMaterial.materialFile;
 
 
         var chunkData = terrainData.chunkArray[chunkIndex];
@@ -406,6 +407,40 @@ async function loadPagedImageCallback(inflatedBuffer, mapFile, anisotropy, envOu
 
 }
 
+function getTerrainFilesId(mapFile) {
+    var terrainChunk = mapFile.getChunk("trn");
+    var pimgTableDataChunk = mapFile.getChunk("pimg");
+    var fileIds = [];
+
+    /// ------------ SPLASH TEXTURES ------------
+    var pimgData = pimgTableDataChunk && pimgTableDataChunk.data;
+    var strippedPages = pimgData.strippedPages;
+
+    ///Only use layer 0
+    strippedPages.forEach(function (page) {
+
+        /// Only load layer 0 and 1
+        if (page.layer <= 1 && page.filename > 0) {
+            fileIds.push(page.filename);
+        }
+    });
+    /// ------------ END SPLASH TEXTURES ------------
+
+
+
+    /// ------------ TILED IMAGES ------------
+    var terrainData = terrainChunk.data;
+    var allTextures = terrainData.materials.texFileArray;
+    allTextures.forEach(function (texture) {
+        if (texture.filename > 0)
+            fileIds.push(texture.filename);
+    })
+    /// ------------ END TILED IMAGES ------------
+
+    return fileIds;
+}
+
 module.exports = {
-    loadPagedImageCallback: loadPagedImageCallback
+    loadPagedImageCallback: loadPagedImageCallback,
+    getTerrainFilesId: getTerrainFilesId
 }

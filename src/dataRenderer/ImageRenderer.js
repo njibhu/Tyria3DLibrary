@@ -53,6 +53,7 @@ class ImageRenderer extends DataRenderer {
     renderAsync(callback) {
         //Ask the localReader for the file type
         const fileId = this.localReader.getFileIndex(this.settings.id);
+
         this.localReader.readFileType(fileId).then((fileType) => {
 
             //If it's a DXT texture then decompress it
