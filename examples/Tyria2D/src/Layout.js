@@ -23,6 +23,8 @@ const Utils = require('./Utils');
 
 var Globals = require('./Globals');
 
+const HexaViewer = require('./Viewers/Hexa');
+
 
 var onReaderCallback;
 
@@ -257,130 +259,15 @@ function fileView() {
     $(w2ui['layout'].el('main'))
         .append($("<h1 id='fileTitle' />"))
         .append($("<div id='fileTabs' />"))
-        .append(
-            $(
-                "<div class='fileTab' id='fileTabsRaw'>" +
-                "<div class='tabOutput' id='rawOutput' />" +
-                "</div>"
-            )
-        )
-        .append(
-            $(
-                "<div class='fileTab' id='fileTabsPack'>" +
-                "<div class='tabOutput' id='packOutput' />" +
-                "</div>"
-            )
-        )
-        .append(
-            $(
-                "<div class='fileTab' id='fileTabsHexView'>" +
-                "<div class='tabOutput' id='hexView' />" +
-                "</div>"
-            )
-            .hide()
-        )
-        .append(
-            $(
-                "<div class='fileTab' id='fileTabsTexture'>" +
-                "<div class='tabOutput' id='textureOutput' />" +
-                "</div>"
-            )
-            .hide()
-        )
-        .append(
-            $(
-                "<div class='fileTab' id='fileTabsString'>" +
-                "<div id='stringOutput' />" +
-                "</div>"
-            )
-            .hide()
-        )
-        .append(
-            $(
-                "<div class='fileTab' id='fileTabsModel'>" +
-                "<div id='modelOutput'/>" +
-                "</div>"
-            )
-            .hide()
-        )
-        .append(
-            $(
-                "<div class='fileTab' id='fileTabsSound'>" +
-                "<div class='tabOutput' id='soundOutput'/>" +
-                "</div>"
-            )
-            .hide()
-        );
 
 
     $("#fileTabs").w2tabs({
         name: 'fileTabs',
         active: 'tabRaw',
-        tabs: [{
-                id: 'tabRaw',
-                caption: 'Raw',
-                disabled: true,
-                onClick: function () {
-                    $('.fileTab').hide();
-                    $('#fileTabsRaw').show();
-                }
-            },
-            {
-                id: 'tabPF',
-                caption: 'Pack File',
-                disabled: true,
-                onClick: function () {
-                    $('.fileTab').hide();
-                    $('#fileTabsPack').show();
-                }
-            },
-            {
-                id: 'tabHexView',
-                caption: 'HexView',
-                disabled: true,
-                onClick: function () {
-                    $('.fileTab').hide();
-                    $('#fileTabsHexView').show();
-                }
-            },
-            {
-                id: 'tabTexture',
-                caption: 'Texture',
-                disabled: true,
-                onClick: function () {
-                    $('.fileTab').hide();
-                    $('#fileTabsTexture').show();
-                }
-            },
-            {
-                id: 'tabString',
-                caption: 'String',
-                disabled: true,
-                onClick: function () {
-                    $('.fileTab').hide();
-                    $('#fileTabsString').show();
-                }
-            },
-            {
-                id: 'tabModel',
-                caption: 'Model',
-                disabled: true,
-                onClick: function () {
-                    $('.fileTab').hide();
-                    $('#fileTabsModel').show();
-                }
-            },
-            {
-                id: 'tabSound',
-                caption: 'Sound',
-                disabled: true,
-                onClick: function () {
-                    $('.fileTab').hide();
-                    $('#fileTabsSound').show();
-                }
-            }
-        ]
+        tabs: []
     });
+
+    FileViewer.generateTabLayout();
 }
 
 function stringGrid() {

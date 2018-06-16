@@ -16,13 +16,14 @@
     <script src="../static/T3D-1.1.0.Formats.js"></script>
     <script>
         /*
-                                                                                                                                                                            This script iterate through the cntc files and look through their 'Main' chunk
-                                                                                                                                                                        */
+                                                                                                                                                                                    This script iterate through the cntc files and look through their 'Main' chunk
+                                                                                                                                                                                */
 
-        var lr;
+        var _lr;
         $("#filePicker").change(function (evt) {
             var file = evt.target.files[0];
             T3D.getLocalReader(file, async function (lr) {
+                _lr = lr;
                 res = await lr.readFileList();
                 console.log("Sorting the files");
 

@@ -1,0 +1,81 @@
+/*
+Copyright © Tyria3DLibrary project contributors
+
+This file is part of the Tyria 3D Library.
+
+Tyria 3D Library is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Tyria 3D Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
+*/
+
+const Viewer = require("./Viewer");
+const Globals = require("../Globals");
+const Utils = require("../Utils");
+
+class PackViewer extends Viewer {
+    constructor() {
+        super("#fileTabsPack", "#packOutput", "tabPF", "Pack File");
+        this.currentRenderId = null;
+    }
+
+    render() {
+        let fileId = Globals._fileId = T3D.getContextValue(Globals._context, T3D.DataRenderer, "fileId");
+
+        //First check if we've already renderer it
+        if (this.currentRenderId != fileId) {
+            let packfile = T3D.getContextValue(Globals._context, T3D.DataRenderer, "file");
+
+            $(this.tabOutputId).html("");
+            $(this.tabOutputId).append($("<h2>" + this.caption + "</h2>"));
+
+            for (let chunk of packfile.chunks) {
+                var field = $("<fieldset />");
+                var legend = $("<legend>" + chunk.header.type + "</legend>");
+
+                var logButton = $("<button>Log Chunk Data to Console</button>");
+                logButton.click(function () {
+                    T3D.Logger.log(T3D.Logger.TYPE_MESSAGE, "Logging", chunk.header.type, "chunk");
+                    T3D.Logger.log(T3D.Logger.TYPE_MESSAGE, chunk.data);
+                });
+
+                field.append(legend);
+                field.append($("<p>Size:" + chunk.header.chunkDataSize + "</p>"));
+                field.append(logButton);
+
+                $(this.tabOutputId).append(field);
+                $(this.tabOutputId).show();
+            }
+
+            //Register it
+            this.currentRenderId = fileId;
+        }
+
+        $('.fileTab').hide();
+        $(this.fileTabId).show();
+    }
+
+    clean() {
+        this.currentRenderId = null;
+    }
+
+    canView() {
+        //if pack then return true
+        let packfile = T3D.getContextValue(Globals._context, T3D.DataRenderer, "file");
+        if (packfile) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+module.exports = PackViewer;

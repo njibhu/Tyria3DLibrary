@@ -227,10 +227,109 @@ function render() {
     Globals._renderer.render(Globals._scene, Globals._camera);
 }
 
+function generateHexTable(rawData, domContainer, callback) {
+    let byteArray = new Uint8Array(rawData);
+    let hexOutput = [];
+    let asciiOutput = [];
+    const loopChunkSize = 10000;
+
+    const ASCII = 'abcdefghijklmnopqrstuvwxyz' + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
+        '0123456789' + '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';
+
+    $(domContainer).html("");
+    $(domContainer).append(`
+<table class="hexaTable">
+    <tr>
+        <th>Address</th>
+        <th>00</th><th>01</th><th>02</th><th>03</th><th>04</th><th>05</th><th>06</th><th>07</th>
+        <th>08</th><th>09</th><th>0A</th><th>0B</th><th>0C</th><th>0D</th><th>0E</th><th>0F</th>
+        <th>ASCII</th>
+    </tr>`);
+
+
+    //Breakup the work into slices of 10kB for performance
+    let byteArraySlice = [];
+    for (let pos = 0; pos < byteArray.length; pos += loopChunkSize) {
+        byteArraySlice.push(byteArray.slice(pos, pos + loopChunkSize));
+    }
+
+    let loopCount = 0;
+    let loopFunc = setInterval(() => {
+        let byteArrayItem = byteArraySlice[loopCount];
+        //If there is no more work we clear the loop and callback
+        if (byteArrayItem == undefined) {
+            clearInterval(loopFunc);
+            $(domContainer + " table").append("</table>");
+            $(domContainer).show();
+            callback();
+            return;
+        }
+
+        //Work with lines of 16 bytes
+        for (let pos = 0; pos < byteArrayItem.length; pos += 16) {
+            let workSlice = byteArrayItem.slice(pos, pos + 16);
+            let rowHTML = "<tr>";
+            let asciiLine = "";
+            let address = Number(pos + (loopCount * loopChunkSize)).toString(16);
+            address = address.length != 8 ? '0'.repeat(8 - address.length) + address : address;
+            rowHTML += '<td>' + address + '</td>';
+
+            //Iterate through each byte of the 16bytes line
+            for (let i = 0; i < 16; i++) {
+                let byte = workSlice[i];
+                let byteHexCode;
+                if (byte != undefined) {
+                    byteHexCode = byte.toString(16).toUpperCase();
+                    byteHexCode = byteHexCode.length == 1 ? "0" + byteHexCode : byteHexCode;
+                } else {
+                    byteHexCode = "  ";
+                }
+
+                rowHTML += '<td>' + byteHexCode + '</td>';
+                let asciiCode = byte ? String.fromCharCode(byte) : " ";
+                asciiCode = ASCII.includes(asciiCode) ? asciiCode : ".";
+                asciiLine += asciiCode;
+            }
+
+            rowHTML += '<td>' + asciiLine + '</td></tr> ';
+            $(domContainer + " table").append(rowHTML);
+        }
+
+        loopCount += 1;
+    }, 1);
+}
+
+//This special forEach have an additional parameter to add a setTimeout(1) between each "chunkSize" items
+function asyncForEach(array, chunkSize, fn) {
+    let workArray = [];
+    //Slice up the array into work array for synchronous call
+    for (let i = 0; i < array.size; i += chunkSize) {
+        workArray.push(array.slice(i, i + chunkSize));
+    }
+
+    //Loopcount is the amount of times chunkSize have been reached
+    let loopcount = 0;
+    let interval = setInterval(() => {
+        //Iterate through the chunk
+        for (let index in workArray) {
+            let item = workArray[index];
+            let index = index + (loopcount * chunkSize);
+            fn(item, index);
+        }
+
+        //Check if there is more work or not
+        loopcount += 1;
+        if (loopcount == workArray.length) {
+            clearInterval(interval);
+        }
+    }, 1);
+}
+
 module.exports = {
     exportScene: exportScene,
     saveData: saveData,
     setupScene: setupScene,
     onCanvasResize: onCanvasResize,
-    render: render
+    render: render,
+    generateHexTable: generateHexTable
 }
