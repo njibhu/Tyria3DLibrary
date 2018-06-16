@@ -63,3 +63,5 @@ class Viewer {
         return false;
     }
 }
+
+module.exports = Viewer;

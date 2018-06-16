@@ -20,20 +20,30 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 var Globals = require('./Globals');
 var Utils = require('./Utils');
 
+//Register viewers
+const HeadViewer = require('./Viewers/Head');
+const HexaViewer = require('./Viewers/Hexa');
+const ModelViewer = require('./Viewers/Model');
+const PackViewer = require('./Viewers/Pack');
+const SoundViewer = require('./Viewers/Sound');
+const StringViewer = require('./Viewers/String');
+const TextureViewer = require('./Viewers/Texture');
+
 var Viewers = [
-    new require("./Viewers/Head")(),
-    new require("./Viewers/HexaViewer")(),
-    new require("./Viewers/ModelViewer")(),
-    new require("./Viewers/PackViewer")(),
-    new require("./Viewers/SoundViewer")(),
-    new require("./Viewers/StringViewer")(),
-    new require("./Viewers/TextureViewer")()
+    new HeadViewer(),
+    new HexaViewer(),
+    new ModelViewer(),
+    new PackViewer(),
+    new SoundViewer(),
+    new StringViewer(),
+    new TextureViewer()
 ];
 
 var DefaultViewerIndex = 0;
 
 function generateTabLayout() {
     for (let tab of Viewers) {
+        console.log(tab);
         let isDefault = tab == Viewers[DefaultViewerIndex];
         let tabHtml = $('#fileTabs').append(
             $(`<div class='fileTab' id='${tab.fileTabId}'>
