@@ -44,26 +44,28 @@ var DefaultViewerIndex = 0;
 function generateTabLayout() {
     for (let tab of Viewers) {
         let isDefault = tab == Viewers[DefaultViewerIndex];
-        let tabHtml = $('#fileTabs').append(
+        let tabHtml =
             $(`<div class='fileTab' id='fileTab${tab.id}'>
             <div class='tabOutput' id='${tab.id}Output'></div>
-            </div>`)
-        )
+            </div>`);
+
         if (!isDefault) {
             tabHtml.hide();
         }
 
+        $('#fileTabs').append(tabHtml);
+
         w2ui['fileTabs'].add({
             id: `tab${tab.id}`,
             caption: tab.name,
-            disabled: !isDefault,
+            disabled: true,
             onClick: function () {
                 tab.render();
             }
         });
 
     }
-    w2ui['fileTabs'].select(Viewers[DefaultViewerIndex].w2tabId);
+    w2ui['fileTabs'].select(`tab${Viewers[DefaultViewerIndex].id}`);
 }
 
 function onBasicRendererDone() {
@@ -80,7 +82,7 @@ function onBasicRendererDone() {
     for (let viewer of Viewers) {
         //check if can view
         if (viewer.canView()) {
-            w2ui.fileTabs.enable(viewer.w2tabId);
+            w2ui.fileTabs.enable(`tab${viewer.id}`);
         }
 
         //check if can override
@@ -94,9 +96,9 @@ function onBasicRendererDone() {
     }
     //Set active tab
     if (override) {
-        w2ui.fileTabs.click(override.w2tabId);
+        w2ui.fileTabs.click(`tab${override.id}`);
     } else {
-        w2ui.fileTabs.click(Viewers[DefaultViewerIndex].w2tabId);
+        w2ui.fileTabs.click(`tab${Viewers[DefaultViewerIndex].id}`);
     }
 
     //Enable context toolbar and download button
@@ -126,7 +128,7 @@ function viewFileByFileId(fileId) {
 
     /// Disable and clean tabs
     for (let viewer of Viewers) {
-        w2ui.fileTabs.disable(viewer.w2tabId);
+        w2ui.fileTabs.disable(`tab${viewer.id}`);
         viewer.clean();
     }
 

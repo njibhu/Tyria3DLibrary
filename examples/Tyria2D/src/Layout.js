@@ -263,7 +263,6 @@ function fileView() {
 
     $("#fileTabs").w2tabs({
         name: 'fileTabs',
-        active: 'tabRaw',
         tabs: []
     });
 
