@@ -23,7 +23,7 @@ const Utils = require("../Utils");
 
 class TextureViewer extends Viewer {
     constructor() {
-        super("#fileTabsTexture", "#textureOutput", "tabTexture", "Texture");
+        super("texture", "Texture");
         this.currentRenderId = null;
     }
 
@@ -46,14 +46,14 @@ class TextureViewer extends Viewer {
             //var imagedata = new ImageData(uica, image.width, image.height);
             //ctx.putImageData(imagedata, 0, 0);
 
-            $(this.tabOutputId).append(canvas);
+            $(`#${this.id}Output`).append(canvas);
 
             //Register it
             this.currentRenderId = fileId;
         }
 
         $('.fileTab').hide();
-        $(this.fileTabId).show();
+        $(`#fileTab${this.id}`).show();
     }
 
     clean() {

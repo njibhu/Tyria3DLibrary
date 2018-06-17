@@ -43,11 +43,10 @@ var DefaultViewerIndex = 0;
 
 function generateTabLayout() {
     for (let tab of Viewers) {
-        console.log(tab);
         let isDefault = tab == Viewers[DefaultViewerIndex];
         let tabHtml = $('#fileTabs').append(
-            $(`<div class='fileTab' id='${tab.fileTabId}'>
-            <div class='tabOutput' id='${tab.tabOutputId}'></div>
+            $(`<div class='fileTab' id='fileTab${tab.id}'>
+            <div class='tabOutput' id='${tab.id}Output'></div>
             </div>`)
         )
         if (!isDefault) {
@@ -55,8 +54,8 @@ function generateTabLayout() {
         }
 
         w2ui['fileTabs'].add({
-            id: tab.w2tabId,
-            caption: tab.caption,
+            id: `tab${tab.id}`,
+            caption: tab.name,
             disabled: !isDefault,
             onClick: function () {
                 tab.render();

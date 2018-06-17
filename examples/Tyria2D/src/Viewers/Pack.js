@@ -23,7 +23,7 @@ const Utils = require("../Utils");
 
 class PackViewer extends Viewer {
     constructor() {
-        super("#fileTabsPack", "#packOutput", "tabPF", "Pack File");
+        super("pack", "Pack file");
         this.currentRenderId = null;
     }
 
@@ -34,8 +34,8 @@ class PackViewer extends Viewer {
         if (this.currentRenderId != fileId) {
             let packfile = T3D.getContextValue(Globals._context, T3D.DataRenderer, "file");
 
-            $(this.tabOutputId).html("");
-            $(this.tabOutputId).append($("<h2>" + this.caption + "</h2>"));
+            $(`#fileTab${this.id}`).html("");
+            $(`#fileTab${this.id}`).append($("<h2>" + this.name + "</h2>"));
 
             for (let chunk of packfile.chunks) {
                 var field = $("<fieldset />");
@@ -51,8 +51,8 @@ class PackViewer extends Viewer {
                 field.append($("<p>Size:" + chunk.header.chunkDataSize + "</p>"));
                 field.append(logButton);
 
-                $(this.tabOutputId).append(field);
-                $(this.tabOutputId).show();
+                $(`#fileTab${this.id}`).append(field);
+                $(`#fileTab${this.id}`).show();
             }
 
             //Register it
@@ -60,7 +60,7 @@ class PackViewer extends Viewer {
         }
 
         $('.fileTab').hide();
-        $(this.fileTabId).show();
+        $(`#fileTab${this.id}`).show();
     }
 
     clean() {

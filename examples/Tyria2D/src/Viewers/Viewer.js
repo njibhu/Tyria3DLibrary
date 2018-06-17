@@ -26,11 +26,9 @@ class Viewer {
     /**
      * Defines the tab here
      */
-    constructor(fileTab, tabOutput, tabId, caption) {
-        this.fileTabId = fileTab;
-        this.tabOutputId = tabOutput;
-        this.w2tabId = tabId;
-        this.caption = caption;
+    constructor(id, name) {
+        this.id = id;
+        this.name = name;
     }
 
     /**

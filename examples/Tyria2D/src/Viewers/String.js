@@ -23,7 +23,7 @@ const Utils = require("../Utils");
 
 class StringViewer extends Viewer {
     constructor() {
-        super("#fileTabsString", "#stringOutput", "tabString", "String");
+        super("string", "String");
         this.currentRenderId = null;
     }
 
@@ -53,7 +53,7 @@ class StringViewer extends Viewer {
         }
 
         $('.fileTab').hide();
-        $(this.fileTabId).show();
+        $(`#fileTab${this.id}`).show();
     }
 
     clean() {
@@ -85,10 +85,6 @@ class StringViewer extends Viewer {
         w2ui.stringGrid.buffered = w2ui.stringGrid.records.length;
         w2ui.stringGrid.total = w2ui.stringGrid.buffered;
         w2ui.stringGrid.refresh();
-
-        /// Select this view
-        w2ui.fileTabs.enable(this.w2tabId);
-        w2ui.fileTabs.click(this.w2tabId);
     }
 }
 

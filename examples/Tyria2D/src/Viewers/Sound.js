@@ -23,7 +23,7 @@ const Utils = require("../Utils");
 
 class SoundViewer extends Viewer {
     constructor() {
-        super("#fileTabsSound", "#soundOutput", "tabSound", "Sound");
+        super("sound", "Sound");
         this.currentRenderId = null;
     }
 
@@ -37,7 +37,7 @@ class SoundViewer extends Viewer {
             let chunk = packfile.getChunk("ASND");
 
             /// Print some random data about this sound
-            $(this.tabOutputId)
+            $(`#${this.id}Output`)
                 .html(
                     "Length: " + chunk.data.length + " seconds<br/>" +
                     "Size: " + chunk.data.audioData.length + " bytes"
@@ -95,7 +95,7 @@ class SoundViewer extends Viewer {
         }
 
         $('.fileTab').hide();
-        $(this.fileTabId).show();
+        $(`#fileTab${this.id}`).show();
     }
 
     clean() {

@@ -23,7 +23,7 @@ const Utils = require("../Utils");
 
 class ModelViewer extends Viewer {
     constructor() {
-        super("#fileTabsModel", "#modelOutput", "tabModel", "Model");
+        super("model", "Model");
         this.currentRenderId = null;
     }
 
@@ -52,7 +52,7 @@ class ModelViewer extends Viewer {
         }
 
         $('.fileTab').hide();
-        $(this.fileTabId).show();
+        $(`#fileTab${this.id}`).show();
     }
 
     clean() {

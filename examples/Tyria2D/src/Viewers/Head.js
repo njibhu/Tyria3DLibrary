@@ -23,7 +23,7 @@ const Utils = require("../Utils");
 
 class HeadViewer extends Viewer {
     constructor() {
-        super("#fileTabsHead", "#headView", "tabHeadView", "Overview");
+        super("headView", "Overview");
         this.currentRenderId = null;
     }
 
@@ -32,8 +32,8 @@ class HeadViewer extends Viewer {
 
         //First check if we've already renderer it
         if (this.currentRenderId != fileId) {
-            $(this.tabOutputId).html("");
-            $(this.tabOutputId).append($("<h2>" + this.caption + "</h2>"));
+            $(`#${this.id}Output`).html("");
+            $(`#${this.id}Output`).append($("<h2>" + this.name + "</h2>"));
 
             //TODO:
             //MFT index
@@ -46,7 +46,7 @@ class HeadViewer extends Viewer {
         }
 
         $('.fileTab').hide();
-        $(this.fileTabId).show();
+        $(`#fileTab${this.id}`).show();
     }
 
     clean() {

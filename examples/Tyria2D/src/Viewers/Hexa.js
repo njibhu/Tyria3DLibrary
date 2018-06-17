@@ -23,7 +23,8 @@ const Utils = require("../Utils");
 
 class HexaViewer extends Viewer {
     constructor() {
-        super("#fileTabsHexView", "#hexView", "tabHexView", "Hex View");
+        super("hexView", "Hex View");
+        //super("#fileTabsHexView", "#hexView", "tabHexView", "Hex View");
         this.currentRenderId = null;
     }
 
@@ -32,12 +33,12 @@ class HexaViewer extends Viewer {
 
         if (this.currentRenderId != fileId) {
             let rawData = T3D.getContextValue(Globals._context, T3D.DataRenderer, "rawData");
-            Utils.generateHexTable(rawData, this.tabOutputId, () => {});
+            Utils.generateHexTable(rawData, `#${this.id}Output`, () => {});
             this.currentRenderId = fileId;
         }
 
         $('.fileTab').hide();
-        $(this.fileTabId).show();
+        $(`#fileTab${this.id}`).show();
     }
 
     clean() {
