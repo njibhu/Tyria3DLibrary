@@ -37,7 +37,7 @@ class SoundViewer extends Viewer {
             let chunk = packfile.getChunk("ASND");
 
             /// Print some random data about this sound
-            $(`#${this.id}Output`)
+            $(`#${this.getOutputId}`)
                 .html(
                     "Length: " + chunk.data.length + " seconds<br/>" +
                     "Size: " + chunk.data.audioData.length + " bytes"
@@ -95,12 +95,9 @@ class SoundViewer extends Viewer {
         }
 
         $('.fileTab').hide();
-        $(`#fileTab${this.id}`).show();
+        $(`#${this.getDomTabId()}`).show();
     }
 
-    clean() {
-
-    }
 
     canView() {
         let packfile = T3D.getContextValue(Globals._context, T3D.DataRenderer, "file");

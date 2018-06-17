@@ -46,18 +46,14 @@ class TextureViewer extends Viewer {
             //var imagedata = new ImageData(uica, image.width, image.height);
             //ctx.putImageData(imagedata, 0, 0);
 
-            $(`#${this.id}Output`).append(canvas);
+            $(`#${this.getOutputId}`).append(canvas);
 
             //Register it
             this.currentRenderId = fileId;
         }
 
         $('.fileTab').hide();
-        $(`#fileTab${this.id}`).show();
-    }
-
-    clean() {
-
+        $(`#${this.getDomTabId()}`).show();
     }
 
     canView() {

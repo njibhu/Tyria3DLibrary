@@ -34,8 +34,8 @@ class PackViewer extends Viewer {
         if (this.currentRenderId != fileId) {
             let packfile = T3D.getContextValue(Globals._context, T3D.DataRenderer, "file");
 
-            $(`#fileTab${this.id}`).html("");
-            $(`#fileTab${this.id}`).append($("<h2>" + this.name + "</h2>"));
+            $(`#${this.getDomTabId()}`).html("");
+            $(`#${this.getDomTabId()}`).append($("<h2>" + this.name + "</h2>"));
 
             for (let chunk of packfile.chunks) {
                 var field = $("<fieldset />");
@@ -51,8 +51,8 @@ class PackViewer extends Viewer {
                 field.append($("<p>Size:" + chunk.header.chunkDataSize + "</p>"));
                 field.append(logButton);
 
-                $(`#fileTab${this.id}`).append(field);
-                $(`#fileTab${this.id}`).show();
+                $(`#${this.getDomTabId()}`).append(field);
+                $(`#${this.getDomTabId()}`).show();
             }
 
             //Register it
@@ -60,11 +60,7 @@ class PackViewer extends Viewer {
         }
 
         $('.fileTab').hide();
-        $(`#fileTab${this.id}`).show();
-    }
-
-    clean() {
-        this.currentRenderId = null;
+        $(`#${this.getDomTabId()}`).show();
     }
 
     canView() {

@@ -32,8 +32,8 @@ class HeadViewer extends Viewer {
 
         //First check if we've already renderer it
         if (this.currentRenderId != fileId) {
-            $(`#${this.id}Output`).html("");
-            $(`#${this.id}Output`).append($("<h2>" + this.name + "</h2>"));
+            $(`#${this.getOutputId()}`).html("");
+            $(`#${this.getOutputId()}`).append($("<h2>" + this.name + "</h2>"));
 
             //TODO:
             //MFT index
@@ -46,11 +46,7 @@ class HeadViewer extends Viewer {
         }
 
         $('.fileTab').hide();
-        $(`#fileTab${this.id}`).show();
-    }
-
-    clean() {
-
+        $(`#${this.getDomTabId()}`).show();
     }
 
     //Headviewer can view every file

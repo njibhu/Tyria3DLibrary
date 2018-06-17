@@ -63,7 +63,7 @@ function mainGrid() {
                 }
             }
         ],
-        onResize: Utils.onCanvasResize
+        onResize: Globals._onCanvasResize
     });
 
     $("#fileIdInputBtn").click(
@@ -436,10 +436,13 @@ function initLayout(onReaderCreated) {
     fileView();
     stringGrid();
 
+    //Setup viewers
+    FileViewer.setupViewers();
+
     /*
         SET UP TREE 3D SCENE
     */
-    Utils.setupScene();
+    // Utils.setupScene();
 
     openFilePopup();
 

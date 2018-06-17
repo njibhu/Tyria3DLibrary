@@ -52,7 +52,7 @@ class ModelViewer extends Viewer {
         }
 
         $('.fileTab').hide();
-        $(`#fileTab${this.id}`).show();
+        $(`#${this.getDomTabId()}`).show();
     }
 
     clean() {
@@ -79,8 +79,10 @@ class ModelViewer extends Viewer {
 
     onRendererDoneModel() {
 
+        $(`#${this.getOutputId()}`).show();
+
         /// Re-fit canvas
-        Utils.onCanvasResize();
+        Globals._onCanvasResize();
 
         /// Add context toolbar export button
         $("#contextToolbar").append(
@@ -121,6 +123,80 @@ class ModelViewer extends Viewer {
         if (biggestMdl)
             Globals._camera.lookAt(biggestMdl.position);
     }
+
+
+    setup() {
+        /// Setting up a scene, Tree.js standard stuff...
+        var canvasWidth = $("#" + this.getOutputId()).width();
+        var canvasHeight = $("#" + this.getOutputId()).height();
+        var canvasClearColor = 0x342920; // For happy rendering, always use Van Dyke Brown.
+        var fov = 60;
+        var aspect = 1;
+        var near = 0.1;
+        var far = 500000;
+
+        Globals._onCanvasResize = () => {
+
+            var sceneWidth = $("#" + this.getOutputId()).width();
+            var sceneHeight = $("#" + this.getOutputId()).height();
+
+            if (!sceneHeight || !sceneWidth)
+                return;
+
+            Globals._camera.aspect = sceneWidth / sceneHeight;
+
+            Globals._renderer.setSize(sceneWidth, sceneHeight);
+
+            Globals._camera.updateProjectionMatrix();
+        }
+
+        Globals._camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+        Globals._scene = new THREE.Scene();
+
+        /// This scene has one ambient light source and three directional lights
+        var ambientLight = new THREE.AmbientLight(0x555555);
+        Globals._scene.add(ambientLight);
+
+        var directionalLight1 = new THREE.DirectionalLight(0xffffff, .8);
+        directionalLight1.position.set(0, 0, 1);
+        Globals._scene.add(directionalLight1);
+
+        var directionalLight2 = new THREE.DirectionalLight(0xffffff, .8);
+        directionalLight2.position.set(1, 0, 0);
+        Globals._scene.add(directionalLight2);
+
+        var directionalLight3 = new THREE.DirectionalLight(0xffffff, .8);
+        directionalLight3.position.set(0, 1, 0);
+        Globals._scene.add(directionalLight3);
+
+        /// Standard THREE renderer with AA
+        Globals._renderer = new THREE.WebGLRenderer({
+            antialiasing: true
+        });
+
+        $("#" + this.getOutputId())[0].appendChild(Globals._renderer.domElement);
+
+        Globals._renderer.setSize(canvasWidth, canvasHeight);
+        Globals._renderer.setClearColor(canvasClearColor);
+
+        /// Add THREE orbit controls, for simple orbiting, panning and zooming
+        Globals._controls = new THREE.OrbitControls(Globals._camera, Globals._renderer.domElement);
+        Globals._controls.enableZoom = true;
+
+        /// Sems w2ui delays resizing :/
+        $(window).resize(function () {
+            setTimeout(Globals._onCanvasResize, 10)
+        });
+
+        /// Note: constant continous rendering from page load event, not very opt.
+        render();
+    }
+}
+
+/// Render loop, no game logic, just rendering.
+function render() {
+    window.requestAnimationFrame(render);
+    Globals._renderer.render(Globals._scene, Globals._camera);
 }
 
 module.exports = ModelViewer;

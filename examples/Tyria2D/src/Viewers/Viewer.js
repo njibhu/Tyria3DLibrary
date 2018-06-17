@@ -31,6 +31,25 @@ class Viewer {
         this.name = name;
     }
 
+    getW2TabId() {
+        return `tab${this.id}`;
+    }
+
+    getOutputId() {
+        return `${this.id}Output`;
+    }
+
+    getDomTabId() {
+        return `fileTab${this.id}`;
+    }
+
+    /**
+     * Facultative method that allows some renderers to setup stuff on startup
+     */
+    setup() {
+
+    }
+
     /**
      * Render the content of the tab when called
      * It is the responsability of the viewer to cache it's heavy tasks
@@ -44,7 +63,7 @@ class Viewer {
      * Used to clean memory as soon as another file is loaded
      */
     clean() {
-        throw new Error("Needs to be implemented by children class");
+        $(this.getOutputId()).html("");
     }
 
     /**

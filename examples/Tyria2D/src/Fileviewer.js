@@ -41,12 +41,18 @@ var Viewers = [
 
 var DefaultViewerIndex = 0;
 
+function setupViewers() {
+    for (let tab of Viewers) {
+        tab.setup();
+    }
+}
+
 function generateTabLayout() {
     for (let tab of Viewers) {
         let isDefault = tab == Viewers[DefaultViewerIndex];
         let tabHtml =
-            $(`<div class='fileTab' id='fileTab${tab.id}'>
-            <div class='tabOutput' id='${tab.id}Output'></div>
+            $(`<div class='fileTab' id='${tab.getDomTabId()}'>
+            <div class='tabOutput' id='${tab.getOutputId()}'></div>
             </div>`);
 
         if (!isDefault) {
@@ -56,16 +62,17 @@ function generateTabLayout() {
         $('#fileTabs').append(tabHtml);
 
         w2ui['fileTabs'].add({
-            id: `tab${tab.id}`,
+            id: tab.getW2TabId(),
             caption: tab.name,
             disabled: true,
             onClick: function () {
+                $('.fileTab').hide();
                 tab.render();
             }
         });
 
     }
-    w2ui['fileTabs'].select(`tab${Viewers[DefaultViewerIndex].id}`);
+    w2ui['fileTabs'].select(Viewers[DefaultViewerIndex].getW2TabId());
 }
 
 function onBasicRendererDone() {
@@ -82,7 +89,7 @@ function onBasicRendererDone() {
     for (let viewer of Viewers) {
         //check if can view
         if (viewer.canView()) {
-            w2ui.fileTabs.enable(`tab${viewer.id}`);
+            w2ui.fileTabs.enable(viewer.getW2TabId());
         }
 
         //check if can override
@@ -96,9 +103,9 @@ function onBasicRendererDone() {
     }
     //Set active tab
     if (override) {
-        w2ui.fileTabs.click(`tab${override.id}`);
+        w2ui.fileTabs.click(override.getW2TabId());
     } else {
-        w2ui.fileTabs.click(`tab${Viewers[DefaultViewerIndex].id}`);
+        w2ui.fileTabs.click(Viewers[DefaultViewerIndex].getW2TabId());
     }
 
     //Enable context toolbar and download button
@@ -120,7 +127,6 @@ function onBasicRendererDone() {
 function viewFileByFileId(fileId) {
 
     /// Clean outputs
-    $(".tabOutput").html("");
     $("#fileTitle").html("");
 
     /// Clean context toolbar
@@ -128,7 +134,7 @@ function viewFileByFileId(fileId) {
 
     /// Disable and clean tabs
     for (let viewer of Viewers) {
-        w2ui.fileTabs.disable(`tab${viewer.id}`);
+        w2ui.fileTabs.disable(viewer.getW2TabId());
         viewer.clean();
     }
 
@@ -159,6 +165,7 @@ function viewFileByMFT(mftIdx) {
 
 module.exports = {
     generateTabLayout: generateTabLayout,
+    setupViewers: setupViewers,
     viewFileByFileId: viewFileByFileId,
     viewFileByMFT: viewFileByMFT
 }

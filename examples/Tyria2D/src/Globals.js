@@ -34,5 +34,6 @@ module.exports = {
     _renderer: undefined,
     _models: [],
     _controls: undefined,
+    _onCanvasResize: function () {}
 
 }
