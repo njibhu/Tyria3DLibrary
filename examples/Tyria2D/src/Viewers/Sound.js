@@ -101,7 +101,7 @@ class SoundViewer extends Viewer {
 
     canView() {
         let packfile = T3D.getContextValue(Globals._context, T3D.DataRenderer, "file");
-        if (packfile.header.type == 'ASND') {
+        if (packfile && packfile.header.type == 'ASND') {
             return true;
         } else {
             return false;

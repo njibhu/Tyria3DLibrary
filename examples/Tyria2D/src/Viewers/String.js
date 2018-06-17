@@ -32,8 +32,6 @@ class StringViewer extends Viewer {
 
         //First check if we've already renderer it
         if (this.currentRenderId != fileId) {
-            /// Make sure output is clean
-            Globals._context = {};
 
             /// Run single renderer
             T3D.runRenderer(

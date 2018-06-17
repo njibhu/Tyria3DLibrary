@@ -33,9 +33,6 @@ class ModelViewer extends Viewer {
         //First check if we've already renderer it
         if (this.currentRenderId != fileId) {
 
-            /// Make sure output is clean
-            Globals._context = {};
-
             /// Run single renderer
             T3D.runRenderer(
                 T3D.SingleModelRenderer,
@@ -66,7 +63,7 @@ class ModelViewer extends Viewer {
 
     canView() {
         let packfile = T3D.getContextValue(Globals._context, T3D.DataRenderer, "file");
-        if (packfile.header.type == 'MODL') {
+        if (packfile && packfile.header.type == 'MODL') {
             return true;
         } else {
             return false;

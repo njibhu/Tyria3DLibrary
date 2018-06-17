@@ -29,13 +29,12 @@ class PackViewer extends Viewer {
 
     render() {
         let fileId = Globals._fileId = T3D.getContextValue(Globals._context, T3D.DataRenderer, "fileId");
-
         //First check if we've already renderer it
         if (this.currentRenderId != fileId) {
             let packfile = T3D.getContextValue(Globals._context, T3D.DataRenderer, "file");
 
-            $(`#${this.getDomTabId()}`).html("");
-            $(`#${this.getDomTabId()}`).append($("<h2>" + this.name + "</h2>"));
+            $(`#${this.getOutputId()}`).html("");
+            $(`#${this.getOutputId()}`).append($("<h2>" + this.name + "</h2>"));
 
             for (let chunk of packfile.chunks) {
                 var field = $("<fieldset />");
@@ -51,8 +50,8 @@ class PackViewer extends Viewer {
                 field.append($("<p>Size:" + chunk.header.chunkDataSize + "</p>"));
                 field.append(logButton);
 
-                $(`#${this.getDomTabId()}`).append(field);
-                $(`#${this.getDomTabId()}`).show();
+                $(`#${this.getOutputId()}`).append(field);
+                $(`#${this.getOutputId()}`).show();
             }
 
             //Register it

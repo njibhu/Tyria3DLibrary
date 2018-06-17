@@ -27,13 +27,56 @@ class HeadViewer extends Viewer {
         this.currentRenderId = null;
     }
 
+    setup() {
+        $('#headGrid').w2grid({
+            name: 'Overview',
+            columns: [{
+                    field: 'type',
+                    caption: 'Type',
+                    size: '50%'
+                },
+                {
+                    field: 'value',
+                    caption: 'Value',
+                    size: '50%'
+                },
+            ],
+            records: []
+        });
+    }
+
     render() {
         let fileId = Globals._fileId = T3D.getContextValue(Globals._context, T3D.DataRenderer, "fileId");
 
         //First check if we've already renderer it
         if (this.currentRenderId != fileId) {
+            let raw = Globals._fileId = T3D.getContextValue(Globals._context, T3D.DataRenderer, "rawData");
+
+            var ds = new DataStream(raw);
+            var first4 = ds.readCString(4);
+
             $(`#${this.getOutputId()}`).html("");
-            $(`#${this.getOutputId()}`).append($("<h2>" + this.name + "</h2>"));
+            $(`#${this.getOutputId()}`).append('<div id="headGrid" style="height: 450px"></div>');
+
+            w2ui['Overview'].records = [{
+                    recid: 1,
+                    type: 'File ID',
+                    value: fileId
+                },
+                {
+                    recid: 2,
+                    type: 'File size',
+                    value: raw.byteLength
+                },
+                {
+                    recid: 3,
+                    type: 'File type',
+                    value: first4
+                }
+            ];
+            w2ui['Overview'].refresh();
+
+            w2ui['Overview'].render($('#headGrid')[0]);
 
             //TODO:
             //MFT index
@@ -52,6 +95,10 @@ class HeadViewer extends Viewer {
     //Headviewer can view every file
     canView() {
         return true;
+    }
+
+    clean() {
+        w2ui['Overview'].delete();
     }
 }
 
