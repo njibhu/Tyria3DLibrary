@@ -33,12 +33,20 @@ class HexaViewer extends Viewer {
 
         if (this.currentRenderId != fileId) {
             let rawData = T3D.getContextValue(Globals._context, T3D.DataRenderer, "rawData");
-            //Utils.generateHexTable(rawData, `#${this.getOutputId()}`, () => {});
+            $(`#${this.getOutputId()}`).append('<div id="hexaGrid" style="height: 90%"></div>');
+            Utils.generateHexTable(rawData, this.getOutputId(), (grid) => {
+                grid.render($(`#hexaGrid`));
+                $(`#${this.getOutputId()}`).show();
+            });
             this.currentRenderId = fileId;
         }
 
         $('.fileTab').hide();
         $(`#${this.getDomTabId()}`).show();
+    }
+
+    clean(){
+        $().w2destroy(this.getOutputId());
     }
 
     //Hexa viewer can view every file

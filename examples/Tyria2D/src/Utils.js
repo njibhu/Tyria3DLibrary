@@ -150,7 +150,7 @@ var saveData = (function () {
     };
 }());
 
-function generateHexTable(rawData, domContainer, callback) {
+function generateHexTable(rawData, gridName, callback) {
     let byteArray = new Uint8Array(rawData);
     let hexOutput = [];
     let asciiOutput = [];
@@ -159,16 +159,32 @@ function generateHexTable(rawData, domContainer, callback) {
     const ASCII = 'abcdefghijklmnopqrstuvwxyz' + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
         '0123456789' + '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';
 
-    $(domContainer).html("");
-    $(domContainer).append(`
-<table class="hexaTable">
-    <tr>
-        <th>Address</th>
-        <th>00</th><th>01</th><th>02</th><th>03</th><th>04</th><th>05</th><th>06</th><th>07</th>
-        <th>08</th><th>09</th><th>0A</th><th>0B</th><th>0C</th><th>0D</th><th>0E</th><th>0F</th>
-        <th>ASCII</th>
-    </tr>`);
-
+    let grid = $().w2grid(
+        { 
+            name   : gridName, 
+            columns: [                
+                //{ field: 'fname', caption: 'First Name', size: '30%' },
+                {field: 'address', caption: 'Address', size: '80px'},
+                {field: 'c0', caption: '00', size: '25px'},
+                {field: 'c1', caption: '01', size: '25px'},
+                {field: 'c2', caption: '02', size: '25px'},
+                {field: 'c3', caption: '03', size: '25px'},
+                {field: 'c4', caption: '04', size: '25px'},
+                {field: 'c5', caption: '05', size: '25px'},
+                {field: 'c6', caption: '06', size: '25px'},
+                {field: 'c7', caption: '07', size: '25px'},
+                {field: 'c8', caption: '08', size: '25px'},
+                {field: 'c9', caption: '09', size: '25px'},
+                {field: 'c10', caption: '0A', size: '25px'},
+                {field: 'c11', caption: '0B', size: '25px'},
+                {field: 'c12', caption: '0C', size: '25px'},
+                {field: 'c13', caption: '0D', size: '25px'},
+                {field: 'c14', caption: '0E', size: '25px'},
+                {field: 'c15', caption: '0F', size: '25px'},
+                {field: 'ascii', caption: 'ASCII', size: '140px', style : 'font-family:monospace'},
+            ],
+        }
+    );
 
     //Breakup the work into slices of 10kB for performance
     let byteArraySlice = [];
@@ -177,25 +193,27 @@ function generateHexTable(rawData, domContainer, callback) {
     }
 
     let loopCount = 0;
+    let records = [];
     let loopFunc = setInterval(() => {
         let byteArrayItem = byteArraySlice[loopCount];
         //If there is no more work we clear the loop and callback
         if (byteArrayItem == undefined) {
             clearInterval(loopFunc);
-            $(domContainer + " table").append("</table>");
-            $(domContainer).show();
-            callback();
+            grid.records = records;
+            grid.refresh();
+            callback(grid);
             return;
         }
 
         //Work with lines of 16 bytes
         for (let pos = 0; pos < byteArrayItem.length; pos += 16) {
             let workSlice = byteArrayItem.slice(pos, pos + 16);
-            let rowHTML = "<tr>";
             let asciiLine = "";
             let address = Number(pos + (loopCount * loopChunkSize)).toString(16);
             address = address.length != 8 ? '0'.repeat(8 - address.length) + address : address;
-            rowHTML += '<td>' + address + '</td>';
+            let line = {
+                address:address,
+            }
 
             //Iterate through each byte of the 16bytes line
             for (let i = 0; i < 16; i++) {
@@ -208,14 +226,15 @@ function generateHexTable(rawData, domContainer, callback) {
                     byteHexCode = "  ";
                 }
 
-                rowHTML += '<td>' + byteHexCode + '</td>';
+                line['c'+i] = byteHexCode;
+
                 let asciiCode = byte ? String.fromCharCode(byte) : " ";
                 asciiCode = ASCII.includes(asciiCode) ? asciiCode : ".";
                 asciiLine += asciiCode;
             }
 
-            rowHTML += '<td>' + asciiLine + '</td></tr> ';
-            $(domContainer + " table").append(rowHTML);
+            line.ascii = asciiLine;
+            records.push(line);
         }
 
         loopCount += 1;

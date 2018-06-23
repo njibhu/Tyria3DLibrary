@@ -20,47 +20,35 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 // This file is the main entry point for the Tyria2D application
 
 /// Requires:
-const Layout = require('./Layout');
-var Globals = require('./Globals');
+const Layout = require("./Layout");
+var Globals = require("./Globals");
 
-
-function onReaderCreated() {
+function onReaderCreated(lr) {
+    Globals._lr = lr;
 
     w2popup.lock();
 
-    $("#filePickerPop").prop('disabled', true);
-    $("#fileLoadProgress").html(
-        "Indexing .dat file<br/>" +
-        "<br/><br/>"
-    );
+    $("#filePickerPop").prop("disabled", true);
+    $("#fileLoadProgress").html("Indexing .dat file<br/>" + "<br/><br/>");
+    T3D.getFileListAsync(lr, files => {
+        /// Store fileList globally
+        Globals._fileList = files;
 
-    setTimeout(() => {
-        T3D.getFileListAsync(Globals._lr,
-            function (files) {
+        Layout.sidebarNodes();
 
-                /// Store fileList globally
-                Globals._fileList = files;
+        /// Close the pop
+        w2popup.close();
 
-                Layout.sidebarNodes();
-
-                /// Close the pop
-                w2popup.close();
-
-                /// Select the "All" category
-                w2ui.sidebar.click("All");
-
-            } /// End readFileListAsync callback
-        );
-    }, 1);
-
+        /// Select the "All" category
+        w2ui.sidebar.click("All");
+    });
 }
 
 Layout.initLayout(onReaderCreated);
 
 /// Overwrite progress logger
-T3D.Logger.logFunctions[T3D.Logger.TYPE_PROGRESS] = function () {
+T3D.Logger.logFunctions[T3D.Logger.TYPE_PROGRESS] = function() {
     $("#fileLoadProgress").html(
-        "Indexing .dat file<br/>" +
-        arguments[1] + "%<br/><br/>"
+        "Indexing .dat file<br/>" + arguments[1] + "%<br/><br/>"
     );
-}
+};

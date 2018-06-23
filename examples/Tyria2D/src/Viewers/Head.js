@@ -56,7 +56,7 @@ class HeadViewer extends Viewer {
             var first4 = ds.readCString(4);
 
             $(`#${this.getOutputId()}`).html("");
-            $(`#${this.getOutputId()}`).append('<div id="headGrid" style="height: 450px"></div>');
+            $(`#${this.getOutputId()}`).append('<div id="headGrid" style="height: 90%"></div>');
 
             w2ui['Overview'].records = [{
                     recid: 1,

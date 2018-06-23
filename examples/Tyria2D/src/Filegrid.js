@@ -17,10 +17,9 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var Globals = require('./Globals');
+var Globals = require("./Globals");
 
 function onFilterClick(evt) {
-
     /// No filter if clicked group was "All"
     if (evt.target == "All") {
         showFileGroup();
@@ -30,20 +29,17 @@ function onFilterClick(evt) {
     else {
         showFileGroup([evt.target]);
     }
-
 }
 
 function showFileGroup(fileTypeFilter) {
-
     w2ui.grid.records = [];
+    w2ui.grid.searchReset();
 
     let reverseTable = Globals._lr.getReverseIndex();
 
     for (var fileType in Globals._fileList) {
-
         /// Only show types we've asked for
         if (fileTypeFilter && fileTypeFilter.indexOf(fileType) < 0) {
-
             /// Special case for "packGroup"
             /// Should let trough all pack types
             /// Should NOT let trought any non-pack types
@@ -59,37 +55,33 @@ function showFileGroup(fileTypeFilter) {
             } else {
                 continue;
             }
-
         }
 
         if (Globals._fileList.hasOwnProperty(fileType)) {
-
             var fileArr = Globals._fileList[fileType];
             fileArr.forEach(
-                function (mftIndex) {
-
+                function(mftIndex) {
                     let meta = Globals._lr.getFileMeta(mftIndex);
 
                     var baseIds = reverseTable[mftIndex];
-                    var fileSize = (meta) ? meta.size : "";
+                    var fileSize = meta ? meta.size : "";
 
                     if (fileSize > 0 && mftIndex > 15) {
-
-                        w2ui['grid'].records.push({
-                            recid: mftIndex, /// MFT index
-                            baseIds: baseIds,
-                            type: fileType,
-                            fileSize: fileSize
-                        });
-
+                        for (let baseId of baseIds) {
+                            w2ui["grid"].records.push({
+                                recid: w2ui["grid"].records.length,
+                                mftId: mftIndex, /// MFT index
+                                baseId: baseId,
+                                type: fileType,
+                                fileSize: fileSize
+                            });
+                        }
                     }
 
                     mftIndex++;
                 } /// End for each mft in this file type
             );
-
         } /// End if _fileList[filetype]
-
     } /// End for each fileType key in _fileList object
 
     /// Update file grid
@@ -99,5 +91,5 @@ function showFileGroup(fileTypeFilter) {
 }
 
 module.exports = {
-    onFilterClick: onFilterClick,
-}
+    onFilterClick: onFilterClick
+};
