@@ -19,30 +19,30 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * Basic helper function that returns a file either from cache or from archive.
- * @param {Number} baseId 
- * @param {Number} mftId 
+ * @param {Number} baseId
+ * @param {Number} mftId
  * @param {Boolean} isImage
- * @param {Object} fileCache 
- * @param {LocalReader} localReader 
+ * @param {Object} fileCache
+ * @param {LocalReader} localReader
  */
 async function loadFile(baseId, mftId, isImage, fileCache, localReader) {
-    if (!mftId) {
-        mftId = localReader.getFileIndex(baseId);
-        if (mftId <= 0) {
-            throw new Error(`Could not find a valid file with baseID: ${baseId}`);
-        }
+  if (!mftId) {
+    mftId = localReader.getFileIndex(baseId);
+    if (mftId <= 0) {
+      throw new Error(`Could not find a valid file with baseID: ${baseId}`);
     }
+  }
 
-    if (fileCache[mftId]) {
-        return fileCache[mftId];
-    } else {
-        return await localReader.readFile(mftId, isImage).then((result) => {
-            fileCache[mftId] = result;
-            return result;
-        });
-    }
+  if (fileCache[mftId]) {
+    return fileCache[mftId];
+  } else {
+    return localReader.readFile(mftId, isImage).then(result => {
+      fileCache[mftId] = result;
+      return result;
+    });
+  }
 }
 
 module.exports = {
-    loadFile: loadFile
-}
+  loadFile: loadFile
+};

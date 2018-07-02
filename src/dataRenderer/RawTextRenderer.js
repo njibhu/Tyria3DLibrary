@@ -17,23 +17,20 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-const DataRenderer = require('./DataRenderer');
+const DataRenderer = require("./DataRenderer");
 
 class RawTextRenderer extends DataRenderer {
-    constructor(localReader, settings, context, logger) {
-        super(localReader, settings, context, logger);
+  constructor(localReader, settings, context, logger) {
+    super(localReader, settings, context, logger);
+  }
+
+  renderAsync(callback) {
+    let fileId = this.settings.id;
+    let output = this.settings.outputObject || "";
+    let progressCallback = this.settings.progressCallback;
+
+    let cache = this.getOutput(T3D.DataRenderer);
+    if (cache.rawData) {
     }
-
-    renderAsync(callback) {
-        let fileId = this.settings.id;
-        let output = this.settings.outputObject || "";
-        let progressCallback = this.settings.progressCallback
-
-        let cache = this.getOutput(T3D.DataRenderer);
-        if (cache.rawData) {
-
-        }
-
-
-    }
+  }
 }

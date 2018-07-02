@@ -17,16 +17,20 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-const Chunk = require('./GW2Chunk');
+const Chunk = require("./GW2Chunk");
 
 const HEAD_STRUCT = [
-	'identifier', 'cstring:2',
-	'unknownField1', 'uint16',
-	'unknownField2', 'uint16',
-	'pkFileVersion', 'uint16',
-	'type', 'cstring:4'
+  "identifier",
+  "cstring:2",
+  "unknownField1",
+  "uint16",
+  "unknownField2",
+  "uint16",
+  "pkFileVersion",
+  "uint16",
+  "type",
+  "cstring:4"
 ];
-
 
 /**
  * Basic header and chunk parsing functionality for Guild Wars 2 pack files (PF)
@@ -38,106 +42,98 @@ const HEAD_STRUCT = [
  * chunks on creation.
  */
 class GW2File {
+  constructor(ds, addr, noChunks) {
+    /**
+     * @property {DataStream} ds The DataStream data source used by this file.
+     */
+    this.ds = ds;
 
-	constructor(ds, addr, noChunks) {
+    /**
+     * @property {Number} addr The address to this File within ds.
+     */
+    this.addr = addr;
 
-		/**
-		 * @property {DataStream} ds The DataStream data source used by this file.
-		 */
-		this.ds = ds;
+    /// Not used anymore I think
+    this.data = null;
 
-		/**
-		 * @property {Number} addr The address to this File within ds.
-		 */
-		this.addr = addr;
+    /**
+     * @property {Number} headerLength The length in bytes of the file header.
+     */
+    this.headerLength = NaN;
 
-		/// Not used anymore I think
-		this.data = null;
+    /**
+     * All {{#crossLink "GW2Chunk"}}chunks{{/crossLink}} contained in the file.
+     *
+     * @property chunks
+     * @type GW2Chunk[]
+     */
+    this.chunks = [];
 
-		/**
-		 * @property {Number} headerLength The length in bytes of the file header.
-		 */
-		this.headerLength = NaN;
+    /**
+     * @property {Object} header Chunk header data.
+     */
+    this.readHead();
 
-		/**
-		 * All {{#crossLink "GW2Chunk"}}chunks{{/crossLink}} contained in the file.
-		 *
-		 * @property chunks
-		 * @type GW2Chunk[]
-		 */
-		this.chunks = [];
+    if (!noChunks) {
+      this.readChunks();
+    }
+  }
 
+  /**
+   * Parses the file header data, populating the header property.
+   */
+  readHead() {
+    this.ds.seek(this.addr);
+    this.header = this.ds.readStruct(HEAD_STRUCT);
+    this.headerLength = this.ds.position - this.addr;
+  }
 
-		/**
-		 * @property {Object} header Chunk header data.
-		 */
-		this.readHead();
+  /**
+   * Parses the file headers and populates the chunks property.
+   */
+  readChunks() {
+    /// Reset chunks
+    this.chunks = [];
 
-		if (!noChunks) {
-			this.readChunks();
-		}
-	}
+    // var structs = this.getChunkStructs && this.getChunkStructs();
 
+    /// Load basic Chunk in order to read the chunk header.
+    let ch = new Chunk(this.ds, this.headerLength + this.addr);
 
-	/**
-	 * Parses the file header data, populating the header property.
-	 */
-	readHead() {
-		this.ds.seek(this.addr);
-		this.header = this.ds.readStruct(HEAD_STRUCT);
-		this.headerLength = this.ds.position - this.addr;
-	}
+    // while(structs && ch!=null && ch.header.type){
+    while (ch != null && ch.header.type) {
+      /// Load data and pass file type if we need to determine what chunk entry to use
+      /// (Some chunks in different files share the same chunk name)
+      ch.loadData(this.header.type);
+      this.chunks.push(ch);
 
-	/**
-	 * Parses the file headers and populates the chunks property.
-	 */
-	readChunks() {
+      /// Load next basic Chunk in order to read the chunk header.
+      ch = ch.next();
+    }
+  }
 
-		/// Reset chunks
-		this.chunks = [];
+  /**
+   * Get a GW2Chunk from this file
+   *
+   * @param  {String} type The name, or type of the desired chunk.
+   * @return {GW2Chunk} The first GW2Chunk in this file matching the type name, or null if no matching GW2Chunk was found.
+   */
+  getChunk(type) {
+    for (let i = 0; i < this.chunks.length; i++) {
+      if (this.chunks[i].header.type.toLowerCase() === type.toLowerCase())
+        return this.chunks[i];
+    }
+    return null;
+  }
 
-		//var structs = this.getChunkStructs && this.getChunkStructs();
-
-		/// Load basic Chunk in order to read the chunk header.
-		var ch = new Chunk(this.ds, this.headerLength + this.addr);
-
-		//while(structs && ch!=null && ch.header.type){
-		while (ch != null && ch.header.type) {
-
-			/// Load data and pass file type if we need to determine what chunk entry to use
-			/// (Some chunks in different files share the same chunk name)
-			ch.loadData(this.header.type);
-			this.chunks.push(ch);
-
-			/// Load next basic Chunk in order to read the chunk header.
-			ch = ch.next();
-		}
-	}
-
-
-	/**
-	 * Get a GW2Chunk from this file
-	 * 
-	 * @param  {String} type The name, or type of the desired chunk.
-	 * @return {GW2Chunk} The first GW2Chunk in this file matching the type name, or null if no matching GW2Chunk was found.
-	 */
-	getChunk(type) {
-		for (var i = 0; i < this.chunks.length; i++) {
-			if (this.chunks[i].header.type.toLowerCase() == type.toLowerCase())
-				return this.chunks[i];
-		}
-		return null;
-	}
-
-	/**
-	 * Provides a list of known header types and their parsing structure. Should be defined by each file type individually.
-	 * 
-	 * @return {Object} An object mapping chunk identifiers to DataStream structure descriptors.
-	 */
-	getChunkStructs() {
-		return {}
-	}
-
+  /**
+   * Provides a list of known header types and their parsing structure. Should be defined by each file type individually.
+   *
+   * @return {Object} An object mapping chunk identifiers to DataStream structure descriptors.
+   */
+  getChunkStructs() {
+    return {};
+  }
 }
 
 module.exports = GW2File;

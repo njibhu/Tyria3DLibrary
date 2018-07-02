@@ -55,8 +55,8 @@ class HeadViewer extends Viewer {
             var ds = new DataStream(raw);
             var first4 = ds.readCString(4);
 
-            $(`#${this.getOutputId()}`).html("");
-            $(`#${this.getOutputId()}`).append('<div id="headGrid" style="height: 90%"></div>');
+            $(this.getOutputId(true)).html("");
+            $(this.getOutputId(true)).append('<div id="headGrid" style="height: 90%"></div>');
 
             w2ui['Overview'].records = [{
                     recid: 1,
@@ -89,7 +89,7 @@ class HeadViewer extends Viewer {
         }
 
         $('.fileTab').hide();
-        $(`#${this.getDomTabId()}`).show();
+        $(this.getDomTabId(true)).show();
     }
 
     //Headviewer can view every file

@@ -28,6 +28,7 @@ const PackViewer = require('./Viewers/Pack');
 const SoundViewer = require('./Viewers/Sound');
 const StringViewer = require('./Viewers/String');
 const TextureViewer = require('./Viewers/Texture');
+const CntcViewer = require('./Viewers/Cntc');
 
 var Viewers = [
     new HeadViewer(),
@@ -36,7 +37,8 @@ var Viewers = [
     new PackViewer(),
     new SoundViewer(),
     new StringViewer(),
-    new TextureViewer()
+    new TextureViewer(),
+    new CntcViewer()
 ];
 
 var DefaultViewerIndex = 0;

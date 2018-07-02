@@ -49,7 +49,7 @@ class ModelViewer extends Viewer {
         }
 
         $('.fileTab').hide();
-        $(`#${this.getDomTabId()}`).show();
+        $(this.getDomTabId(true)).show();
     }
 
     clean() {
@@ -76,7 +76,7 @@ class ModelViewer extends Viewer {
 
     onRendererDoneModel() {
 
-        $(`#${this.getOutputId()}`).show();
+        $(this.getOutputId(true)).show();
 
         /// Re-fit canvas
         Globals._onCanvasResize();
@@ -124,8 +124,8 @@ class ModelViewer extends Viewer {
 
     setup() {
         /// Setting up a scene, Tree.js standard stuff...
-        var canvasWidth = $("#" + this.getOutputId()).width();
-        var canvasHeight = $("#" + this.getOutputId()).height();
+        var canvasWidth = $(this.getOutputId(true)).width();
+        var canvasHeight = $(this.getOutputId(true)).height();
         var canvasClearColor = 0x342920; // For happy rendering, always use Van Dyke Brown.
         var fov = 60;
         var aspect = 1;
@@ -134,8 +134,8 @@ class ModelViewer extends Viewer {
 
         Globals._onCanvasResize = () => {
 
-            var sceneWidth = $("#" + this.getOutputId()).width();
-            var sceneHeight = $("#" + this.getOutputId()).height();
+            var sceneWidth = $(this.getOutputId(true)).width();
+            var sceneHeight = $(this.getOutputId(true)).height();
 
             if (!sceneHeight || !sceneWidth)
                 return;
@@ -171,7 +171,7 @@ class ModelViewer extends Viewer {
             antialiasing: true
         });
 
-        $("#" + this.getOutputId())[0].appendChild(Globals._renderer.domElement);
+        $(this.getOutputId(true))[0].appendChild(Globals._renderer.domElement);
 
         Globals._renderer.setSize(canvasWidth, canvasHeight);
         Globals._renderer.setClearColor(canvasClearColor);

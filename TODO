@@ -19,3 +19,10 @@ In details:
 
  > LocalReader, preload the next task in worker instead of waiting.
     And signalize an in-between state
+
+ > Allow asynchronous use during file parsing with a function getProgress
+ 
+ > Remove unused bits and unnecessary helpers of the main T3DLib file.
+   > Export Utils/CompatUtils for backward compatibility utilities (filelist format...)
+
+ > Implements PackContentRenderer with settings to load specific entries

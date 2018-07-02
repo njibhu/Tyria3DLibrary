@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-const DataRenderer = require('./DataRenderer');
+const DataRenderer = require("./DataRenderer");
 
 const MapTerrainUtils = require("../util/MapTerrainUtils");
 
@@ -25,10 +25,10 @@ const MapTerrainUtils = require("../util/MapTerrainUtils");
  *
  * A renderer that generates the meshes for the terrain of a map.
  *
- * 
- * Requires a context previously populated by a 
+ *
+ * Requires a context previously populated by a
  * {{#crossLink "EnvironmentRenderer"}}{{/crossLink}}.
- * 
+ *
  * @class TerrainRenderer
  * @constructor
  * @extends DataRenderer
@@ -39,57 +39,57 @@ const MapTerrainUtils = require("../util/MapTerrainUtils");
  * @param  {Logger} logger       The logging class to use for progress, warnings, errors et cetera.
  */
 class TerrainRenderer extends DataRenderer {
-	constructor(localReader, settings, context, logger) {
-		super(localReader, settings, context, logger);
+  constructor(localReader, settings, context, logger) {
+    super(localReader, settings, context, logger);
 
-		this.mapFile = this.settings.mapFile;
-	}
+    this.mapFile = this.settings.mapFile;
+  }
 
+  /**
+   * Output fileds generated:
+   *
+   * - *terrainTiles* An array of THREE.Mesh objects visualizing terrain of the map.
+   *
+   * - *water* A THREE.Mesh object visualizing the bounds of the map.
+   *
+   * - *bounds* An object wiht x1, x2, y1, and y2 properties specifying the bounds of the map.
+   *
+   * @async
+   * @param  {Function} callback Fires when renderer is finished, does not take arguments.
+   */
+  renderAsync(callback) {
+    /// Load all paged Images, requires inflation of other pack files!
+    const pagedImageId = this.mapFile.getChunk("trn").data.materials.pagedImage;
+    this.localReader
+      .readFile(pagedImageId, false, false, undefined, undefined, true)
+      .then(result => {
+        return MapTerrainUtils.loadPagedImageCallback(
+          result.buffer,
+          this.mapFile,
+          this.settings.anisotropy,
+          this.getOutput(T3D.EnvironmentRenderer),
+          this.localReader
+        );
+      })
+      .then(terrainResult => {
+        // Populate the output
+        this.getOutput().terrainTiles = terrainResult.terrainTiles;
+        this.getOutput().water = terrainResult.water;
+        this.getOutput().bounds = terrainResult.mapRect;
 
-	/**
-	 * Output fileds generated:
-	 * 
-	 * - *terrainTiles* An array of THREE.Mesh objects visualizing terrain of the map.
-	 * 
-	 * - *water* A THREE.Mesh object visualizing the bounds of the map.
-	 * 
-	 * - *bounds* An object wiht x1, x2, y1, and y2 properties specifying the bounds of the map.
-	 * 
-	 * @async
-	 * @param  {Function} callback Fires when renderer is finished, does not take arguments.
-	 */
-	renderAsync(callback) {
+        callback();
+      });
+  }
 
-		/// Load all paged Images, requires inflation of other pack files!
-		var pagedImageId = this.mapFile.getChunk("trn").data.materials.pagedImage;
-		this.localReader.readFile(pagedImageId, false, false, undefined, undefined, true).then((result) => {
-
-			return MapTerrainUtils.loadPagedImageCallback(
-				result.buffer,
-				this.mapFile,
-				this.settings.anisotropy,
-				this.getOutput(T3D.EnvironmentRenderer),
-				this.localReader);
-
-		}).then((terrainResult) => {
-			//Populate the output
-			this.getOutput().terrainTiles = terrainResult.terrainTiles;
-			this.getOutput().water = terrainResult.water;
-			this.getOutput().bounds = terrainResult.mapRect;
-
-			callback();
-		});
-	}
-
-	/**
-	 * TODO: write description. Used for export feature
-	 * 
-	 * @param  {Function} callback [description]
-	 * @return {*}            [description]
-	 */
-	getFileIdsAsync(callback) {
-		callback(MapTerrainUtils.getTerrainFilesId(this.mapFile));
-	}
+  /**
+   * TODO: write description. Used for export feature
+   *
+   * @param  {Function} callback [description]
+   * @return {*}            [description]
+   */
+  getFileIdsAsync(callback) {
+    callback(MapTerrainUtils.getTerrainFilesId(this.mapFile));
+  }
 }
 
 module.exports = TerrainRenderer;

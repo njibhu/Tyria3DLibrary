@@ -18,18 +18,23 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
 module.exports = [
-	//uint8_t  magic[4];
-	"magic", "string:4",
+  // uint8_t  magic[4];
+  "magic",
+  "string:4",
 
-	//uint64_t unknown1;
-	"unknown1", ["[]", "uint32", 2],
+  // uint64_t unknown1;
+  "unknown1",
+  ["[]", "uint32", 2],
 
-	//uint32_t nbOfEntries;
-	"nbOfEntries", "uint32",
+  // uint32_t nbOfEntries;
+  "nbOfEntries",
+  "uint32",
 
-	//uint32_t unknown2;
-	"unknown2", "uint32",
+  // uint32_t unknown2;
+  "unknown2",
+  "uint32",
 
-	//uint32_t unknown3;
-	"unknown3", "uint32",
+  // uint32_t unknown3;
+  "unknown3",
+  "uint32"
 ];

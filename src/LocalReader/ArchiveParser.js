@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-const MathUtils = require('../util/MathUtils');
+const MathUtils = require("../util/MathUtils");
 
 /**
  * @file The ArchiveParser module is a set of helper tools to correctly read the Archive.
@@ -32,21 +32,23 @@ const MathUtils = require('../util/MathUtils');
  * @returns {Promise<{archiveHeader: ArchiveHeader, metaTable: MetaTable, indexTable: IndexTable}>}
  */
 async function readArchive(file) {
-    let archiveHeader = parseANDatHeader((await getFilePart(file, 0, 40)).ds);
-    let mftData = parseMFTTable((await getFilePart(file, archiveHeader.mftOffset, archiveHeader.mftSize)).ds);
-    let {
-        ds,
-        len
-    } = await getFilePart(file, mftData.mftIndexOffset, mftData.mftIndexSize);
-    let indexTable = parseMFTIndex(ds, len);
+  let archiveHeader = parseANDatHeader((await getFilePart(file, 0, 40)).ds);
+  let mftData = parseMFTTable(
+    (await getFilePart(file, archiveHeader.mftOffset, archiveHeader.mftSize)).ds
+  );
+  let { ds, len } = await getFilePart(
+    file,
+    mftData.mftIndexOffset,
+    mftData.mftIndexSize
+  );
+  let indexTable = parseMFTIndex(ds, len);
 
-    return {
-        archiveHeader: archiveHeader,
-        metaTable: mftData.table,
-        indexTable: indexTable
-    };
+  return {
+    archiveHeader: archiveHeader,
+    metaTable: mftData.table,
+    indexTable: indexTable
+  };
 }
-
 
 /**
  * The header of the archive.
@@ -63,40 +65,40 @@ async function readArchive(file) {
 
 /**
  *   Parse the main information about the archive like format version, positions of information tables, crc etc...
- * 
+ *
  * @memberof ArchiveParser
  * @param {DataStream} ds
  * @returns {ArchiveIndex} Returns undefined if the header couldn't be parsed
  */
 function parseANDatHeader(ds) {
-    var header = {};
+  let header = {};
 
-    // Header parsing
-    header.version = ds.readUint8();
-    header.magic = ds.readString(3);
-    header.headerSize = ds.readUint32();
-    ds.seek(ds.position + 4); //Skip uint32
-    header.chunkSize = ds.readUint32();
-    header.crc = ds.readUint32();
-    ds.seek(ds.position + 4); //Skip uint32
-    header.mftOffset = MathUtils.arr32To64([ds.readUint32(), ds.readUint32()]);
-    header.mftSize = ds.readUint32();
-    header.flags = ds.readUint32();
-    // End header parsing
+  // Header parsing
+  header.version = ds.readUint8();
+  header.magic = ds.readString(3);
+  header.headerSize = ds.readUint32();
+  ds.seek(ds.position + 4); // Skip uint32
+  header.chunkSize = ds.readUint32();
+  header.crc = ds.readUint32();
+  ds.seek(ds.position + 4); // Skip uint32
+  header.mftOffset = MathUtils.arr32To64([ds.readUint32(), ds.readUint32()]);
+  header.mftSize = ds.readUint32();
+  header.flags = ds.readUint32();
+  // End header parsing
 
-    //Check MAGIC
-    if (header.magic != "AN\u001A") {
-        T3D.Logger.log(
-            T3D.Logger.TYPE_ERROR, "ANDat header is not valid", header.magic);
-        return undefined;
-    }
-
+  // Check MAGIC
+  if (header.magic !== "AN\u001A") {
     T3D.Logger.log(
-        T3D.Logger.TYPE_DEBUG,
-        "Loaded Main .dat header"
+      T3D.Logger.TYPE_ERROR,
+      "ANDat header is not valid",
+      header.magic
     );
+    return undefined;
+  }
 
-    return header;
+  T3D.Logger.log(T3D.Logger.TYPE_DEBUG, "Loaded Main .dat header");
+
+  return header;
 }
 
 /**
@@ -106,57 +108,56 @@ function parseANDatHeader(ds) {
 
 /**
  *   Parse the main information table that contains the offset, size, compression flags and crc
- * 
+ *
  * @memberof ArchiveParser
  * @param {Datastream}  ds
  * @returns {{header: {magic: String, nbOfEntries: number}, table: MetaTable, mftIndexOffset: number, mftIndexSize: number}|undefined}
  *   Returns undefined if it couldn't parse the table
  */
 function parseMFTTable(ds) {
-    // Parse the table header
-    var header = {};
-    header.magic = ds.readString(4);
-    ds.seek(ds.position + 8) //Skip uint64
-    header.nbOfEntries = ds.readUint32();
-    ds.seek(ds.position + 4 + 4); //Skip uint32 * 2
+  // Parse the table header
+  let header = {};
+  header.magic = ds.readString(4);
+  ds.seek(ds.position + 8); // Skip uint64
+  header.nbOfEntries = ds.readUint32();
+  ds.seek(ds.position + 4 + 4); // Skip uint32 * 2
 
-    //check MAGIC
-    if (header.magic != "Mft\u001A") {
-        T3D.Logger.log(
-            T3D.Logger.TYPE_ERROR, "MFTTable header is not valid", header.magic);
-        return undefined;
-    }
-
-    //Where we put all the parsed data
-    //We don't pre-alloc anymore since not having the data aligned together procs too many
-    //cache misses during a fullscan
-    let fullTable = [];
-
-    // Go through the table
-    for (let i = 1; i < header.nbOfEntries; i++) {
-        let item = {};
-        item['offset'] = MathUtils.arr32To64([ds.readUint32(), ds.readUint32()]);
-        item['size'] = ds.readUint32();
-        item['compressed'] = ds.readUint16();
-        ds.seek(ds.position + 4 + 2); //Skip uint16 + uint32
-        item['crc'] = ds.readUint32();
-        fullTable[i] = item;
-    }
-
+  // check MAGIC
+  if (header.magic !== "Mft\u001A") {
     T3D.Logger.log(
-        T3D.Logger.TYPE_DEBUG,
-        "Loaded MFTTable"
+      T3D.Logger.TYPE_ERROR,
+      "MFTTable header is not valid",
+      header.magic
     );
+    return undefined;
+  }
 
-    return {
-        header: header,
-        table: fullTable,
-        //Register the MFTIndex table position and size
-        mftIndexOffset: fullTable[2].offset,
-        mftIndexSize: fullTable[2].size
-    };
+  // Where we put all the parsed data
+  // We don't pre-alloc anymore since not having the data aligned together procs too many
+  // cache misses during a fullscan
+  let fullTable = [];
+
+  // Go through the table
+  for (let i = 1; i < header.nbOfEntries; i++) {
+    let item = {};
+    item["offset"] = MathUtils.arr32To64([ds.readUint32(), ds.readUint32()]);
+    item["size"] = ds.readUint32();
+    item["compressed"] = ds.readUint16();
+    ds.seek(ds.position + 4 + 2); // Skip uint16 + uint32
+    item["crc"] = ds.readUint32();
+    fullTable[i] = item;
+  }
+
+  T3D.Logger.log(T3D.Logger.TYPE_DEBUG, "Loaded MFTTable");
+
+  return {
+    header: header,
+    table: fullTable,
+    // Register the MFTIndex table position and size
+    mftIndexOffset: fullTable[2].offset,
+    mftIndexSize: fullTable[2].size
+  };
 }
-
 
 /**
  * The array linking all the file indexes to their respective files
@@ -165,71 +166,67 @@ function parseMFTTable(ds) {
 
 /**
  *   This function used to be much more complex with the use of
- *   a "fileId" which in the end was just the equivalent of 
+ *   a "fileId" which in the end was just the equivalent of
  *   MFTbaseIds[mftId].sort().reverse()[0] (aka the bigger baseId found)
- * 
+ *
  * @memberof ArchiveParser
- * @param {DataStream} ds 
+ * @param {DataStream} ds
  * @param {number} size
  * @returns {IndexTable}
  */
 function parseMFTIndex(ds, size) {
-    let length = size / 8;
+  let length = size / 8;
 
-    let indexTable = [];
+  let indexTable = [];
 
-    for (let i = 0; i < length; i++) {
-        //Parse table
-        let id = ds.readUint32();
-        let mftIndex = ds.readUint32();
-        //Store the values
-        indexTable[id] = mftIndex;
-    }
+  for (let i = 0; i < length; i++) {
+    // Parse table
+    let id = ds.readUint32();
+    let mftIndex = ds.readUint32();
+    // Store the values
+    indexTable[id] = mftIndex;
+  }
 
-    T3D.Logger.log(
-        T3D.Logger.TYPE_DEBUG,
-        "Finished indexing MFT"
-    );
+  T3D.Logger.log(T3D.Logger.TYPE_DEBUG, "Finished indexing MFT");
 
-    return indexTable;
+  return indexTable;
 }
-
 
 /**
  *   Get a chunk of the specified file. Used mainly to take parts of the Archive before parsing.
- * 
+ *
  * @memberof ArchiveParser
- * @param {File} file 
- * @param {number} offset 
- * @param {number} length 
+ * @param {File} file
+ * @param {number} offset
+ * @param {number} length
  * @returns {Promise<{ds: DataStream, len: number}>}
  */
 function getFilePart(file, offset, length) {
-    return new Promise((resolve, reject) => {
-        let reader = new FileReader();
+  return new Promise((resolve, reject) => {
+    let reader = new FileReader();
 
-        reader.onerror = reject;
+    reader.onerror = reject;
 
-        reader.onload = (fileEvent) => {
-            var buffer = fileEvent.target.result;
-            var ds = new DataStream(buffer);
-            ds.endianness = DataStream.LITTLE_ENDIAN;
-            // Pass data stream and data length to callback function
-            resolve({
-                ds: ds,
-                len: length
-            });
-        }
+    reader.onload = fileEvent => {
+      let buffer = fileEvent.target.result;
+      let ds = new DataStream(buffer);
+      ds.endianness = DataStream.LITTLE_ENDIAN;
+      // Pass data stream and data length to callback function
+      resolve({
+        ds: ds,
+        len: length
+      });
+    };
 
-        // Slicing a File is just reducing the scope of the ArrayBuffer, but doesn't load anything in memory.
-        reader.readAsArrayBuffer(file.slice(offset, offset + length));
-    })
+    // Slicing a File is just reducing the scope of the ArrayBuffer, but doesn't load anything in memory.
+    reader.readAsArrayBuffer(file.slice(offset, offset + length));
+  });
 }
 
 module.exports = {
-    readArchive: readArchive,
-    parseANDatHeader: parseANDatHeader,
-    parseMFTTable: parseMFTTable,
-    parseMFTIndex: parseMFTIndex,
-    getFilePart: getFilePart
+  readArchive: readArchive,
+  parseANDatHeader: parseANDatHeader,
+  parseMFTTable: parseMFTTable,
+  parseMFTIndex: parseMFTIndex,
+  getFilePart: getFilePart
 };

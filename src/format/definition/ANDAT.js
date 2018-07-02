@@ -18,33 +18,43 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
 module.exports = [
-    //uint8_t  version;
-    "version", "uint8",
+  // uint8_t  version;
+  "version",
+  "uint8",
 
-    //uint8_t  magic[3];
-    "magic", "string:3",
+  // uint8_t  magic[3];
+  "magic",
+  "string:3",
 
-    //uint32_t headerSize;
-    "headerSize", "uint32",
+  // uint32_t headerSize;
+  "headerSize",
+  "uint32",
 
-    //uint32_t unknown1;
-    "unknown1", "uint32",
+  // uint32_t unknown1;
+  "unknown1",
+  "uint32",
 
-    //uint32_t chunkSize;
-    "chunkSize", "uint32",
+  // uint32_t chunkSize;
+  "chunkSize",
+  "uint32",
 
-    //uint32_t crc;
-    "crc", "uint32",
+  // uint32_t crc;
+  "crc",
+  "uint32",
 
-    //uint32_t unknown2;
-    "unknown2", "uint32",
+  // uint32_t unknown2;
+  "unknown2",
+  "uint32",
 
-    //uint64_t mftOffset;
-    "mftOffset", ["[]", "uint32", 2],
+  // uint64_t mftOffset;
+  "mftOffset",
+  ["[]", "uint32", 2],
 
-    //uint32_t mftSize;
-    "mftSize", "uint32",
+  // uint32_t mftSize;
+  "mftSize",
+  "uint32",
 
-    //uint32_t flags;
-    "flags", "uint32"
+  // uint32_t flags;
+  "flags",
+  "uint32"
 ];

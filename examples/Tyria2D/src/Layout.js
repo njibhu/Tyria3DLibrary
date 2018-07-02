@@ -20,6 +20,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 const FileViewer = require("./Fileviewer");
 const FileGrid = require("./Filegrid");
 const Utils = require("./Utils");
+const Tools = require("./Tools");
 
 var Globals = require("./Globals");
 
@@ -143,6 +144,7 @@ function toolbar() {
                 img: "icon-page",
                 items: [
                     {
+                        id: 'viewCntcSummary',
                         text: "View cntc summary",
                         img: "icon-page"
                     }
@@ -162,6 +164,9 @@ function toolbar() {
             switch (event.target) {
                 case "loadFile":
                     openFilePopup();
+                    break;
+                case "tools:viewCntcSummary":
+                    Tools.cntcSummary();
                     break;
             }
         }
@@ -209,6 +214,7 @@ function fileBrowser() {
                 toolbarReload: false,
                 footer: true
             },
+            multiSearch: false,
             columns: [
                 {
                     field: "baseId",

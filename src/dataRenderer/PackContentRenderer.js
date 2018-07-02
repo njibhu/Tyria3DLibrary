@@ -17,15 +17,14 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-const DataRenderer = require('./DataRenderer');
+const DataRenderer = require("./DataRenderer");
 
 class PackContentRenderer extends DataRenderer {
-    constructor(localReader, settings, context, logger) {
-        super(localReader, settings, context, logger);
-    }
+  constructor(localReader, settings, context, logger) {
+    super(localReader, settings, context, logger);
+  }
 
-    renderAsync(callback) {
-        var fileId = this.settings.id;
-
-    }
+  renderAsync(callback) {
+    var fileId = this.settings.id;
+  }
 }

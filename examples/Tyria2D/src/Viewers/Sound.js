@@ -37,7 +37,7 @@ class SoundViewer extends Viewer {
             let chunk = packfile.getChunk("ASND");
 
             /// Print some random data about this sound
-            $(`#${this.getOutputId}`)
+            $(this.getOutputId(true))
                 .html(
                     "Length: " + chunk.data.length + " seconds<br/>" +
                     "Size: " + chunk.data.audioData.length + " bytes"
@@ -95,7 +95,7 @@ class SoundViewer extends Viewer {
         }
 
         $('.fileTab').hide();
-        $(`#${this.getDomTabId()}`).show();
+        $(this.getDomTabId(true)).show();
     }
 
 

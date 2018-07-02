@@ -33,16 +33,16 @@ class HexaViewer extends Viewer {
 
         if (this.currentRenderId != fileId) {
             let rawData = T3D.getContextValue(Globals._context, T3D.DataRenderer, "rawData");
-            $(`#${this.getOutputId()}`).append('<div id="hexaGrid" style="height: 90%"></div>');
+            $(this.getOutputId(true)).append('<div id="hexaGrid" style="height: 90%"></div>');
             Utils.generateHexTable(rawData, this.getOutputId(), (grid) => {
                 grid.render($(`#hexaGrid`));
-                $(`#${this.getOutputId()}`).show();
+                $(this.getOutputId(true)).show();
             });
             this.currentRenderId = fileId;
         }
 
         $('.fileTab').hide();
-        $(`#${this.getDomTabId()}`).show();
+        $(this.getDomTabId(true)).show();
     }
 
     clean(){

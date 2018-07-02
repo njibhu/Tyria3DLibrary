@@ -35,12 +35,20 @@ class Viewer {
         return `tab${this.id}`;
     }
 
-    getOutputId() {
-        return `${this.id}Output`;
+    getOutputId(withSign) {
+        if(withSign){
+            return `#${this.id}Output`;
+        } else {
+            return `${this.id}Output`;
+        }
     }
 
-    getDomTabId() {
-        return `fileTab${this.id}`;
+    getDomTabId(withSign) {
+        if(withSign){
+            return `#fileTab${this.id}`;
+        } else {
+            return `fileTab${this.id}`;
+        }
     }
 
     /**

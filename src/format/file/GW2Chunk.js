@@ -18,102 +18,103 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
 const HEAD_STRUCT = [
-	'type', 'cstring:4',
-	'chunkDataSize', 'uint32',
-	'chunkVersion', 'uint16',
-	'chunkHeaderSize', 'uint16',
-	'offsetTableOffset', 'uint32',
+  "type",
+  "cstring:4",
+  "chunkDataSize",
+  "uint32",
+  "chunkVersion",
+  "uint16",
+  "chunkHeaderSize",
+  "uint16",
+  "offsetTableOffset",
+  "uint32"
 ];
-
 
 /**
  * Settings for resolving conflicting chunk names in different files.
- * @private 
+ * @private
  * @property DUPLICATE_SETTINGS
  * @type {Object}
  */
-var DUPLICATE_SETTINGS;
+let DUPLICATE_SETTINGS;
 
-//Replacement for DUPLICATE_SETTINGS, based on the name of the root property.
-const PACKTOCHUNK = [{
-		pack: 'MODL',
-		chunk: 'ANIM',
-		root: 'ModelFileAnimation'
-	},
-	{
-		pack: 'MODL',
-		chunk: 'GAME',
-		root: 'ModelFileGame'
-	},
-	{
-		pack: 'MODL',
-		chunk: 'SKEL',
-		root: 'ModelFileSkeleton'
-	},
-	{
-		pack: 'MODL',
-		chunk: 'TOOL',
-		root: 'ModelFileTool'
-	},
-	{
-		pack: 'cntc',
-		chunk: 'Main',
-		root: 'PackContent'
-	},
-	{
-		pack: 'mMet',
-		chunk: 'Main',
-		root: 'PackMapMetadata'
-	},
-	{
-		pack: 'AMAT',
-		chunk: 'TOOL',
-		root: 'AmatToolParams'
-	},
-	{
-		pack: 'cmaC',
-		chunk: 'main',
-		root: 'CollideModelManifest'
-	}
+// Replacement for DUPLICATE_SETTINGS, based on the name of the root property.
+const PACKTOCHUNK = [
+  {
+    pack: "MODL",
+    chunk: "ANIM",
+    root: "ModelFileAnimation"
+  },
+  {
+    pack: "MODL",
+    chunk: "GAME",
+    root: "ModelFileGame"
+  },
+  {
+    pack: "MODL",
+    chunk: "SKEL",
+    root: "ModelFileSkeleton"
+  },
+  {
+    pack: "MODL",
+    chunk: "TOOL",
+    root: "ModelFileTool"
+  },
+  {
+    pack: "cntc",
+    chunk: "Main",
+    root: "PackContent"
+  },
+  {
+    pack: "mMet",
+    chunk: "Main",
+    root: "PackMapMetadata"
+  },
+  {
+    pack: "AMAT",
+    chunk: "TOOL",
+    root: "AmatToolParams"
+  },
+  {
+    pack: "cmaC",
+    chunk: "main",
+    root: "CollideModelManifest"
+  }
 ];
 
 // Builds the DUPLICATE_SETTINGS based on the provided T3D.formats.
 // Required to be done dynamically since the 32 bit and 64bits have different ordering
 function genDuplicateSettings() {
-	//Early return if the settings have been already generated
-	if (DUPLICATE_SETTINGS)
-		return;
+  // Early return if the settings have been already generated
+  if (DUPLICATE_SETTINGS) return;
 
-	function getRootName(definition) {
-		let a = new definition();
-		return Object.keys(a).filter(v => {
-			return a[v] === a.__root && v != '__root'
-		})[0];
-	}
+  function getRootName(Definition) {
+    let a = new Definition();
+    return Object.keys(a).filter(v => {
+      return a[v] === a.__root && v !== "__root";
+    })[0];
+  }
 
-	DUPLICATE_SETTINGS = {};
-	let duplicate_settings = {};
-	for (let setting of PACKTOCHUNK) {
+  DUPLICATE_SETTINGS = {};
+  for (let setting of PACKTOCHUNK) {
+    let regex = new RegExp(`^${setting.root}(V[0-9]*)?$`);
+    let chunkDef = T3D.formats.filter(v => {
+      return v.name === setting.chunk;
+    });
 
-		let regex = new RegExp(`^${setting.root}(V[0-9]*)?$`);
-		let chunkDef = T3D.formats.filter(v => {
-			return v.name == setting.chunk
-		});
-
-		for (let defsIdx in chunkDef) {
-			let defs = chunkDef[defsIdx].versions;
-			let lastVersion = defs[Object.keys(defs).pop()];
-			let rootName = getRootName(lastVersion);
-			if (rootName.match(regex)) {
-				if (!DUPLICATE_SETTINGS[setting.chunk])
-					DUPLICATE_SETTINGS[setting.chunk] = [];
-				DUPLICATE_SETTINGS[setting.chunk][defsIdx] = setting.pack;
-				break;
-			}
-		}
-	}
+    for (let defsIdx in chunkDef) {
+      let defs = chunkDef[defsIdx].versions;
+      let lastVersion = defs[Object.keys(defs).pop()];
+      let rootName = getRootName(lastVersion);
+      if (rootName.match(regex)) {
+        if (!DUPLICATE_SETTINGS[setting.chunk])
+          DUPLICATE_SETTINGS[setting.chunk] = [];
+        DUPLICATE_SETTINGS[setting.chunk][defsIdx] = setting.pack;
+        break;
+      }
+    }
+  }
 }
-
 
 /**
  * Basic chunk parsing functionality for Guild Wars 2 file chunks
@@ -123,151 +124,145 @@ function genDuplicateSettings() {
  * @param {Number} addr Offset of chunk start within the DataStream
  */
 class GW2Chunk {
+  constructor(ds, addr) {
+    // Early returns if already called, it defines the DUPLICATE_SETTINGS variable
+    genDuplicateSettings();
 
-	constructor(ds, addr) {
-		//Early returns if already called, it defines the DUPLICATE_SETTINGS variable
-		genDuplicateSettings();
+    /**
+     * @property {DataStream} ds The DataStream data source used by this chunk.
+     */
+    this.ds = ds;
 
-		/**
-		 * @property {DataStream} ds The DataStream data source used by this chunk.
-		 */
-		this.ds = ds;
+    /**
+     * @property {Number} addr The address to this Chunk within ds.
+     */
+    this.addr = addr;
 
-		/**
-		 * @property {Number} addr The address to this Chunk within ds.
-		 */
-		this.addr = addr;
+    /**
+     * @property {Object} data The typed data read from the body of this chunk.
+     */
+    this.data = null;
 
-		/**
-		 * @property {Object} data The typed data read from the body of this chunk.
-		 */
-		this.data = null;
+    /**
+     * @property {Number} headerLength The length in bytes of the chunk header.
+     */
+    this.headerLength = NaN;
 
+    /**
+     * @property {Object} header Chunk header data.
+     */
+    this.loadHead();
+  }
 
-		/**
-		 * @property {Number} headerLength The length in bytes of the chunk header.
-		 */
-		this.headerLength = NaN;
+  /**
+   * Parses the chunk header data, populating the header property.
+   */
+  loadHead() {
+    this.ds.seek(this.addr);
+    this.header = this.ds.readStruct(HEAD_STRUCT);
 
-		/**
-		 * @property {Object} header Chunk header data.
-		 */
-		this.loadHead();
-	}
+    this.headerLength = this.ds.position - this.addr;
+  }
 
-	/**
-	 * Parses the chunk header data, populating the header property.
-	 */
-	loadHead() {
-		this.ds.seek(this.addr);
-		this.header = this.ds.readStruct(HEAD_STRUCT);
+  /**
+   * @param  {String} fileType The main type of the pack file containing this chunk.
+   * Used for resolving chunk naming conflicts between pack file types.
+   * @return {Array}	DataStream formatted array describing the data
+   * sctructures of this chunk
+   */
+  getDefinition(fileType) {
+    /// Normally we're looking for the 0th occurance
+    /// But some chunk names occur multiple times and we're interrested
+    /// in the N:th occurance of the definition.
 
-		this.headerLength = this.ds.position - this.addr;
-	}
+    /// I've no idea how this is automated, for now just use the
+    /// settings object I've put together from experience.
+    let useNthIndex = 0;
 
-	/**
-	 * @param  {String} fileType The main type of the pack file containing this chunk.
-	 * Used for resolving chunk naming conflicts between pack file types.
-	 * @return {Array}	DataStream formatted array describing the data
-	 * sctructures of this chunk
-	 */
-	getDefinition(fileType) {
+    /// If this chunk has multiple definitions
+    /// get to know what def to use...
+    let fileTypes = DUPLICATE_SETTINGS[this.header.type];
+    if (fileTypes) {
+      useNthIndex = -1;
 
-		/// Normally we're looking for the 0th occurance
-		/// But some chunk names occur multiple times and we're interrested
-		/// in the N:th occurance of the definition.
-		/// 
-		/// I've no idea how this is automated, for now just use the 
-		/// settings object I've put together from experience.
-		var useNthIndex = 0;
+      /// Check what file name entry matches this file name
+      for (let i = 0; i < fileTypes.length && useNthIndex === -1; i++) {
+        let ft = fileTypes[i];
 
-		/// If this chunk has multiple definitions
-		/// get to know what def to use...
-		var fileTypes = DUPLICATE_SETTINGS[this.header.type];
-		if (fileTypes) {
+        if (ft === fileType) {
+          useNthIndex = i;
+        }
+      }
 
-			useNthIndex = -1;
+      /// We didnt find this file name!
+      /// TODO: if you get this error, please update the DUPLICATE_SETTINGS above
+      if (useNthIndex === -1) {
+      }
+    }
 
-			/// Check what file name entry matches this file name
-			for (var i = 0; i < fileTypes.length && useNthIndex == -1; i++) {
-				var ft = fileTypes[i];
+    let defsFound = 0;
+    for (let i = 0; i < T3D.formats.length; i++) {
+      let f = T3D.formats[i];
 
+      /// Chunk name needs to match
+      if (f.name === this.header.type) {
+        /// There needs to be a chunk def version matching the one specifiend
 
-				if (ft == fileType) {
-					useNthIndex = i;
-				}
-			}
+        /// AND If this is the Nth occurance of the chunk definition
+        /// and we're looking for the Nth occurance, return it.
 
-			/// We didnt find this file name!
-			/// TODO: if you get this error, please update the DUPLICATE_SETTINGS above
-			if (useNthIndex == -1) {
-				debugger;
-			}
-		}
+        /// chunkVersion in the dat uses 0 indexing
+        if (defsFound === useNthIndex && f.versions[this.header.chunkVersion]) {
+          return new f.versions[this.header.chunkVersion]().__root;
+        }
 
-		var defsFound = 0;
-		for (var i = 0; i < T3D.formats.length; i++) {
-			var f = T3D.formats[i];
+        defsFound++;
+      }
+    }
+  }
 
-			/// Chunk name needs to match
-			if (f.name == this.header.type) {
+  /**
+   * Parses the chunk main data, populating the data property.
+   *
+   * @param  {String} fileType The main type of the pack file containing this chunk.
+   * Used for resolving chunk naming conflicts between pack file types when
+   * looking up the structure definition for this chunk.
+   */
+  loadData(fileType) {
+    let def = this.getDefinition(fileType);
 
-				/// There needs to be a chunk def version matching the one specifiend 
-				/// 
-				/// AND If this is the Nth occurance of the chunk definition
-				/// and we're looking for the Nth occurance, return it.
-				/// 
-				/// chunkVersion in the dat uses 0 indexing
-				if (defsFound == useNthIndex && f.versions[this.header.chunkVersion]) {
-					return (new f.versions[this.header.chunkVersion]()).__root;
-				}
+    if (def) {
+      this.ds.seek(this.addr + this.headerLength);
+      this.data = this.ds.readStruct(def);
+    } else {
+      T3D.Logger.log(
+        T3D.Logger.TYPE_WARNING,
+        "Could not find a definition for chunk",
+        this.header.type,
+        "version",
+        this.header.chunkVersion,
+        "file name",
+        fileType
+      );
+    }
+  }
 
-				defsFound++;
-			}
-		}
-	}
-
-	/**
-	 * Parses the chunk main data, populating the data property.
-	 * 
-	 * @param  {String} fileType The main type of the pack file containing this chunk.
-	 * Used for resolving chunk naming conflicts between pack file types when
-	 * looking up the structure definition for this chunk.
-	 */
-	loadData(fileType) {
-
-		var def = this.getDefinition(fileType);
-
-		if (def) {
-			this.ds.seek(this.addr + this.headerLength);
-			this.data = this.ds.readStruct(def);
-		} else {
-			T3D.Logger.log(T3D.Logger.TYPE_WARNING,
-				"Could not find a definition for chunk",
-				this.header.type,
-				"version", this.header.chunkVersion,
-				"file name", fileType);
-		}
-
-	}
-
-	/**
-	 * Retrieves the next chunk is the datastream. In practice this means the next chunk
-	 * within the same pack file.
-	 * 
-	 * @return {GW2Chunk} The next chunk if any, otherwise null.
-	 */
-	next() {
-		try {
-
-			// Calculate actual data size, as mChunkDataSize
-			// does not count the size of some header variables
-			return new GW2Chunk(this.ds, this.addr + 8 + this.header.chunkDataSize);
-		} catch (e) {
-			/// Out of bounds probably		
-		}
-		return null;
-	}
+  /**
+   * Retrieves the next chunk is the datastream. In practice this means the next chunk
+   * within the same pack file.
+   *
+   * @return {GW2Chunk} The next chunk if any, otherwise null.
+   */
+  next() {
+    try {
+      // Calculate actual data size, as mChunkDataSize
+      // does not count the size of some header variables
+      return new GW2Chunk(this.ds, this.addr + 8 + this.header.chunkDataSize);
+    } catch (e) {
+      /// Out of bounds probably
+    }
+    return null;
+  }
 }
 
 module.exports = GW2Chunk;

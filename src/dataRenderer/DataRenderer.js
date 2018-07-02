@@ -17,15 +17,15 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-const GW2File = require('../format/file/GW2File');
+const GW2File = require("../format/file/GW2File");
 
 /**
  * Base class for data interpretors a.k.a. 'Renderers'
  *
  * Renderers are classes that collect and interpret data from the dat file.
- * 
+ *
  * A {{#crossLink "LocalReader"}}{{/crossLink}} instance is used for accessing data from the dat.
- * 
+ *
  * A {{#crossLink "Logger"}}{{/crossLink}} is used for posting progress output or error messages.
  *
  * Most Renderers use one or more
@@ -43,10 +43,10 @@ const GW2File = require('../format/file/GW2File');
  * When a Renderer is done it will fire the callback and any view interrested in retrieving the generated
  * data from the context can read it using
  * {{#crossLink "T3D/getContextValue:method"}}{{/crossLink}}.
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
  * @class DataRenderer
  * @constructor
  * @param  {LocalReader} localReader  The LocalReader instance to read data from.
@@ -55,103 +55,103 @@ const GW2File = require('../format/file/GW2File');
  * @param  {Logger} logger       The logging class to use for progress, warnings, errors et cetera.
  */
 class DataRenderer {
-	constructor(localReader, settings, context, logger) {
+  constructor(localReader, settings, context, logger) {
+    /// Just storing parameters
+    this.localReader = localReader;
+    this.settings = settings;
+    if (!settings) {
+      settings = {};
+    }
+    this.context = context;
+    this.context[this.constructor.name] = {};
 
-		/// Just storing parameters
-		this.localReader = localReader;
-		this.settings = settings;
-		if (!settings) {
-			settings = {};
-		}
-		this.context = context;
-		this.context[this.constructor.name] = {};
+    if (logger) this.logger = logger;
+    else this.logger = T3D.Logger;
+  }
 
-		if (logger)
-			this.logger = logger;
-		else
-			this.logger = T3D.Logger;
-	}
+  /**
+   * Gets the output value object for a specified class within the context.
+   *
+   * @param  {Class} otherClass The class to fetch the output value object for.
+   * If not specified the class of this instance will be used.
+   * @return {Object}            The output value object for this class within the context.
+   */
+  getOutput(otherClass) {
+    return this.context[otherClass ? otherClass.name : this.constructor.name];
+  }
 
-	/**
-	 * Gets the output value object for a specified class within the context.
-	 * 
-	 * @param  {Class} otherClass The class to fetch the output value object for.
-	 * If not specified the class of this instance will be used.
-	 * @return {Object}            The output value object for this class within the context.
-	 */
-	getOutput(otherClass) {
-		return this.context[otherClass ? otherClass.name : this.constructor.name];
-	}
+  /**
+   * Basic rendering of unknown files. Output fileds generated:
+   *
+   * - *fileId* The fileId passed in the settings parameter when constructing this instance.
+   *
+   * - *rawData* An ArrayBuffer containg the infalted binary data of the loaded file.
+   *
+   * - *rawString* A string representation of the rawData
+   *
+   * - *image* A value object witht he fields 'width', 'height' and 'data' describing a RGBA bitmap
+   * image. Only set if the loaded file was a texture.
+   *
+   * - *file* A GW2File representation of the loaded file. Only set if the loaded file was a Pack File.
+   *
+   * @async
+   * @param  {Function} callback Fires when renderer is finished, does not take arguments.
+   */
+  renderAsync(callback) {
+    this.localReader
+      .readFile(this.settings.id, false, false, undefined, undefined, true)
+      .then(result => {
+        let inflatedData = result.buffer;
 
-	/**
-	 * Basic rendering of unknown files. Output fileds generated:
-	 *
-	 * - *fileId* The fileId passed in the settings parameter when constructing this instance.
-	 * 
-	 * - *rawData* An ArrayBuffer containg the infalted binary data of the loaded file.
-	 * 
-	 * - *rawString* A string representation of the rawData
-	 * 
-	 * - *image* A value object witht he fields 'width', 'height' and 'data' describing a RGBA bitmap
-	 * image. Only set if the loaded file was a texture.
-	 * 
-	 * - *file* A GW2File representation of the loaded file. Only set if the loaded file was a Pack File.
-	 * 
-	 * @async
-	 * @param  {Function} callback Fires when renderer is finished, does not take arguments.
-	 */
-	renderAsync(callback) {
-		this.localReader.readFile(this.settings.id, false, false, undefined, undefined, true).then((result) => {
-			let inflatedData = result.buffer;
+        /// Set fileId so callers can identify this VO
+        this.getOutput().fileId = this.settings.id;
 
-			/// Set fileId so callers can identify this VO		
-			this.getOutput().fileId = this.settings.id;
+        /// Share inflated data
+        this.getOutput().rawData = inflatedData;
 
-			/// Share inflated data
-			this.getOutput().rawData = inflatedData;
+        /// Construct raw string
+        let uarr = new Uint8Array(inflatedData);
+        let textDecoder = new TextDecoder("latin2");
+        this.getOutput().rawString = textDecoder.decode(uarr);
 
-			/// Construct raw string
-			var uarr = new Uint8Array(inflatedData);
-			let textDecoder = new TextDecoder('latin2');
-			this.getOutput().rawString = textDecoder.decode(uarr);
+        /// Check if this is an PF or ATEX file
+        // Binareis are MZ
+        let ds = new DataStream(inflatedData);
+        let first4 = ds.readCString(4);
 
+        /// Do special stuff for different fcc signatures
+        /// fourcc != fcc::ATEX && fourcc != fcc::ATEC && fourcc != fcc::ATEP &&
+        /// fourcc != fcc::ATET && fourcc != fcc::ATEU && fourcc != fcc::ATTX)
+        if (
+          first4 === "ATEX" ||
+          first4 === "ATEC" ||
+          first4 === "ATEP" ||
+          first4 === "ATET" ||
+          first4 === "ATEU" ||
+          first4 === "ATTX"
+        ) {
+          this.localReader
+            .readFile(this.settings.id, true, false, undefined, undefined, true)
+            .then(result => {
+              /// Create image using returned data.
+              let image = {
+                data: new Uint8Array(result.buffer),
+                width: result.imageWidth,
+                height: result.imageHeight
+              };
 
-			/// Check if this is an PF or ATEX file
-			// Binareis are MZ
-			var ds = new DataStream(inflatedData);
-			var first4 = ds.readCString(4);
-
-			/// Do special stuff for different fcc signatures
-			/// 
-			/// fourcc != fcc::ATEX && fourcc != fcc::ATEC && fourcc != fcc::ATEP &&
-			/// fourcc != fcc::ATET && fourcc != fcc::ATEU && fourcc != fcc::ATTX)
-			/// 
-			if (first4 == "ATEX" || first4 == "ATEC" ||
-				first4 == "ATEP" || first4 == "ATET" ||
-				first4 == "ATEU" || first4 == "ATTX") {
-
-				this.localReader.readFile(this.settings.id, true, false, undefined, undefined, true).then((result) => {
-					/// Create image using returned data.
-					var image = {
-						data: new Uint8Array(result.buffer),
-						width: result.imageWidth,
-						height: result.imageHeight
-					};
-
-					this.getOutput().image = image;
-					callback();
-				});
-
-			} else if (first4.indexOf("PF") == 0) {
-				this.getOutput().file = new GW2File(ds, 0);
-				callback();
-			} else {
-				this.getOutput().file = null;
-				callback();
-			}
-
-		});
-	}
+              this.getOutput().image = image;
+              callback();
+            });
+        } else if (first4.indexOf("PF") === 0) {
+          this.getOutput().file = new GW2File(ds, 0);
+          callback();
+        } else {
+          this.getOutput().file = null;
+          callback();
+        }
+      });
+  }
 }
 
 module.exports = DataRenderer;

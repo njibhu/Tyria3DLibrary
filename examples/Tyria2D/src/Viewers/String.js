@@ -51,7 +51,7 @@ class StringViewer extends Viewer {
         }
 
         $('.fileTab').hide();
-        $(`#${this.getDomTabId()}`).show();
+        $(this.getDomTabId(true)).show();
     }
 
 
