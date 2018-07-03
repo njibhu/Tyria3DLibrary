@@ -10,7 +10,7 @@ In details:
  > Clean DataRenderers in order:
    1. TerrainRenderer +
    2. EnvironmentRenderer +
-   3. PropertiesRenderer
+   3. PropertiesRenderer +
    4. HavokRenderer
    5. ZoneRenderer
  > Add support for a fileCache object into all loading functions
