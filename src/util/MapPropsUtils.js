@@ -44,7 +44,7 @@ const renderIndex = function(
   if (lastPct !== pct) {
     let pctStr = pct + (pct.toString().indexOf(".") < 0 ? ".0" : "");
 
-    T3D.logger.log(
+    T3D.Logger.log(
       T3D.Logger.TYPE_PROGRESS,
       "Loading 3D Models (Props)",
       pctStr
@@ -212,7 +212,8 @@ const renderIndex = function(
         callback,
         lastPct,
         meshCache,
-        textureCache
+        textureCache,
+        output
       );
     }
   );
@@ -225,7 +226,7 @@ const getIdsForProp = function(props, idx, callback, fileIds = []) {
   }
 
   if (idx % 100 === 0) {
-    this.logger.log(
+    T3D.Logger.log(
       T3D.Logger.TYPE_MESSAGE,
       "getting ids for entry",
       idx,

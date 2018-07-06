@@ -152,7 +152,7 @@ function parseLights(environmentChunkData) {
 
     /// Ambient light
     // light.backlightIntensity /= sumDirLightIntensity +light.backlightIntensity;
-    light.backlightIntensity = light.backlightIntensity;
+    light.backlightIntensity = sumDirLightIntensity; // light.backlightIntensity;
     const color = new THREE.Color(
       (light.backlightIntensity * (255.0 - light.backlightColor[2])) / 255.0,
       (light.backlightIntensity * (255.0 - light.backlightColor[1])) / 255.0,
