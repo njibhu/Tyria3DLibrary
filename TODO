@@ -26,3 +26,27 @@ In details:
    > Export Utils/CompatUtils for backward compatibility utilities (filelist format...)
 
  > Implements PackContentRenderer with settings to load specific entries
+
+
+____
+
+# LocalReader third implementation
+Safer and faster
+* Have an internal queue and pushes work to the workers before they are free so there are no wait time
+* Tracks which tasks have been pushed to a worker and is able to re-push a task if the worker crashes
+* Allow bulk working: extractItems(items: array, onItemDone: function) -> globalPromise;
+* Does not use a class anymore, but just a high order function so the private items really are not accessible and the api is easier to document.
+
+____
+
+# Safer code in general
+* Does not uses class anymore, use jest to make sure that every datarenderer exports all the required functions, but the definitions use high order functions.
+(There should not be any case where a class is an actual requirement)
+
+____
+
+# Easier to maitain
+* Extract all the threejs specific code to another folder
+* Extract the chunks and the map list to separate libraries
+  Map list should not even be required but just provided by the app using the library.
+* Use strong eslint, and strong jsdoc requirements
