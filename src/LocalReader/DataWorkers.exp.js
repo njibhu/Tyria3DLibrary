@@ -40,14 +40,46 @@ const DataWorkers = function({
   let handleCounter = 0;
 
   // Create a worker and
-  function initWorker(id, path) {
+  function initWorker(path) {
     const assignedWork = []; // contains references from the queue
     const worker = new Worker(path);
 
+    // There are no error recovery, we assume the worse and just reassign the work
+    // and spawn a new worker
+    worker.onerror = err => {
+      console.err("Worker encountered an error, restarting... \n" + err);
+      for (let work of assignedWork) {
+        work.assigned = false;
+        work.handle = undefined;
+      }
+      worker.terminate();
+      workers.splice(workers.indexOf(worker), 1);
+      workers.push(initWorker(path));
+    };
+
+    worker.onmessage = ({ data }) => {
+      if (typeof data === "string") {
+        console.err("Inflater threw an error", data);
+      }
+
+      const [handle, buffer, dxtType, imageWidth, imageHeight] = data;
+      const work = assignedWork.find(i => i.handle === handle);
+      if (work) {
+        workQueue.splice(workQueue.indexOf(work), 1);
+        assignedWork.splice(assignedWork.indexOf(work), 1);
+        work.callback({
+          buffer,
+          dxtType,
+          imageWidth,
+          imageHeight
+        });
+      } else {
+        console.err("Inflater returned data from unknown work !");
+      }
+    };
+
     return {
-      worker,
-      id,
-      assignedWork
+      worker
     };
   }
 
@@ -73,6 +105,7 @@ const DataWorkers = function({
 
   function pushWork(work, worker) {
     work.handle = getNewHandle();
+    work.assigned = true;
     worker.worker.postMessage([
       work.handle,
       work.buffer,
@@ -100,16 +133,26 @@ const DataWorkers = function({
   }
 
   /**
-   * workItems = [{buffer, isImage, capLength, meta}]
-   * meta here is anything that will be given back on callback
+   * @typedef {Object} Work
+   * @property {ArrayBuffer} buffer
+   * @property {boolean} isImage
+   * @property {number} capLength
+   * @property {function} callback
    */
-  function decompress(workItems, callback) {}
 
-  function decodeImage(workItems, callback) {}
+  /**
+   * Ask a worker to decompress / decode data
+   * @param {Array<Work>} workItems
+   */
+  function decompress(workItems) {
+    for (const { buffer, isImage, capLength, callback } of workItems) {
+      workQueue.push({ buffer, isImage, capLength, callback });
+    }
+    distributeWork();
+  }
 
   return {
-    decompress,
-    decodeImage
+    decompress
   };
 };
 
