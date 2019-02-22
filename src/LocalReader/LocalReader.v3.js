@@ -18,14 +18,26 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
- * LocalReader (Back to synchronous calls, for performance reasons)
- *
- * - constructor(archive, options)
- * - getFiles([fileIndex], callback(err, {index, file}))
- * - getFilesMetaData([fileIndex], scanType, callback(err, {index, metadata}))
+ * @typedef MetaData
+ * @property {number}   index also known as mftIndex
+ * @property {number}   rawIndex
+ * @property {number}   offset
+ * @property {number}   size
+ * @property {boolean}  compressed
+ * @property {string}   type
  */
 
-const LocalReader = function(archive, { metaDataCache }) {
+/**
+ * @typedef MetaDataStore
+ * @property {Array<MetaData>} table
+ */
+
+/**
+ * LocalRader contructor
+ * @param {File} archive
+ * @param {Object} options
+ */
+const LocalReader = function(archive, { metaDataCache } = {}) {
   if (metaDataCache) {
     // compare crcs and size for each entry and remove the entry from the cache if it doesn't match
   }
@@ -33,6 +45,10 @@ const LocalReader = function(archive, { metaDataCache }) {
   /**
    * Replaces all the functions to get the decompressed file, decoded image or raw one.
    * But works natively in batch mode allowing to efficiently query multiple at once.
+   *
+   * @param {Array<number>} fileIndexArray
+   * @param {Objet} options
+   * @param {function} callback (err, {index, file})
    */
   function getFiles(
     fileIndexArray,
@@ -46,6 +62,10 @@ const LocalReader = function(archive, { metaDataCache }) {
    * The "type" field is not enabled by default, if the the type is not in the cache it will be undefined
    * The "scanForType" option can be used to tell the LocalReader to read the file head to get its type
    * if it can't get it from the cache. But if it already knows it, it returns it from the cache.
+   *
+   * @param {Array<number>} fileIndexArray
+   * @param {Objet} options
+   * @param {function} callback (err, {index, metadata})
    */
   function getFilesMetaData(
     fileIndexArray,
@@ -57,10 +77,12 @@ const LocalReader = function(archive, { metaDataCache }) {
   ) {}
 
   /**
-   * getCache returns a snapshot of the cache, it should be used with persistant storage to allow fast
-   * archive opening times.
+   * makeCache returns a snapshot of the metadata store,
+   * it should be used with persistant storage to allow fast archive opening times.
+   *
+   * @returns {MetaDataStore}
    */
-  function getCache() {}
+  function makeCache() {}
 
   return {
     getFiles,
