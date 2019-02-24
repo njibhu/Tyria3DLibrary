@@ -17,13 +17,16 @@ You should have received a copy of the GNU General Public License
 along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
+const ArchiveParser = require("./ArchiveParser");
+
 /**
+ * The order of items follows where they are in the archive, which means the table index is real
  * @typedef MetaData
- * @property {number}   index also known as mftIndex
- * @property {number}   rawIndex
+ * @property {number}   mftId
  * @property {number}   offset
  * @property {number}   size
  * @property {boolean}  compressed
+ * @property {number}   crc
  * @property {string}   type
  */
 
@@ -33,13 +36,42 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
- * LocalRader contructor
- * @param {File} archive
- * @param {Object} options
+ * @param {Array<MetaData>} old
+ * @param {Array<{}>}
  */
-const LocalReader = function(archive, { metaDataCache } = {}) {
-  if (metaDataCache) {
-    // compare crcs and size for each entry and remove the entry from the cache if it doesn't match
+function loadCache(old, current) {
+  // compare crcs and size for each entry and remove the entry from the cache if it doesn't match
+  for(const entry of current){
+    if(entry.mftId != undefined)
+    const matchingOld = old.find(e => e.mftId === entry.mftId);
+    if(matchinOld && entry.crc === matchingOld.crc && entry.size === matchingOld.size){
+      entry.type = matchingOld.type;
+    }
+  }
+}
+
+/**
+ *
+ * @param {Array<number>} mftTable
+ * @param {Array<{offset: number, size: number, compressed: boolean, crc: number }>} entryTable
+ */
+function attachMftTable(mftTable, entryTable) {
+  for(const [index, entry] of entryTable.entries()){
+    entry.mftId = mftTable[index];
+  }
+}
+
+/**
+ * LocalRader contructor
+ * @param {File} file
+ * @param {Object} options
+ * @param {MetaDataStore} options.metaDataCache
+ */
+const LocalReader = function(file, { metaDataCache } = {}) {
+  let { metaTable, indexTable } = await ArchiveParser.readArchive(file);
+  attachMftTable(indexTable, metaTable);
+  if (metaDataCache && metaDataCache.table) {
+    loadCache(metaDataCache.table, metaTable);
   }
 
   /**
