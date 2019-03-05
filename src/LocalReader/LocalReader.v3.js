@@ -18,6 +18,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
 const ArchiveParser = require("./ArchiveParser");
+const DataWorkers = require("./DataWorkers.exp");
 
 /**
  * The order of items follows where they are in the archive, which means the table index is real
@@ -41,10 +42,10 @@ const ArchiveParser = require("./ArchiveParser");
  */
 function loadCache(old, current) {
   // compare crcs and size for each entry and remove the entry from the cache if it doesn't match
-  for(const entry of current){
-    if(entry.mftId != undefined)
-    const matchingOld = old.find(e => e.mftId === entry.mftId);
-    if(matchinOld && entry.crc === matchingOld.crc && entry.size === matchingOld.size){
+  for (const entry of current) {
+    if (entry.mftId != undefined)
+      const matchingOld = old.find(e => e.mftId === entry.mftId);
+    if (matchinOld && entry.crc === matchingOld.crc && entry.size === matchingOld.size) {
       entry.type = matchingOld.type;
     }
   }
@@ -56,37 +57,46 @@ function loadCache(old, current) {
  * @param {Array<{offset: number, size: number, compressed: boolean, crc: number }>} entryTable
  */
 function attachMftTable(mftTable, entryTable) {
-  for(const [index, entry] of entryTable.entries()){
+  for (const [index, entry] of entryTable.entries()) {
     entry.mftId = mftTable[index];
   }
 }
 
 /**
  * LocalRader contructor
+ * 
+ * This localreader also has a queue like the dataworkers but it doesnt contain buffer data so is very light
+ * It only fetches the data from the archive at a simultaneous rate than what the decoder is able to do
+ * But should never keep him waiting
  * @param {File} file
  * @param {Object} options
  * @param {MetaDataStore} options.metaDataCache
  */
-const LocalReader = function(file, { metaDataCache } = {}) {
+const LocalReader = function (file, { metaDataCache, workersAmount, workersPaths } = {}) {
+  const dataWorkers = DataWorkers({ workersAmount, workersPath });
+
   let { metaTable, indexTable } = await ArchiveParser.readArchive(file);
   attachMftTable(indexTable, metaTable);
   if (metaDataCache && metaDataCache.table) {
     loadCache(metaDataCache.table, metaTable);
   }
 
+  // {fileIndex, uncompress, decodeImage, callback}
+  const maxWorkersTasks = workersAmount * 3;
+  let workQueue = [];
+  let workersTaskAmount = 0;
+
   /**
    * Replaces all the functions to get the decompressed file, decoded image or raw one.
    * But works natively in batch mode allowing to efficiently query multiple at once.
    *
-   * @param {Array<number>} fileIndexArray
-   * @param {Objet} options
-   * @param {function} callback (err, {index, file})
+   * @param {Array<{fileId: number, uncompress: boolean, decodeImage: boolean, callback: function}>} workArray
+   * @param {function} callback End callback
    */
-  function getFiles(
-    fileIndexArray,
-    { uncompress = true, decodeImage = false } = {},
-    callback
-  ) {}
+  function getFiles(workArray) {
+    workQueue = workQueue.concat(workArray);
+    // distributeWork();
+  }
 
   /**
    * Replaces all the functions to get file types, maps, offsets, size, compression...
@@ -95,18 +105,13 @@ const LocalReader = function(file, { metaDataCache } = {}) {
    * The "scanForType" option can be used to tell the LocalReader to read the file head to get its type
    * if it can't get it from the cache. But if it already knows it, it returns it from the cache.
    *
-   * @param {Array<number>} fileIndexArray
-   * @param {Objet} options
-   * @param {function} callback (err, {index, metadata})
+   * @param {Array<{fileId: number, scan: boolean, fields: Array, callback: function}>} workArray
+   * @param {function} callback End callback
    */
   function getFilesMetaData(
-    fileIndexArray,
-    {
-      scanForType = false,
-      filterFields = ["index", "compressed", "size", "crc"]
-    } = {},
+    workArray,
     callback
-  ) {}
+  ) { }
 
   /**
    * makeCache returns a snapshot of the metadata store,
@@ -114,7 +119,7 @@ const LocalReader = function(file, { metaDataCache } = {}) {
    *
    * @returns {MetaDataStore}
    */
-  function makeCache() {}
+  function makeCache() { }
 
   return {
     getFiles,
