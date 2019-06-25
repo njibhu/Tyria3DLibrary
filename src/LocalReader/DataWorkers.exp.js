@@ -26,17 +26,15 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
-const DataWorkers = function({
+const DataWorkers = function ({
   workersAmount = 1,
   workersPath,
   workLoadPerWorkers = 2
 } = {}) {
   const workers = Array(workersAmount)
     .fill() // .map doesnt work on freshly created arrays
-    .map(() => ({ ...initWorker(workersPath) }));
+    .map(() => (initWorker(workersPath)));
 
-  // {...workItem, assigned: bool}
-  const workQueue = [];
   let handleCounter = 0;
 
   // Create a worker and
@@ -48,13 +46,19 @@ const DataWorkers = function({
     // and spawn a new worker
     worker.onerror = err => {
       console.err("Worker encountered an error, restarting... \n" + err);
-      for (let work of assignedWork) {
-        work.assigned = false;
-        work.handle = undefined;
-      }
+
       worker.terminate();
       workers.splice(workers.indexOf(worker), 1);
-      workers.push(initWorker(path));
+
+      const newWorker = initWorker(path);
+      workers.push(newWorker);
+
+      // push old work to it
+      for (let work of assignedWork) {
+        work.handle = undefined; // Invalidate the current handle
+        pushWork(work, newWorker);
+      }
+
     };
 
     worker.onmessage = ({ data }) => {
@@ -65,7 +69,6 @@ const DataWorkers = function({
       const [handle, buffer, dxtType, imageWidth, imageHeight] = data;
       const work = assignedWork.find(i => i.handle === handle);
       if (work) {
-        workQueue.splice(workQueue.indexOf(work), 1);
         assignedWork.splice(assignedWork.indexOf(work), 1);
         work.callback({
           buffer,
@@ -78,35 +81,21 @@ const DataWorkers = function({
       }
     };
 
-    return {
-      worker
-    };
+    worker.business = () => {
+      return assignedWork.length;
+    }
+
+    return worker;
   }
 
-  function distributeWork() {
-    const busyWorkers = workers.reduce((busyAmount, worker) => {
-      return isWorkerFree(worker) ? busyAmount : busyAmount + 1;
-    }, 0);
+  function getLeastBusyWorker() {
+    // TODO
 
-    while (busyWorkers < workersAmount) {
-      for (const worker of workers) {
-        if (isWorkerFree(worker)) {
-          const work = getWork();
-          if (!work) {
-            return;
-          }
-
-          pushWork(work, worker);
-          busyWorkers = isWorkerFree(worker) ? busyWorkers : busyWorkers + 1;
-        }
-      }
-    }
   }
 
   function pushWork(work, worker) {
     work.handle = getNewHandle();
-    work.assigned = true;
-    worker.worker.postMessage([
+    worker.postMessage([
       work.handle,
       work.buffer,
       work.isImage,
@@ -118,18 +107,6 @@ const DataWorkers = function({
   function getNewHandle() {
     handleCounter += 1;
     return handleCounter;
-  }
-
-  function getWork() {
-    for (const work of workQueue) {
-      if (!work.assigned) {
-        return work;
-      }
-    }
-  }
-
-  function isWorkerFree(worker) {
-    return worker.assignedWork.length < workLoadPerWorkers;
   }
 
   /**
@@ -146,9 +123,8 @@ const DataWorkers = function({
    */
   function decompress(workItems) {
     for (const { buffer, isImage, capLength, callback } of workItems) {
-      workQueue.push({ buffer, isImage, capLength, callback });
+      pushWork({ buffer, isImage, capLength, callback }, getLeastBusyWorker());
     }
-    distributeWork();
   }
 
   return {

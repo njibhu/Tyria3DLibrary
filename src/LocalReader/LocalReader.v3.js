@@ -94,7 +94,10 @@ const LocalReader = function (file, { metaDataCache, workersAmount, workersPaths
    * @param {function} callback End callback
    */
   function getFiles(workArray) {
-    workQueue = workQueue.concat(workArray);
+    workQueue = workQueue.concat(workArray.map(work => ({
+      work,
+      type: "getFile"
+    })));
     // distributeWork();
   }
 
