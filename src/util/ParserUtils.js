@@ -26,261 +26,256 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
  *
  * Most of these methods are only refered by the automatically generated script
  * AllFormats.js
- * 
+ *
  */
 
 module.exports = {
+  /**
+   * Generates a function for reading an array using DataStream
+   *
+   * @param  {Array} structDef DataStream formatted structure definition
+   *                           for the items in the array.
+   * @param  {Number} maxCount The maximum allowed length of the array.
+   *                           Allows any length if left unspecified.
+   * @return {Function}        The generated parsing function.
+   */
+  getArrayReader: function(structDef, maxCount) {
+    return function(ds, struct) {
+      let ret = [];
+      try {
+        let arr_len = ds.readUint32();
+        let offset = ds.readUint32();
+        if (offset === 0) {
+          return ret;
+        }
+        let arr_ptr = ds.position - 4 + offset;
+        let pos = ds.position;
 
-	/**
-	 * Generates a function for reading an array using DataStream
-	 * 
-	 * @param  {Array} structDef DataStream formatted structure definition
-	 *                           for the items in the array.
-	 * @param  {Number} maxCount The maximum allowed length of the array.
-	 *                           Allows any length if left unspecified.
-	 * @return {Function}        The generated parsing function.
-	 */
-	getArrayReader : function(structDef, maxCount){
-		return function(ds, struct){
-			var ret = [];
-			try{
+        if (maxCount && arr_len > maxCount) {
+          throw "Array length " +
+            arr_len +
+            " exceeded allowed maximum " +
+            maxCount;
+        }
 
-		    	var arr_len = ds.readUint32();
-		    	var offset = ds.readUint32(); 
-				if(offset == 0){
-					return ret;
-				}
-				var arr_ptr = ds.position -4 + offset;
-		    	var pos = ds.position;	   
+        ds.seek(arr_ptr);
+        ret = ds.readType(["[]", structDef, arr_len], struct);
+        ds.seek(pos);
+      } catch (e) {
+        console.warn("getArrayReader Failed loading array", e);
+        console.warn(
+          "getArrayReader Failed loading array, structDef",
+          structDef
+        );
+      }
+      return ret;
+    };
+  },
 
-		    	if(maxCount && arr_len > maxCount){
-		    		throw("Array length "+arr_len+" exceeded allowed maximum " + maxCount);
-		    	}
+  /**
+   * Generates a function for reading a refered array using DataStream
+   *
+   * @param  {Array} structDef DataStream formatted structure definition
+   *                           for the items in the array.
+   * @return {Function}        The generated parsing function.
+   */
+  getRefArrayReader: function(structDef) {
+    return function(ds) {
+      let ret_arr = [];
 
-		    	var pos = ds.position;   	
-		    	
-	    	
-		    	ds.seek( arr_ptr );
-		    	ret = ds.readType (['[]',structDef,arr_len], struct);
-		    	ds.seek(pos);
-	    	}
-	    	catch(e){
-	    		console.warn("getArrayReader Failed loading array", e);
-	    		console.warn("getArrayReader Failed loading array, structDef", structDef);
-	    	}
-	    	return ret;
-	    }
-	},
+      /// Read array of offsets
+      let arr_len = ds.readUint32();
+      let arr_ptr = ds.position + ds.readUint32();
 
-	/**
-	 * Generates a function for reading a refered array using DataStream
-	 * 
-	 * @param  {Array} structDef DataStream formatted structure definition
-	 *                           for the items in the array.
-	 * @return {Function}        The generated parsing function.
-	 */
-	getRefArrayReader : function(structDef){
-		return function(ds, struct){
-	    	
-	    	var ret_arr=[];
+      if (arr_len === 0) {
+        return ret_arr;
+      }
 
-	    	/// Read array of offsets
-	    	var arr_len = ds.readUint32();
-		    var arr_ptr = ds.position + ds.readUint32();
+      let orgPos = ds.position;
 
-	    	if(arr_len==0){
-	    		return ret_arr;
-	    	}
+      /// Go to pointer and read an array of offsets!
+      ds.seek(arr_ptr);
+      let offsets = ds.readInt32Array(arr_len);
 
-	    	var orgPos = ds.position;
+      // p_data is after having read array
+      // var pointer = p_data - 4;
+      let pointer = orgPos - 4;
 
-	    	/// Go to pointer and read an array of offsets!
-	    	ds.seek(arr_ptr);
-	    	var offsets = ds.readInt32Array(arr_len);	
+      // auto offset  = *reinterpret_cast<const int32*>(pointer);
+      ds.seek(pointer);
+      let offset = ds.readUint32(); /// this should be the same as arr_ptr
 
+      // pointer     += offset;
+      pointer += offset;
 
-	    	//p_data is after having read array
-	    	//var pointer = p_data - 4;
-	    	var pointer = orgPos -4;
+      for (let i = 0; i < offsets.length; i++) {
+        if (offsets[i] !== 0) {
+          let pos = pointer + i * 4 + offsets[i];
+          ds.seek(pos);
 
-        	//auto offset  = *reinterpret_cast<const int32*>(pointer);
-        	ds.seek(pointer);
-        	var offset = ds.readUint32(); /// this should be the same as arr_ptr
-        	
-        	//pointer     += offset;
-        	pointer +=offset;
+          try {
+            ret_arr.push(ds.readStruct(structDef));
+          } catch (e) {
+            // debugger;
+            ret_arr.push(null);
+            console.warn(
+              "getRefArrayReader could not find refered data at offset",
+              offsets[i],
+              e
+            );
+          }
+        }
+      } /// End for each offset
 
-	    	for(var i=0;i<offsets.length;i++){
+      ds.seek(orgPos);
+      return ret_arr;
+    };
+  },
 
-	    		
-	    		if(offsets[i] != 0){
+  /**
+   * Generates a function for reading a 64bit initeger. For now just reads each
+   * 32 bit integer and glues together as a string.
+   *
+   * @return {Function}        The generated parsing function.
+   */
+  getQWordReader: function() {
+    // let base32Max = 4294967296;
+    return function(ds /*, struct */) {
+      return ds.readUint32() + "-" + ds.readUint32();
 
-	    			var pos = pointer + i * 4 + offsets[i];
-		    		ds.seek(pos);
+      // let p0 = ds.readUint32();
+      // let p1 = ds.readUint32();
+      // return base32Max * p1 + p0;
+    };
+  },
 
-		    		try{
-		    			ret_arr.push(ds.readStruct(structDef));	
-		    		}
-		    		catch(e){
-		    			//debugger;
-		    			ret_arr.push(null);
-		    			console.warn("getRefArrayReader could not find refered data at offset",offsets[i] ,e);
-		    		}
+  /**
+   * Generates a function for reading a string of 8 bit chars.
+   *
+   * @return {Function}        The generated parsing function.
+   */
+  getStringReader: function() {
+    return function(ds /*, struct*/) {
+      let ptr = ds.position + ds.readUint32();
+      let pos = ds.position;
 
-	    		}
-	    		
-	    	}/// End for each offset
+      /// Go to pointer
+      ds.seek(ptr);
 
-	    	ds.seek(orgPos);
-	    	return ret_arr;
+      let ret = ds.readCString();
 
+      /// Go back to where we were
+      ds.seek(pos);
 
-	    }
-	},
+      return ret;
+    };
+  },
 
+  /**
+   * Generates a function for reading a string of 16 bit chars.
+   *
+   * @return {Function}        The generated parsing function.
+   */
+  getString16Reader: function(stringOffset) {
+    return function(ds /*, struct*/) {
+      let ptr = ds.position + ds.readUint32() + (stringOffset || 0);
+      let pos = ds.position;
 
-	/**
-	 * Generates a function for reading a 64bit initeger. For now just reads each
-	 * 32 bit integer and glues together as a string.
-	 * 
-	 * @return {Function}        The generated parsing function.
-	 */
-	getQWordReader:function(){
-		var base32Max = 4294967296;
-		return function(ds, struct){
-			return ds.readUint32()+"-"+ds.readUint32();
+      /// Go to pointer
+      ds.seek(ptr);
 
-			var p0= ds.readUint32();
-			var p1= ds.readUint32();
-			return base32Max*p1 + p0;
-		}
-		
-	},
-	
-	/**
-	 * Generates a function for reading a string of 8 bit chars.
-	 * 
-	 * @return {Function}        The generated parsing function.
-	 */
-	getStringReader : function(){
-		return function(ds, struct){
-			var ptr = ds.position + ds.readUint32();
-	    	var pos = ds.position;	    	
+      let ret = "";
+      let num;
+      while (ds.position + 2 < ds.byteLength && (num = ds.readUint16()) !== 0) {
+        ret += String.fromCharCode(num);
+      }
+      // ds.readCString();
 
-	    	/// Go to pointer
-	    	ds.seek( ptr );
+      /// Go back to where we were
+      ds.seek(pos);
 
-	    	var ret = ds.readCString();
+      return ret;
+    };
+  },
 
-			/// Go back to where we were
-	    	ds.seek( pos );
+  /**
+   * Generates a function for reading a pointer.
+   *
+   * @param  {Array} structDef DataStream formatted structure definition
+   *                           for the item pointed to.
+   * @return {Function}        The generated parsing function.
+   */
+  getPointerReader: function(structDef) {
+    return function(ds /*, struct*/) {
+      let offset = ds.readUint32();
 
-	    	return ret;
-	    }
-	},
+      if (offset === 0) {
+        return {};
+      }
 
-	/**
-	 * Generates a function for reading a string of 16 bit chars.
-	 * 
-	 * @return {Function}        The generated parsing function.
-	 */
-	getString16Reader : function(stringOffset){
-		return function(ds, struct){
-			var ptr = ds.position + ds.readUint32() + (stringOffset ? stringOffset : 0);
-	    	var pos = ds.position;	    	
+      let ptr = ds.position - 4 + offset;
+      let pos = ds.position;
 
-	    	/// Go to pointer
-	    	ds.seek( ptr );
+      /// Go to pointer
+      ds.seek(ptr);
 
-	    	var ret = "";
-	    	var num;
-	    	while(ds.position+2<ds.byteLength && (num = ds.readUint16()) != 0 ){
-	    		ret += String.fromCharCode(num);
-	    	}
-	    	//ds.readCString();
+      let ret = ds.readStruct(structDef);
 
-			/// Go back to where we were
-	    	ds.seek( pos );
+      /// Go back to where we were
+      ds.seek(pos);
 
-	    	return ret;
-	    }
-	},
+      return ret;
+    };
+  },
 
+  /**
+   * Generates a function for reading a filename/file Id.
+   *
+   * @return {Function}        The generated parsing function.
+   */
+  getFileNameReader: function() {
+    return function(ds /*, struct*/) {
+      let pos;
+      try {
+        let ptr = ds.position + ds.readUint32();
+        pos = ds.position;
 
-	/**
-	 * Generates a function for reading a pointer.
-	 * 
-	 * @param  {Array} structDef DataStream formatted structure definition
-	 *                           for the item pointed to.
-	 * @return {Function}        The generated parsing function.
-	 */
-	getPointerReader : function(structDef){
-		return function(ds, struct){
-			var offset = ds.readUint32(); 
+        /// Go to pointer
+        ds.seek(ptr);
 
-			if(offset == 0){
-				return {};
-			}
+        let fileRef = ds.readStruct([
+          "m_lowPart",
+          "uint16", // uint16 m_lowPart;
+          "m_highPart",
+          "uint16", // uint16 m_highPart;
+          "m_terminator",
+          "uint16" // uint16 m_terminator;
+        ]);
 
-			var ptr = ds.position -4 + offset;
-	    	var pos = ds.position;	    	
+        /// Getting the file name...
+        /// Both need to be >= than 256 (terminator is 0)
+        let ret =
+          0xff00 * (fileRef.m_highPart - 0x100) +
+          (fileRef.m_lowPart - 0x100) +
+          1;
+        // var ret = (fileRef.m_highPart - 0x100) * 0xff00 + (fileRef.m_lowPart - 0xff);
 
-	    	/// Go to pointer
-	    	ds.seek( ptr );
-	    	
-	    	var ret = ds.readStruct(structDef);
+        if (ret < 0) {
+          ret = 0;
+          // console.log("FR negative", fileRef.m_highPart, fileRef.m_lowPart, fileRef.m_terminator);
+          // debugger;
+        }
 
-			/// Go back to where we were
-	    	ds.seek( pos );
+        /// Go back to where we were
+        ds.seek(pos);
 
+        return ret;
+      } catch (e) {
+        /// Go back to where we were
+        ds.seek(pos);
 
-	    	return ret;
-	    }
-	},
-
-	/**
-	 * Generates a function for reading a filename/file Id.
-	 * 
-	 * @return {Function}        The generated parsing function.
-	 */
-	getFileNameReader : function(){
-		return function(ds, struct){
-			try{
-				var ptr = ds.position + ds.readUint32();
-	    		var pos = ds.position;	    	
-	    	
-		    	/// Go to pointer
-		    	ds.seek( ptr );
-
-		    	var fileRef = ds.readStruct([
-		    		"m_lowPart", "uint16", //uint16 m_lowPart;
-				    "m_highPart", "uint16", //uint16 m_highPart;
-				    "m_terminator", "uint16",//uint16 m_terminator;
-				]);
-
-
-				/// Getting the file name...
-				/// Both need to be >= than 256 (terminator is 0)
-				var ret = 0xFF00 * (fileRef.m_highPart - 0x100) + (fileRef.m_lowPart - 0x100) + 1;
-				//var ret = (fileRef.m_highPart - 0x100) * 0xff00 + (fileRef.m_lowPart - 0xff);
-
-				if(ret<0){
-					ret = 0;
-					//console.log("FR negative", fileRef.m_highPart, fileRef.m_lowPart, fileRef.m_terminator);
-					//debugger;
-				}
-
-		    	/// Go back to where we were
-		    	ds.seek( pos );
-
-		    	return ret;
-	    	}
-	    	catch(e){
-	    		/// Go back to where we were
-		    	ds.seek( pos );
-
-		    	return -1;
-	    	}	    	
-	    }
-	}
-}
+        return -1;
+      }
+    };
+  }
+};

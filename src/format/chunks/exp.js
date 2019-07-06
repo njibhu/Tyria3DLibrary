@@ -1,31 +1,29 @@
-var Utils = T3D.ParserUtils;
+let Utils = T3D.ParserUtils;
 
 module.exports = [
-    ///==================================================
-    ///Chunk: exp, versions: 1, strucTab: 0x1720B58 
-    ///==================================================
+  /// ==================================================
+  /// Chunk: exp, versions: 1, strucTab: 0x1720B58
+  /// ==================================================
 
+  {
+    name: "exp",
+    versions: {
+      // => Version: 0
+      0: function() {
+        this.MapExpansionProperty = [
+          "type",
+          "uint32",
+          "val",
+          Utils.getQWordReader(),
+          "strVal",
+          Utils.getFileNameReader()
+        ];
 
-    {
-        name: 'exp',
-        versions: {
-
-
-            // => Version: 0
-            0: function() {
-                this.MapExpansionProperty = [
-                    'type', 'uint32',
-                    'val', Utils.getQWordReader(),
-                    'strVal', Utils.getFileNameReader(),
-                ];
-
-                this.__root = this.MapExpansionProperties = [
-                    'properties', Utils.getArrayReader(this.MapExpansionProperty),
-                ];
-
-            },
-        }
+        this.__root = this.MapExpansionProperties = [
+          "properties",
+          Utils.getArrayReader(this.MapExpansionProperty)
+        ];
+      }
     }
-
-
-]
+  }
+];
