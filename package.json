@@ -29,7 +29,6 @@
     "prettier": "^1.18.2",
     "uglify-es": "^3.3.10",
     "vinyl-buffer": "^1.0.1",
-    "vinyl-source-stream": "*",
-    "yargs": "^11.1.0"
+    "vinyl-source-stream": "*"
   }
 }
