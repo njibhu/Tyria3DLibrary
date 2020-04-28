@@ -1,21 +1,21 @@
-var Utils = T3D.ParserUtils;
+let Utils = T3D.ParserUtils;
 
 module.exports = [
-    ///==================================================
-    ///Chunk: shex, versions: 2, strucTab: 0x1722DD0 
-    ///==================================================
+    /// ==================================================
+    /// Chunk: shex, versions: 2, strucTab: 0x1722DD0 
+    /// ==================================================
 
 
     {
-        name: 'shex',
+        name: "shex",
         versions: {
 
 
             // => Version: 1
             1: function() {
                 this.__root = this.PackMapShadowExtV1 = [
-                    'filename', Utils.getFileNameReader(),
-                    'shadowDims', ['[]', 'uint32', 2],
+                    "filename", Utils.getFileNameReader(),
+                    "shadowDims", ["[]", "uint32", 2],
                 ];
 
             },
@@ -23,4 +23,4 @@ module.exports = [
     }
 
 
-]
+];

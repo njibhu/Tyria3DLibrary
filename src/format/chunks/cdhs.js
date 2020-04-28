@@ -1,37 +1,37 @@
-var Utils = T3D.ParserUtils;
+let Utils = T3D.ParserUtils;
 
 module.exports = [
-    ///==================================================
-    ///Chunk: CDHS, versions: 2, strucTab: 0x15313C0 
-    ///==================================================
+    /// ==================================================
+    /// Chunk: CDHS, versions: 2, strucTab: 0x15313C0 
+    /// ==================================================
 
 
     {
-        name: 'CDHS',
+        name: "CDHS",
         versions: {
 
 
             // => Version: 1, ReferencedFunction: 0x5B0AE0
             1: function() {
                 this.PackVsGenParams = [
-                    'pointWindCount', 'uint8',
-                    'lightPointCount', 'uint8',
-                    'lightSpotCount', 'uint8',
-                    'texTransCount', 'uint8',
-                    'hazeMode', 'uint8',
-                    'flags', 'uint16',
+                    "pointWindCount", "uint8",
+                    "lightPointCount", "uint8",
+                    "lightSpotCount", "uint8",
+                    "texTransCount", "uint8",
+                    "hazeMode", "uint8",
+                    "flags", "uint16",
                 ];
 
                 this.PackVertexShaderKey = [
-                    'vsGenParams', this.PackVsGenParams,
-                    'vertexFormat', 'uint32',
-                    'texGenCount', 'uint32',
-                    'texGen', ['[]', 'uint32', 14],
-                    'vsVersion', 'uint32',
+                    "vsGenParams", this.PackVsGenParams,
+                    "vertexFormat", "uint32",
+                    "texGenCount", "uint32",
+                    "texGen", ["[]", "uint32", 14],
+                    "vsVersion", "uint32",
                 ];
 
                 this.__root = this.PackShaderCache = [
-                    'data', Utils.getArrayReader(this.PackVertexShaderKey),
+                    "data", Utils.getArrayReader(this.PackVertexShaderKey),
                 ];
 
             },
@@ -39,15 +39,15 @@ module.exports = [
             // => Version: 0
             0: function() {
                 this.PackVertexShaderKeyV0 = [
-                    'params', 'uint32',
-                    'vertexFormat', 'uint32',
-                    'texGenCount', 'uint32',
-                    'texGen', ['[]', 'uint32', 14],
-                    'vsVersion', 'uint32',
+                    "params", "uint32",
+                    "vertexFormat", "uint32",
+                    "texGenCount", "uint32",
+                    "texGen", ["[]", "uint32", 14],
+                    "vsVersion", "uint32",
                 ];
 
                 this.__root = this.PackShaderCacheV0 = [
-                    'data', Utils.getArrayReader(this.PackVertexShaderKeyV0),
+                    "data", Utils.getArrayReader(this.PackVertexShaderKeyV0),
                 ];
 
             },
@@ -55,4 +55,4 @@ module.exports = [
     }
 
 
-]
+];

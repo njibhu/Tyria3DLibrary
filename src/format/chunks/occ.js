@@ -1,27 +1,27 @@
-var Utils = T3D.ParserUtils;
+let Utils = T3D.ParserUtils;
 
 module.exports = [
-    ///==================================================
-    ///Chunk: occ, versions: 1, strucTab: 0x17213F0 
-    ///==================================================
+    /// ==================================================
+    /// Chunk: occ, versions: 1, strucTab: 0x17213F0 
+    /// ==================================================
 
 
     {
-        name: 'occ',
+        name: "occ",
         versions: {
 
 
             // => Version: 0
             0: function() {
                 this.MapOcclusion = [
-                    'token', 'uint32',
-                    'flags', 'uint32',
-                    'vertices', Utils.getArrayReader(['[]', 'float32', 3]),
-                    'name', Utils.getString16Reader(),
+                    "token", "uint32",
+                    "flags", "uint32",
+                    "vertices", Utils.getArrayReader(["[]", "float32", 3]),
+                    "name", Utils.getString16Reader(),
                 ];
 
                 this.__root = this.MapOcclusions = [
-                    'Occlusions', Utils.getArrayReader(this.MapOcclusion),
+                    "Occlusions", Utils.getArrayReader(this.MapOcclusion),
                 ];
 
             },
@@ -29,4 +29,4 @@ module.exports = [
     }
 
 
-]
+];

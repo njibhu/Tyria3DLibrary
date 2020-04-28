@@ -213,7 +213,7 @@ T3D = module.exports = {
    * @property MaterialUtils
    * @type Object
    */
-  //MaterialUtils: require("./util/MaterialUtils.js"),
+  // MaterialUtils: require("./util/MaterialUtils.js"),
 
   /**
    * A static reference to the MathUtils class.
@@ -222,7 +222,7 @@ T3D = module.exports = {
    * @property MathUtils
    * @type Object
    */
-  //MathUtils: require("./util/MathUtils.js"),
+  // MathUtils: require("./util/MathUtils.js"),
 
   /**
    * A static reference to the ParserUtils class.
@@ -231,7 +231,7 @@ T3D = module.exports = {
    * @property ParserUtils
    * @type Object
    */
-  //ParserUtils: require("./util/ParserUtils.js"),
+  // ParserUtils: require("./util/ParserUtils.js"),
 
   /**
    * A static reference to the RenderUtils class.
@@ -249,7 +249,7 @@ T3D = module.exports = {
    * @property PersistantStore
    * @type Class
    */
-  //PersistantStore: require("./LocalReader/PersistantStore"),
+  // PersistantStore: require("./LocalReader/PersistantStore"),
 
   /**
    * A static reference to the FileTypes tools and list.
@@ -258,7 +258,7 @@ T3D = module.exports = {
    * @property FileTypes
    * @type Object
    */
-  //FileTypes: require("./LocalReader/FileTypes"),
+  // FileTypes: require("./LocalReader/FileTypes"),
 
   /* PUBLIC METHODS */
 

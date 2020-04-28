@@ -1,26 +1,26 @@
-var Utils = T3D.ParserUtils;
+let Utils = T3D.ParserUtils;
 
 module.exports = [
-    ///==================================================
-    ///Chunk: UPDB, versions: 1, strucTab: 0x1528BC4 
-    ///==================================================
+    /// ==================================================
+    /// Chunk: UPDB, versions: 1, strucTab: 0x1528BC4 
+    /// ==================================================
 
 
     {
-        name: 'UPDB',
+        name: "UPDB",
         versions: {
 
 
             // => Version: 0
             0: function() {
                 this.AmatXbxUPDBentry = [
-                    'originalSize', 'uint32',
-                    'compressedData', Utils.getArrayReader('uint8'),
-                    'originalName', Utils.getStringReader(),
+                    "originalSize", "uint32",
+                    "compressedData", Utils.getArrayReader("uint8"),
+                    "originalName", Utils.getStringReader(),
                 ];
 
                 this.__root = this.AmatXbxUPDBinfo = [
-                    'uPDBarray', Utils.getArrayReader(this.AmatXbxUPDBentry),
+                    "uPDBarray", Utils.getArrayReader(this.AmatXbxUPDBentry),
                 ];
 
             },
@@ -28,4 +28,4 @@ module.exports = [
     }
 
 
-]
+];

@@ -1,25 +1,25 @@
-var Utils = T3D.ParserUtils;
+let Utils = T3D.ParserUtils;
 
 module.exports = [
-    ///==================================================
-    ///Chunk: fall, versions: 1, strucTab: 0x1884460 
-    ///==================================================
+    /// ==================================================
+    /// Chunk: fall, versions: 1, strucTab: 0x1884460 
+    /// ==================================================
 
 
     {
-        name: 'fall',
+        name: "fall",
         versions: {
 
 
             // => Version: 0
             0: function() {
                 this.PackAnimFallbackV0 = [
-                    'sourceAnim', Utils.getQWordReader(),
-                    'targetAnims', Utils.getArrayReader(Utils.getQWordReader()),
+                    "sourceAnim", Utils.getQWordReader(),
+                    "targetAnims", Utils.getArrayReader(Utils.getQWordReader()),
                 ];
 
                 this.__root = this.PackAnimFallbacksV0 = [
-                    'fallbacks', Utils.getArrayReader(this.PackAnimFallbackV0),
+                    "fallbacks", Utils.getArrayReader(this.PackAnimFallbackV0),
                 ];
 
             },
@@ -27,4 +27,4 @@ module.exports = [
     }
 
 
-]
+];

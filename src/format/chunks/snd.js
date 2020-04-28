@@ -1,21 +1,21 @@
-var Utils = T3D.ParserUtils;
+let Utils = T3D.ParserUtils;
 
 module.exports = [
-    ///==================================================
-    ///Chunk: snd, versions: 1, strucTab: 0x1721AA4 
-    ///==================================================
+    /// ==================================================
+    /// Chunk: snd, versions: 1, strucTab: 0x1721AA4 
+    /// ==================================================
 
 
     {
-        name: 'snd',
+        name: "snd",
         versions: {
 
 
             // => Version: 0
             0: function() {
                 this.__root = this.MapLegacy = [
-                    'data', Utils.getArrayReader('uint8'),
-                    'files', Utils.getArrayReader(Utils.getFileNameReader()),
+                    "data", Utils.getArrayReader("uint8"),
+                    "files", Utils.getArrayReader(Utils.getFileNameReader()),
                 ];
 
             },
@@ -23,4 +23,4 @@ module.exports = [
     }
 
 
-]
+];

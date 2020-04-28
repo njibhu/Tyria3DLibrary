@@ -1,25 +1,25 @@
-var Utils = T3D.ParserUtils;
+let Utils = T3D.ParserUtils;
 
 module.exports = [
-    ///==================================================
-    ///Chunk: txtv, versions: 1, strucTab: 0x1565804 
-    ///==================================================
+    /// ==================================================
+    /// Chunk: txtv, versions: 1, strucTab: 0x1565804 
+    /// ==================================================
 
 
     {
-        name: 'txtv',
+        name: "txtv",
         versions: {
 
 
             // => Version: 0
             0: function() {
                 this.TextPackVoice = [
-                    'textId', 'uint32',
-                    'voiceId', 'uint32',
+                    "textId", "uint32",
+                    "voiceId", "uint32",
                 ];
 
                 this.__root = this.TextPackVoices = [
-                    'voices', Utils.getArrayReader(this.TextPackVoice),
+                    "voices", Utils.getArrayReader(this.TextPackVoice),
                 ];
 
             },
@@ -27,4 +27,4 @@ module.exports = [
     }
 
 
-]
+];

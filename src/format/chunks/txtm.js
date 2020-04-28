@@ -1,25 +1,25 @@
-var Utils = T3D.ParserUtils;
+let Utils = T3D.ParserUtils;
 
 module.exports = [
-    ///==================================================
-    ///Chunk: txtm, versions: 1, strucTab: 0x15657D4 
-    ///==================================================
+    /// ==================================================
+    /// Chunk: txtm, versions: 1, strucTab: 0x15657D4 
+    /// ==================================================
 
 
     {
-        name: 'txtm',
+        name: "txtm",
         versions: {
 
 
             // => Version: 0
             0: function() {
                 this.TextPackLanguage = [
-                    'filenames', Utils.getArrayReader(Utils.getFileNameReader()),
+                    "filenames", Utils.getArrayReader(Utils.getFileNameReader()),
                 ];
 
                 this.__root = this.TextPackManifest = [
-                    'stringsPerFile', 'uint32',
-                    'languages', Utils.getArrayReader(this.TextPackLanguage),
+                    "stringsPerFile", "uint32",
+                    "languages", Utils.getArrayReader(this.TextPackLanguage),
                 ];
 
             },
@@ -27,4 +27,4 @@ module.exports = [
     }
 
 
-]
+];

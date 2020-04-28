@@ -418,7 +418,7 @@ function getMaterial(material, materialFile, localReader, sharedTextures) {
     /// GRCHUNK -> DATA -> FLAGS
 
     /// HAS LIGHT - TEX - ? - EMISSIVE16460
-    ///
+    /// 
 
     /// 56533 LOD FOR TOMBSTONE?
 

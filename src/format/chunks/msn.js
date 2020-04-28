@@ -1,26 +1,26 @@
-var Utils = T3D.ParserUtils;
+let Utils = T3D.ParserUtils;
 
 module.exports = [
-    ///==================================================
-    ///Chunk: msn, versions: 3, strucTab: 0x1721258 
-    ///==================================================
+    /// ==================================================
+    /// Chunk: msn, versions: 3, strucTab: 0x1721258 
+    /// ==================================================
 
 
     {
-        name: 'msn',
+        name: "msn",
         versions: {
 
 
             // => Version: 2
             2: function() {
                 this.PackMapInterestPoint = [
-                    'position', ['[]', 'float32', 3],
-                    'forward', ['[]', 'float32', 3],
-                    'description', Utils.getString16Reader(),
+                    "position", ["[]", "float32", 3],
+                    "forward", ["[]", "float32", 3],
+                    "description", Utils.getString16Reader(),
                 ];
 
                 this.__root = this.MapMission = [
-                    'interestPoint', Utils.getArrayReader(this.PackMapInterestPoint),
+                    "interestPoint", Utils.getArrayReader(this.PackMapInterestPoint),
                 ];
 
             },
@@ -28,12 +28,12 @@ module.exports = [
             // => Version: 1
             1: function() {
                 this.PackMapInterestPoint = [
-                    'position', ['[]', 'float32', 3],
-                    'forward', ['[]', 'float32', 3],
+                    "position", ["[]", "float32", 3],
+                    "forward", ["[]", "float32", 3],
                 ];
 
                 this.__root = this.MapMission = [
-                    'interestPoint', Utils.getArrayReader(this.PackMapInterestPoint),
+                    "interestPoint", Utils.getArrayReader(this.PackMapInterestPoint),
                 ];
 
             },
@@ -41,4 +41,4 @@ module.exports = [
     }
 
 
-]
+];

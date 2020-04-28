@@ -25,6 +25,6 @@ class PackContentRenderer extends DataRenderer {
   }
 
   renderAsync(callback) {
-    var fileId = this.settings.id;
+    let fileId = this.settings.id;
   }
 }
