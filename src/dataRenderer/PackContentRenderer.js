@@ -20,11 +20,9 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 const DataRenderer = require("./DataRenderer");
 
 class PackContentRenderer extends DataRenderer {
-  constructor(localReader, settings, context, logger) {
-    super(localReader, settings, context, logger);
-  }
-
   renderAsync(callback) {
-    let fileId = this.settings.id;
+    // let fileId = this.settings.id;
   }
 }
+
+module.exports = PackContentRenderer;

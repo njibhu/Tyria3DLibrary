@@ -89,8 +89,8 @@ function arr32To64(arr) {
  * @param  {Function} comparator A comparator function between the objects in arr_in
  * @return {Array}            Sorted and unique value.
  */
-function sort_unique(arr_in, comparator) {
-  let arr = Array.prototype.sort.call(arr_in, comparator);
+function sortUnique(arrayInput, comparator) {
+  let arr = Array.prototype.sort.call(arrayInput, comparator);
 
   let u = {};
 
@@ -110,5 +110,5 @@ module.exports = {
   f16: f16,
   popcount: popcount,
   arr32To64: arr32To64,
-  sort_unique: sort_unique
+  sort_unique: sortUnique,
 };

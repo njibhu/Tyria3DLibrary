@@ -174,7 +174,7 @@ function getUVMat(textures, numUV, alphaTest) {
   textures.forEach(function(t, idx) {
     uniforms["texture" + idx] = {
       type: "t",
-      value: t
+      value: t,
     };
   });
 
@@ -187,7 +187,7 @@ function getUVMat(textures, numUV, alphaTest) {
   for (let i = 2; i < numUV; i++) {
     attributes["uv" + (i + 1)] = {
       type: "v2",
-      value: []
+      value: [],
     };
   }
 
@@ -198,7 +198,7 @@ function getUVMat(textures, numUV, alphaTest) {
     vertexShader: vs,
     fragmentShader: buildPS(textures, numUV, alphaTest, lightMap),
     attributes: attributes,
-    side: THREE.FrontSide
+    side: THREE.FrontSide,
   });
 }
 
@@ -334,28 +334,29 @@ function getMaterial(material, materialFile, localReader, sharedTextures) {
   /// Create custom shader material if there are textures
   if (finalTextures) {
     // TODO: make this work!
+    // eslint-disable-next-line
     if (false && finalTextures.length > 0) {
       finalMaterial = getUVMat(
         finalTextures,
         material.texCoordCount,
-        grChunk.data.flags != 16460
+        grChunk.data.flags !== 16460
       );
     } else {
       let ft = false;
       let nt = false;
       material.textures.forEach(function(t) {
         // Flag for diffuse map
-        if (!ft && t.token.split("-")[0] == "1733499172") ft = t;
+        if (!ft && t.token.split("-")[0] === "1733499172") ft = t;
 
         // Flag for normal map
-        if (!nt && t.token.split("-")[0] == "404146670") nt = t;
+        if (!nt && t.token.split("-")[0] === "404146670") nt = t;
       });
 
       if (!ft || ft.filename <= 0) return;
 
       finalMaterial = new THREE.MeshPhongMaterial({
         side: THREE.FrontSide,
-        map: getTexture(ft.filename, localReader, sharedTextures)
+        map: getTexture(ft.filename, localReader, sharedTextures),
       });
       if (nt) {
         let normalMap = getTexture(nt.filename, localReader, sharedTextures);
@@ -364,7 +365,7 @@ function getMaterial(material, materialFile, localReader, sharedTextures) {
       }
 
       finalMaterial.textureFilename = ft.filename;
-      if (grChunk.data.flags != 16460) {
+      if (grChunk.data.flags !== 16460) {
         // console.log("Setting alpha flag for ",grChunk.data.flags)
         finalMaterial.alphaTest = 0.05;
       }
@@ -376,7 +377,7 @@ function getMaterial(material, materialFile, localReader, sharedTextures) {
     finalMaterial = new THREE.MeshBasicMaterial({
       side: THREE.FrontSide,
       color: 0xff0000,
-      shading: THREE.FlatShading
+      shading: THREE.FlatShading,
     });
   }
 
@@ -464,7 +465,7 @@ function getMaterial(material, materialFile, localReader, sharedTextures) {
       320,
       76,
       68,
-      64
+      64,
     ];
 
     if (knownFileFlags.indexOf(grChunk.data.flags) < 0) {
@@ -480,11 +481,11 @@ function getMaterial(material, materialFile, localReader, sharedTextures) {
       // console.log("no light");
       finalMaterial = new THREE.MeshBasicMaterial({
         side: THREE.FrontSide,
-        map: finalMaterial.map
+        map: finalMaterial.map,
       });
     }
 
-    if (grChunk.data.flags != 16460) {
+    if (grChunk.data.flags !== 16460) {
       finalMaterial.alphaTest = 0.05;
     }
   } /// End if material
@@ -565,7 +566,7 @@ function loadLocalTexture(localReader, fileId, mapping, defaultColor, onerror) {
   /// Load file using LocalReader.
   localReader
     .readFile(fileId, true, false, undefined, undefined, true)
-    .then(result => {
+    .then((result) => {
       /// Require infalted data to be returned.
       if (!result.buffer) {
         if (onerror) onerror();
@@ -576,13 +577,14 @@ function loadLocalTexture(localReader, fileId, mapping, defaultColor, onerror) {
       let image = {
         data: new Uint8Array(result.buffer),
         width: result.imageWidth,
-        height: result.imageHeight
+        height: result.imageHeight,
       };
 
       /// Use RGBA for all textures for now...
       /// TODO: don't use alpha for some formats!
       texture.format =
-        result.dxtType == 3 || result.dxtType == 5 || true
+        // eslint-disable-next-line
+        result.dxtType === 3 || result.dxtType === 5 || true
           ? THREE.RGBAFormat
           : THREE.RGBFormat;
 
@@ -601,5 +603,5 @@ module.exports = {
   buildPS,
   getUVMat,
   getMaterial,
-  loadLocalTexture
+  loadLocalTexture,
 };

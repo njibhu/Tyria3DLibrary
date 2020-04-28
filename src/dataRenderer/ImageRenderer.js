@@ -33,10 +33,6 @@ const DataRenderer = require("./DataRenderer");
  * @param  {Logger} logger       The logging class to use for progress, warnings, errors et cetera.
  */
 class ImageRenderer extends DataRenderer {
-  constructor(localReader, settings, context, logger) {
-    super(localReader, settings, context, logger);
-  }
-
   /**
    * Extract the image or texture
    * Output fileds generated:
@@ -56,7 +52,7 @@ class ImageRenderer extends DataRenderer {
 
     this.localReader
       .readFileType(fileId)
-      .then(fileType => {
+      .then((fileType) => {
         // If it's a DXT texture then decompress it
         if (fileType.startsWith("TEXTURE_AT")) {
           return this.localReader
@@ -64,34 +60,34 @@ class ImageRenderer extends DataRenderer {
             .then((buffer, dxtType, imageWidth, imageHeight) => {
               return {
                 type: fileType,
-                data: result,
+                data: buffer,
                 dxtType: dxtType,
                 imageWidth: imageWidth,
-                imageHeight: imageHeight
+                imageHeight: imageHeight,
               };
             });
         }
 
         // If it's not a DXT just extract it (can be DDS/PNG/GIF...)
         else if (fileType.startsWith("TEXTURE_")) {
-          return this.localReader.readFile(fileId).then(result => {
+          return this.localReader.readFile(fileId).then((result) => {
             return {
               type: fileType,
-              data: result.buffer
+              data: result.buffer,
             };
           });
         }
       })
-      .then(image => {
+      .then((image) => {
         // Then with the result we give the informations and send the callback
         if (image) {
           this.getOutput().fileId = this.settings.id;
           this.getOutput().image = {
             data: new Uint8Array(image.data),
-            type: fileType,
-            dxtType: dxtType,
-            imageWidth: imageWidth,
-            imageHeight: imageHeight
+            type: image.fileType,
+            dxtType: image.dxtType,
+            imageWidth: image.imageWidth,
+            imageHeight: image.imageHeight,
           };
 
           callback();
@@ -99,3 +95,5 @@ class ImageRenderer extends DataRenderer {
       });
   }
 }
+
+module.exports = ImageRenderer;

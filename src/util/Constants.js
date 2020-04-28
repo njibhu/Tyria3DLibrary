@@ -53,7 +53,7 @@ let fvfFormat = {
   /** < 16 bytes. Unknown data. */
   PositionCompressed: 0x10000000,
   /** < 6 bytes. Position as three 16-bit floats in the order x, y, z. */
-  Unknown5: 0x20000000
+  Unknown5: 0x20000000,
   /** < 12 bytes. Unknown data. **/
 };
 
@@ -91,9 +91,10 @@ const knownflags = [
   2840, // 0 1011 0001 1000		Fountain running water + pipe water
 
   4617, // 1 0010 0000 1001		Found nothing
-  6664 // 1 1010 0000 1000		Two groups of solid boxes
+  6664, // 1 1010 0000 1000		Two groups of solid boxes
 ];
 
 module.exports = {
-  fvfFormat: fvfFormat
+  fvfFormat,
+  knownflags,
 };

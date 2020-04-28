@@ -33,10 +33,6 @@ const DataRenderer = require("./DataRenderer");
  * @param  {Logger} logger       The logging class to use for progress, warnings, errors et cetera.
  */
 class StringRenderer extends DataRenderer {
-  constructor(localReader, settings, context, logger) {
-    super(localReader, settings, context, logger);
-  }
-
   /**
    * Output fileds generated:
    *
@@ -52,8 +48,8 @@ class StringRenderer extends DataRenderer {
     let self = this;
 
     /// Get file id
-    let fileId = this.settings.id;
-    let showUnmaterialed = true;
+    // let fileId = this.settings.id;
+    // let showUnmaterialed = true;
 
     /// Load the string file
 
@@ -62,7 +58,7 @@ class StringRenderer extends DataRenderer {
 
     this.localReader
       .readFile(this.settings.id, false, false, undefined, undefined, true)
-      .then(result => {
+      .then((result) => {
         let inflatedData = result.buffer;
         let ds = new DataStream(inflatedData);
         let end = ds.byteLength - 2;
@@ -76,7 +72,7 @@ class StringRenderer extends DataRenderer {
           "decryptionOffset",
           "uint16",
           "bitsPerSymbol",
-          "uint16"
+          "uint16",
         ];
 
         let entryIndex = 0;
@@ -94,7 +90,7 @@ class StringRenderer extends DataRenderer {
               let value = ds.readUCS2String(entry.size / 2);
               self.getOutput().strings.push({
                 value: value,
-                recid: entryIndex
+                recid: entryIndex,
               });
             }
 

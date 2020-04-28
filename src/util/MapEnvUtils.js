@@ -24,7 +24,7 @@ function getMat(tex) {
     map: tex,
     side: THREE.BackSide,
     fog: false,
-    depthWrite: false
+    depthWrite: false,
   });
 }
 
@@ -84,8 +84,8 @@ function parseLights(environmentChunkData) {
         {
           lights: [],
           backlightIntensity: 1.0,
-          backlightColor: [255, 255, 255]
-        }
+          backlightColor: [255, 255, 255],
+        },
       ];
 
   let ambientLight;
@@ -130,7 +130,11 @@ function parseLights(environmentChunkData) {
 
     /// Add some random directional lighting if there was no, in order to se SOME depth on models
     if (!light.lights || light.lights.length === 0) {
-      const directions = [[0, 1, 0, 0.3], [1, 2, 1, 0.3], [-1, -2, -1, 0.3]];
+      const directions = [
+        [0, 1, 0, 0.3],
+        [1, 2, 1, 0.3],
+        [-1, -2, -1, 0.3],
+      ];
 
       for (let lightDir of directions) {
         const color = new THREE.Color(1, 1, 1);
@@ -172,7 +176,7 @@ function parseLights(environmentChunkData) {
   /// Parsing done, return hasLight flag and lights
   return {
     lights: lightOutput,
-    hasLight: hasLight || ambientTotal > 0
+    hasLight: hasLight || ambientTotal > 0,
   };
 }
 
@@ -198,15 +202,15 @@ function parseSkybox(
     skyModeTex = {
       texPathNE: 1930687,
       texPathSW: 193069,
-      texPathT: 193071
+      texPathT: 193071,
     };
   }
 
   /// Calculate bounds
-  const bounds = parameterChunkData.rect;
-  let mapW = Math.abs(bounds.x1 - bounds.x2);
-  let mapD = Math.abs(bounds.y1 - bounds.y2);
-  let boundSide = Math.max(mapW, mapD);
+  // const bounds = parameterChunkData.rect;
+  // let mapW = Math.abs(bounds.x1 - bounds.x2);
+  // let mapD = Math.abs(bounds.y1 - bounds.y2);
+  // let boundSide = Math.max(mapW, mapD);
 
   let materialArray = [];
 
@@ -236,7 +240,7 @@ function parseSkybox(
     localReader
   );
   materialArray[3] = new THREE.MeshBasicMaterial({
-    visible: false
+    visible: false,
   });
 
   /// Create skybox geometry
@@ -289,12 +293,12 @@ function parseSkybox(
 
   /// And return
   return {
-    skyElements: skyElements
+    skyElements: skyElements,
   };
 }
 
 module.exports = {
   getHazeColor: getHazeColor,
   parseLights: parseLights,
-  parseSkybox: parseSkybox
+  parseSkybox: parseSkybox,
 };

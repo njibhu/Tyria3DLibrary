@@ -9,7 +9,7 @@
     "browserify": "^16.2.0",
     "combined-stream": "0.0.5",
     "eslint": "^5.0.1",
-    "eslint-config-prettier": "^2.9.0",
+    "eslint-config-prettier": "^6.11.0",
     "eslint-config-standard": "^11.0.0",
     "eslint-plugin-import": "^2.13.0",
     "eslint-plugin-node": "^6.0.1",
