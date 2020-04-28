@@ -2,7 +2,7 @@ Clear up the utils and DataRenderers.
 
  > DataRenderers should have their own file cache system.
  > DataRenderers should not handle parsing/transforming.
- > DataRenderers should share informations when used together:
+ > DataRenderers should share information when used together:
    Ex: DataRenderer will load up the inflatedBuffer and can be reused by another renderer from the context.
 
 In details:
@@ -16,13 +16,14 @@ In details:
  > Add support for a fileCache object into all loading functions
  > Fix OBJExporter
  > Transform the DataRenders into real async functions
-
- > LocalReader, preload the next task in worker instead of waiting.
-    And signalize an in-between state
-
- > Allow asynchronous use during file parsing with a function getProgress
  
  > Remove unused bits and unnecessary helpers of the main T3DLib file.
    > Export Utils/CompatUtils for backward compatibility utilities (filelist format...)
 
  > Implements PackContentRenderer with settings to load specific entries
+
+ > Improve LocalReader
+ > Analyse what is best perf for loading all files using scripts
+ > Move t3dtools inside T3DLib, and move the file detection inside the workers
+  > LocalReader, preload the next task in worker instead of waiting.
+    And signalize an in-between state

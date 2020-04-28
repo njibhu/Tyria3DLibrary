@@ -596,10 +596,10 @@ function loadLocalTexture(localReader, fileId, mapping, defaultColor, onerror) {
 }
 
 module.exports = {
-  buildVS: buildVS,
-  generateDataTexture: generateDataTexture,
-  buildPS: buildPS,
-  getUVMat: getUVMat,
-  getMaterial: getMaterial,
-  loadLocalTexture: loadLocalTexture
+  buildVS,
+  generateDataTexture,
+  buildPS,
+  getUVMat,
+  getMaterial,
+  loadLocalTexture
 };

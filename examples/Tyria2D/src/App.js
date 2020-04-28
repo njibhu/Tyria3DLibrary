@@ -24,31 +24,31 @@ const Layout = require("./Layout");
 var Globals = require("./Globals");
 
 function onReaderCreated(lr) {
-    Globals._lr = lr;
+  Globals._lr = lr;
 
-    w2popup.lock();
+  w2popup.lock();
 
-    $("#filePickerPop").prop("disabled", true);
-    $("#fileLoadProgress").html("Indexing .dat file<br/>" + "<br/><br/>");
-    T3D.getFileListAsync(lr, files => {
-        /// Store fileList globally
-        Globals._fileList = files;
+  $("#filePickerPop").prop("disabled", true);
+  $("#fileLoadProgress").html("Indexing .dat file<br/>" + "<br/><br/>");
+  T3D.getFileListAsync(lr, files => {
+    /// Store fileList globally
+    Globals._fileList = files;
 
-        Layout.sidebarNodes();
+    Layout.sidebarNodes();
 
-        /// Close the pop
-        w2popup.close();
+    /// Close the pop
+    w2popup.close();
 
-        /// Select the "All" category
-        w2ui.sidebar.click("All");
-    });
+    /// Select the "All" category
+    w2ui.sidebar.click("All");
+  });
 }
 
 Layout.initLayout(onReaderCreated);
 
 /// Overwrite progress logger
 T3D.Logger.logFunctions[T3D.Logger.TYPE_PROGRESS] = function() {
-    $("#fileLoadProgress").html(
-        "Indexing .dat file<br/>" + arguments[1] + "%<br/><br/>"
-    );
+  $("#fileLoadProgress").html(
+    "Indexing .dat file<br/>" + arguments[1] + "%<br/><br/>"
+  );
 };

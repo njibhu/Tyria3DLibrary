@@ -18,6 +18,7 @@ along with the Tyria 3D Library. If not, see <http://www.gnu.org/licenses/>.
 */
 
 const GW2File = require("../format/file/GW2File");
+const FileTypes = require("../LocalReader/FileTypes");
 
 /**
  * Base class for data interpretors a.k.a. 'Renderers'
@@ -120,16 +121,7 @@ class DataRenderer {
         let first4 = ds.readCString(4);
 
         /// Do special stuff for different fcc signatures
-        /// fourcc != fcc::ATEX && fourcc != fcc::ATEC && fourcc != fcc::ATEP &&
-        /// fourcc != fcc::ATET && fourcc != fcc::ATEU && fourcc != fcc::ATTX)
-        if (
-          first4 === "ATEX" ||
-          first4 === "ATEC" ||
-          first4 === "ATEP" ||
-          first4 === "ATET" ||
-          first4 === "ATEU" ||
-          first4 === "ATTX"
-        ) {
+        if (FileTypes.getAnetTextureType(first4)) {
           this.localReader
             .readFile(this.settings.id, true, false, undefined, undefined, true)
             .then(result => {

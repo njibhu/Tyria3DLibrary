@@ -23,62 +23,62 @@ const GW2File = require("../format/file/GW2File.js");
  * @namespace FileTypes
  */
 
-let FileTypes = {
-  /**
-   * Parse the beginning of a file to find its type
-   *
-   * @memberof FileTypes
-   * @param {DataStream} ds
-   * @return {number}
-   */
-  getFileType: ds => {
-    let first4 = ds.readCString(4);
+/**
+ * Parse the beginning of a file to find its type
+ *
+ * @memberof FileTypes
+ * @param {DataStream} ds
+ * @return {number}
+ */
+function getFileType(ds) {
+  let first4 = ds.readCString(4);
 
-    // Parse textures
-    switch (first4) {
-      case "ATEC":
-        return "TEXTURE_ATEC";
-      case "ATEP":
-        return "TEXTURE_ATEP";
-      case "ATET":
-        return "TEXTURE_ATET";
-      case "ATEU":
-        return "TEXTURE_ATEU";
-      case "ATEX":
-        return "TEXTURE_ATEX";
-      case "ATTX":
-        return "TEXTURE_ATTX";
-    }
+  let fileType = "UNKNOWN";
 
-    if (first4.indexOf("DDS") === 0) return "TEXTURE_DDS";
-
-    if (first4.indexOf("PNG") === 1) return "TEXTURE_PNG";
-
-    if (first4.indexOf("RIFF") === 0) return "TEXTURE_RIFF";
-
-    if (first4.indexOf("YUI") === 0) return "TEXT_YUI";
-
-    // PackFiles
-    if (first4.indexOf("PF") === 0) {
-      let file = new GW2File(ds, 0, true); /// true for "plz no load chunkz"
-      return "PF_" + file.header.type;
-    }
-
-    // Binaries
-    if (first4.indexOf("MZ") === 0) return "BINARIES";
-
-    // Strings
-    if (first4.indexOf("strs") === 0) return "STRINGS";
-
-    // Raw asnd chunk (without pack file)
-    if (first4.indexOf("asnd") === 0) return "CHUNK_ASND";
-
-    // TODO: parse all datastream and if all bytes are valid unicode symbols then
-    // return TEXT_UNKNOWN;
-
-    // Unknown
-    return "UNKNOWN";
+  // Parse textures
+  const textureType = getAnetTextureType(first4);
+  if (textureType) fileType = textureType;
+  else if (first4.indexOf("DDS") === 0) fileType = "TEXTURE_DDS";
+  else if (first4.indexOf("PNG") === 1) fileType = "TEXTURE_PNG";
+  else if (first4.indexOf("RIFF") === 0) fileType = "TEXTURE_RIFF";
+  else if (first4.indexOf("YUI") === 0) fileType = "TEXT_YUI";
+  // PackFiles
+  else if (first4.indexOf("PF") === 0) {
+    let file = new GW2File(ds, 0, true); /// true for "plz no load chunkz"
+    fileType = "PF_" + file.header.type;
   }
-};
 
-module.exports = FileTypes;
+  // Binaries
+  else if (first4.indexOf("MZ") === 0) fileType = "BINARIES";
+  // Strings
+  else if (first4.indexOf("strs") === 0) fileType = "STRINGS";
+  // Raw asnd chunk (without pack file)
+  else if (first4.indexOf("asnd") === 0) fileType = "CHUNK_ASND";
+
+  // TODO: parse all datastream and if all bytes are valid unicode symbols then
+  // TEXT_UNKNOWN;
+
+  // Unknown
+  return fileType;
+}
+
+/**
+ * Returns the texture type if it's the Anet format, if not it returns undefined
+ * @param {String} first4 First 4 bytes of the file
+ * @returns {String|undefined}
+ */
+function getAnetTextureType(first4) {
+  let textureType;
+  if (first4 === "ATEC") textureType = "TEXTURE_ATEC";
+  else if (first4 === "ATEP") textureType = "TEXTURE_ATEP";
+  else if (first4 === "ATET") textureType = "TEXTURE_ATET";
+  else if (first4 === "ATEU") textureType = "TEXTURE_ATEU";
+  else if (first4 === "ATEX") textureType = "TEXTURE_ATEX";
+  else if (first4 === "ATTX") textureType = "TEXTURE_ATTX";
+  return textureType;
+}
+
+module.exports = {
+  getFileType,
+  getAnetTextureType
+};

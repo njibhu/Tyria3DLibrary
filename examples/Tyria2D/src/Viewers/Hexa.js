@@ -22,37 +22,47 @@ const Globals = require("../Globals");
 const Utils = require("../Utils");
 
 class HexaViewer extends Viewer {
-    constructor() {
-        super("hexView", "Hex View");
-        //super("#fileTabsHexView", "#hexView", "tabHexView", "Hex View");
-        this.currentRenderId = null;
+  constructor() {
+    super("hexView", "Hex View");
+    //super("#fileTabsHexView", "#hexView", "tabHexView", "Hex View");
+    this.currentRenderId = null;
+  }
+
+  render() {
+    let fileId = (Globals._fileId = T3D.getContextValue(
+      Globals._context,
+      T3D.DataRenderer,
+      "fileId"
+    ));
+
+    if (this.currentRenderId != fileId) {
+      let rawData = T3D.getContextValue(
+        Globals._context,
+        T3D.DataRenderer,
+        "rawData"
+      );
+      $(this.getOutputId(true)).append(
+        '<div id="hexaGrid" style="height: 90%"></div>'
+      );
+      Utils.generateHexTable(rawData, this.getOutputId(), grid => {
+        grid.render($(`#hexaGrid`));
+        $(this.getOutputId(true)).show();
+      });
+      this.currentRenderId = fileId;
     }
 
-    render() {
-        let fileId = Globals._fileId = T3D.getContextValue(Globals._context, T3D.DataRenderer, "fileId");
+    $(".fileTab").hide();
+    $(this.getDomTabId(true)).show();
+  }
 
-        if (this.currentRenderId != fileId) {
-            let rawData = T3D.getContextValue(Globals._context, T3D.DataRenderer, "rawData");
-            $(this.getOutputId(true)).append('<div id="hexaGrid" style="height: 90%"></div>');
-            Utils.generateHexTable(rawData, this.getOutputId(), (grid) => {
-                grid.render($(`#hexaGrid`));
-                $(this.getOutputId(true)).show();
-            });
-            this.currentRenderId = fileId;
-        }
+  clean() {
+    $().w2destroy(this.getOutputId());
+  }
 
-        $('.fileTab').hide();
-        $(this.getDomTabId(true)).show();
-    }
-
-    clean(){
-        $().w2destroy(this.getOutputId());
-    }
-
-    //Hexa viewer can view every file
-    canView() {
-        return true;
-    }
+  //Hexa viewer can view every file
+  canView() {
+    return true;
+  }
 }
 
 module.exports = HexaViewer;
