@@ -20,11 +20,11 @@
     "gulp-sourcemaps": "^2.6.4",
     "gulp-streamify": "*",
     "gulp-uglify": "*",
-    "gulp-watch": "~0.6.8",
+    "gulp-watch": "^5.0.1",
     "js-beautify": "^1.7.5",
     "uglify-es": "^3.3.10",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "*",
-    "yargs": "^11.1.0"
+    "yargs": "^15.3.1"
   }
 }
