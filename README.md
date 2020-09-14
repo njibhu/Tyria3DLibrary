@@ -1,3 +1,6 @@
+
+# This repository has been moved to [github.com/njibhu/t3d](https://github.com/njibhu/t3d)
+
 # Tyria 3D Library
 
 Tyria 3D Library is an open source javascript library aimed at accessing and interpreting data from Guild Wars 2 .dat files.
